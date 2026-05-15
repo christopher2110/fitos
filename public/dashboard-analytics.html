@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitOS — Analytics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:        #F4EFE6;
+      --cream-light:  #FDFAF5;
+      --cream-mid:    #EDE6D8;
+      --olive:        #5C6B2A;
+      --olive-dark:   #3D4A1A;
+      --olive-muted:  #8A9650;
+      --olive-pale:   #E8EDD6;
+      --text:         #2C2A24;
+      --text-muted:   #7A7570;
+      --border:       #DDD8CA;
+      --sidebar-w:    220px;
+      --topbar-h:     60px;
+    }
+
+    html, body { height: 100%; background: var(--cream); color: var(--text); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+    .layout { display: flex; min-height: 100vh; }
+
+    /* ── SIDEBAR ─────────────────────────────────────────── */
+    .sidebar {
+      width: var(--sidebar-w); background: var(--cream-light); border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 50;
+    }
+    .sidebar-brand { padding: 22px 20px 20px; border-bottom: 1px solid var(--border); }
+    .brand-wordmark { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; color: var(--olive); letter-spacing: -0.02em; line-height: 1; }
+    .brand-tagline { font-size: 10px; font-weight: 500; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 6px; }
+    .sidebar-nav { flex: 1; padding: 12px 10px; display: flex; flex-direction: column; gap: 2px; overflow-y: auto; }
+    .nav-section-label { font-size: 10px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; padding: 10px 10px 4px; }
+    .nav-link {
+      display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 10px;
+      text-decoration: none; font-size: 13.5px; font-weight: 500; color: var(--text-muted);
+      transition: background 0.12s, color 0.12s;
+    }
+    .nav-link:hover { background: var(--cream-mid); color: var(--text); }
+    .nav-link.active { background: var(--olive-pale); color: var(--olive-dark); font-weight: 600; }
+    .nav-icon { width: 17px; height: 17px; flex-shrink: 0; opacity: 0.7; }
+    .nav-link.active .nav-icon { opacity: 1; }
+    .sidebar-footer { padding: 14px; border-top: 1px solid var(--border); }
+    .coach-chip { display: flex; align-items: center; gap: 9px; }
+    .coach-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--olive); color: var(--cream-light); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: 'Fraunces', serif; }
+    .coach-name-small { font-size: 13px; font-weight: 600; color: var(--text); }
+    .coach-role { font-size: 11px; color: var(--text-muted); }
+
+    /* ── MAIN ────────────────────────────────────────────── */
+    .main { margin-left: var(--sidebar-w); flex: 1; min-height: 100vh; }
+    .topbar {
+      height: var(--topbar-h); background: var(--cream-light); border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; padding: 0 28px;
+      position: sticky; top: 0; z-index: 40;
+    }
+    .topbar-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; color: var(--text); letter-spacing: -0.01em; }
+    .topbar-sub { font-size: 13px; color: var(--text-muted); }
+    .content { padding: 28px; max-width: 1100px; }
+
+    /* ── STAT CARDS ──────────────────────────────────────── */
+    .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+    .stat-card {
+      background: var(--cream-light); border: 1px solid var(--border); border-radius: 14px;
+      padding: 20px 22px;
+    }
+    .stat-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+    .stat-value { font-family: 'Fraunces', serif; font-size: 36px; font-weight: 700; color: var(--text); line-height: 1; }
+    .stat-sub { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+
+    /* ── PANELS ──────────────────────────────────────────── */
+    .panel-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 28px; }
+    .panel {
+      background: var(--cream-light); border: 1px solid var(--border); border-radius: 14px;
+      padding: 20px 22px;
+    }
+    .panel-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 16px; }
+    .panel-empty { font-size: 13px; color: var(--text-muted); text-align: center; padding: 24px 0; }
+
+    /* ── TABLES ──────────────────────────────────────────── */
+    .data-table { width: 100%; border-collapse: collapse; }
+    .data-table th { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; padding: 0 0 10px 0; text-align: left; border-bottom: 1px solid var(--border); }
+    .data-table td { padding: 10px 0; font-size: 13px; border-bottom: 1px solid var(--cream-mid); }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table .num { text-align: right; font-weight: 600; color: var(--olive-dark); }
+
+    /* ── BAR CHART ───────────────────────────────────────── */
+    .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .bar-label { font-size: 12px; color: var(--text); flex: 0 0 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .bar-track { flex: 1; height: 8px; background: var(--cream-mid); border-radius: 4px; overflow: hidden; }
+    .bar-fill { height: 100%; background: var(--olive); border-radius: 4px; transition: width 0.4s ease; }
+    .bar-count { font-size: 12px; font-weight: 600; color: var(--text-muted); flex: 0 0 32px; text-align: right; }
+
+    /* ── SPARKLINE ───────────────────────────────────────── */
+    .sparkline-wrap { overflow: hidden; }
+    .sparkline-bars { display: flex; align-items: flex-end; gap: 3px; height: 48px; }
+    .sparkline-bar { flex: 1; background: var(--olive-pale); border-radius: 3px 3px 0 0; min-width: 6px; transition: height 0.3s ease; position: relative; }
+    .sparkline-bar:hover { background: var(--olive); }
+    .sparkline-bar[data-tip]:hover::after {
+      content: attr(data-tip);
+      position: absolute; bottom: calc(100% + 4px); left: 50%; transform: translateX(-50%);
+      background: var(--text); color: var(--cream-light); padding: 3px 7px; border-radius: 5px;
+      font-size: 10px; white-space: nowrap; pointer-events: none;
+    }
+    .sparkline-labels { display: flex; justify-content: space-between; margin-top: 6px; }
+    .sparkline-labels span { font-size: 10px; color: var(--text-muted); }
+
+    /* ── LOADING / ERROR ─────────────────────────────────── */
+    .loading-msg { display: flex; align-items: center; justify-content: center; min-height: 200px; color: var(--text-muted); font-size: 14px; }
+    .error-banner { background: #FEF2F2; border: 1px solid #FECACA; border-radius: 10px; padding: 14px 18px; margin-bottom: 20px; font-size: 13px; color: #B91C1C; }
+
+    /* ── RESPONSIVE ──────────────────────────────────────── */
+    @media (max-width: 900px) {
+      :root { --sidebar-w: 0px; }
+      .sidebar { display: none; }
+      .stat-grid { grid-template-columns: 1fr 1fr; }
+      .panel-row { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 500px) {
+      .stat-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- ── SIDEBAR ──────────────────────────────────────── -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-wordmark">FitOS</div>
+      <div class="brand-tagline">Coaching Platform</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Workspace</div>
+      <a class="nav-link" href="/dashboard">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        Dashboard
+      </a>
+      <a class="nav-link" href="/dashboard/messages">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+        </svg>
+        Messages
+      </a>
+      <a class="nav-link" href="/dashboard/clients">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+        </svg>
+        Clients
+      </a>
+      <a class="nav-link" href="/dashboard/exercises">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2z"/><path d="M8 10h8M8 14h5"/>
+        </svg>
+        Exercise Library
+      </a>
+      <a class="nav-link active" href="/dashboard/analytics">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/>
+          <line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/>
+        </svg>
+        Analytics
+      </a>
+      <div class="nav-section-label" style="margin-top:6px">AI Tools</div>
+      <a class="nav-link" href="/dashboard/agents/builder">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+        </svg>
+        Program Builder
+        <span style="font-size:9px;font-weight:700;background:var(--olive);color:#fff;padding:2px 6px;border-radius:10px;margin-left:auto">AI</span>
+      </a>
+      <div class="nav-section-label" style="margin-top:6px">Programs</div>
+      <a class="nav-link" href="/dashboard/templates">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+        Templates
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="coach-chip">
+        <div class="coach-avatar" id="coach-avatar-init">C</div>
+        <div>
+          <div class="coach-name-small" id="coach-name-display">Coach</div>
+          <div class="coach-role">FitOS</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ─────────────────────────────────────────── -->
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <div class="topbar-title">Analytics</div>
+        <div class="topbar-sub">Last 7 days · auto-refreshes on load</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div id="error-area"></div>
+      <div id="loading" class="loading-msg">Loading analytics…</div>
+      <div id="analytics-body" style="display:none">
+
+        <!-- ── STAT CARDS ─────────────────────────────── -->
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-label">Unique Sessions</div>
+            <div class="stat-value" id="stat-sessions">—</div>
+            <div class="stat-sub">Last 7 days</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Page Views</div>
+            <div class="stat-value" id="stat-views">—</div>
+            <div class="stat-sub">Last 7 days</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">CTA Clicks</div>
+            <div class="stat-value" id="stat-cta">—</div>
+            <div class="stat-sub">Last 7 days</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Checkout Starts</div>
+            <div class="stat-value" id="stat-checkout">—</div>
+            <div class="stat-sub">Intent to purchase</div>
+          </div>
+        </div>
+
+        <!-- ── SPARKLINE ──────────────────────────────── -->
+        <div class="panel" style="margin-bottom:28px">
+          <div class="panel-title">Daily Page Views — Last 7 Days</div>
+          <div class="sparkline-wrap">
+            <div class="sparkline-bars" id="sparkline-bars"></div>
+            <div class="sparkline-labels" id="sparkline-labels"></div>
+          </div>
+        </div>
+
+        <!-- ── PANELS ─────────────────────────────────── -->
+        <div class="panel-row">
+
+          <div class="panel">
+            <div class="panel-title">Top 5 Pages by Views</div>
+            <div id="top-pages-area"></div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-title">CTA Clicks by Page</div>
+            <div id="cta-clicks-area"></div>
+          </div>
+
+        </div>
+
+      </div><!-- #analytics-body -->
+    </div><!-- .content -->
+  </div><!-- .main -->
+
+</div><!-- .layout -->
+
+<script>
+(async () => {
+  const $ = id => document.getElementById(id);
+
+  // ── helpers ────────────────────────────────────────────
+  function fmtDate(dateStr) {
+    // dateStr is YYYY-MM-DD
+    const d = new Date(dateStr + 'T00:00:00Z');
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
+  }
+
+  function renderBars(containerId, items, labelKey, countKey) {
+    const el = $(containerId);
+    if (!items || items.length === 0) {
+      el.innerHTML = '<p class="panel-empty">No data yet</p>';
+      return;
+    }
+    const max = Math.max(...items.map(i => i[countKey]));
+    el.innerHTML = items.map(item => `
+      <div class="bar-row">
+        <div class="bar-label" title="${item[labelKey]}">${item[labelKey]}</div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:${max ? (item[countKey] / max * 100).toFixed(1) : 0}%"></div>
+        </div>
+        <div class="bar-count">${item[countKey]}</div>
+      </div>
+    `).join('');
+  }
+
+  function renderSparkline(dailyViews) {
+    const barsEl   = $('sparkline-bars');
+    const labelsEl = $('sparkline-labels');
+
+    // Fill in missing days with 0
+    const days = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setUTCDate(d.getUTCDate() - i);
+      const key = d.toISOString().slice(0, 10);
+      const found = dailyViews.find(r => r.date === key || String(r.date).slice(0, 10) === key);
+      days.push({ date: key, views: found ? found.views : 0 });
+    }
+
+    const max = Math.max(...days.map(d => d.views), 1);
+
+    barsEl.innerHTML = days.map(d => {
+      const pct = Math.max(4, (d.views / max * 100)).toFixed(1);
+      return `<div class="sparkline-bar" style="height:${pct}%" data-tip="${fmtDate(d.date)}: ${d.views} views"></div>`;
+    }).join('');
+
+    // Show first and last date
+    labelsEl.innerHTML = `<span>${fmtDate(days[0].date)}</span><span>${fmtDate(days[6].date)}</span>`;
+  }
+
+  // ── fetch and render ───────────────────────────────────
+  try {
+    const res  = await fetch('/api/analytics/summary');
+    const data = await res.json();
+
+    $('loading').style.display = 'none';
+
+    if (!data.ok) {
+      $('error-area').innerHTML = `<div class="error-banner">Failed to load analytics: ${data.error}</div>`;
+      $('analytics-body').style.display = 'block';
+      return;
+    }
+
+    // Stat cards
+    $('stat-sessions').textContent = data.uniqueSessions.toLocaleString();
+    const totalViews = data.topPages.reduce((s, p) => s + p.views, 0);
+    $('stat-views').textContent = totalViews.toLocaleString();
+    const totalCta = data.ctaClicks.reduce((s, p) => s + p.clicks, 0);
+    $('stat-cta').textContent = totalCta.toLocaleString();
+    $('stat-checkout').textContent = data.checkoutStarts.toLocaleString();
+
+    // Sparkline
+    renderSparkline(data.dailyViews);
+
+    // Top pages bar chart
+    renderBars('top-pages-area', data.topPages, 'page', 'views');
+
+    // CTA clicks bar chart
+    renderBars('cta-clicks-area', data.ctaClicks, 'page', 'clicks');
+
+    $('analytics-body').style.display = 'block';
+
+  } catch (err) {
+    $('loading').style.display = 'none';
+    $('error-area').innerHTML = `<div class="error-banner">Could not load analytics data. ${err.message}</div>`;
+    $('analytics-body').style.display = 'block';
+  }
+})();
+</script>
+</body>
+</html>
