@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitOS — Messages</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:        #F4EFE6;
+      --cream-light:  #FDFAF5;
+      --cream-mid:    #EDE6D8;
+      --olive:        #5C6B2A;
+      --olive-dark:   #3D4A1A;
+      --olive-muted:  #8A9650;
+      --olive-pale:   #E8EDD6;
+      --text:         #2C2A24;
+      --text-muted:   #7A7570;
+      --border:       #DDD8CA;
+      --sidebar-w:    220px;
+      --topbar-h:     60px;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--cream);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .layout { display: flex; min-height: 100vh; }
+
+    /* ── SIDEBAR ─────────────────────────────────────────── */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--cream-light);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 50;
+    }
+
+    .sidebar-brand { padding: 22px 20px 20px; border-bottom: 1px solid var(--border); }
+    .brand-wordmark { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; color: var(--olive); letter-spacing: -0.02em; }
+    .brand-tagline  { font-size: 10px; font-weight: 500; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 6px; }
+
+    .sidebar-nav { flex: 1; padding: 12px 10px; display: flex; flex-direction: column; gap: 2px; }
+
+    .nav-section-label {
+      font-size: 10px; font-weight: 600; color: var(--text-muted);
+      letter-spacing: 0.1em; text-transform: uppercase; padding: 10px 10px 4px;
+    }
+
+    .nav-link {
+      display: flex; align-items: center; gap: 10px; padding: 9px 12px;
+      border-radius: 10px; text-decoration: none; font-size: 13.5px; font-weight: 500;
+      color: var(--text-muted); transition: background 0.12s, color 0.12s; cursor: pointer; position: relative;
+    }
+    .nav-link:hover { background: var(--cream-mid); color: var(--text); }
+    .nav-link.active { background: var(--olive-pale); color: var(--olive-dark); font-weight: 600; }
+    .nav-icon { width: 17px; height: 17px; flex-shrink: 0; opacity: 0.7; }
+    .nav-link.active .nav-icon { opacity: 1; }
+
+    .nav-badge {
+      margin-left: auto; background: var(--cream-mid); color: var(--text-muted);
+      font-size: 11px; font-weight: 600; padding: 2px 6px; border-radius: 8px; min-width: 24px; text-align: center;
+    }
+    .nav-link.active .nav-badge { background: var(--olive); color: var(--cream-light); }
+    .nav-badge.unread { background: var(--olive); color: #fff; }
+
+    .sidebar-footer { padding: 14px; border-top: 1px solid var(--border); }
+    .coach-chip { display: flex; align-items: center; gap: 9px; }
+    .coach-avatar {
+      width: 32px; height: 32px; border-radius: 50%; background: var(--olive);
+      color: var(--cream-light); font-size: 12px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Fraunces', serif;
+    }
+    .coach-name-small { font-size: 13px; font-weight: 600; color: var(--text); }
+    .coach-role { font-size: 11px; color: var(--text-muted); }
+
+    /* ── MAIN ──────────────────────────────────────────── */
+    .main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+
+    .topbar {
+      height: var(--topbar-h); background: var(--cream-light); border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; padding: 0 28px;
+      flex-shrink: 0; z-index: 40;
+    }
+    .topbar-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; letter-spacing: -0.01em; }
+
+    .demo-bar {
+      background: var(--olive-pale); border-bottom: 1px solid var(--border);
+      padding: 8px 28px; font-size: 12px; color: var(--olive-dark); font-weight: 500;
+      display: none; align-items: center; gap: 6px; flex-shrink: 0;
+    }
+    .demo-bar.visible { display: flex; }
+
+    /* ── MESSAGES BODY ──────────────────────────────────── */
+    .messages-body {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      overflow: hidden;
+    }
+
+    /* ── CLIENT LIST (left panel) ──────────────────────── */
+    .client-panel {
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      background: var(--cream-light);
+      overflow: hidden;
+    }
+
+    .client-panel-hd {
+      padding: 16px 18px 12px;
+      border-bottom: 1px solid var(--border);
+      font-family: 'Fraunces', serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      flex-shrink: 0;
+    }
+
+    .client-list { flex: 1; overflow-y: auto; }
+
+    .client-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+    .client-row:last-child { border-bottom: none; }
+    .client-row:hover { background: var(--cream-mid); }
+    .client-row.active { background: var(--olive-pale); }
+
+    .client-init {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--olive-pale); color: var(--olive-dark);
+      font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center;
+      font-family: 'Fraunces', serif; flex-shrink: 0;
+    }
+    .client-row.active .client-init { background: var(--olive); color: #fff; }
+
+    .client-info { flex: 1; min-width: 0; }
+    .client-row-name { font-size: 13.5px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .client-row-preview { font-size: 12px; color: var(--text-muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .unread-dot {
+      width: 20px; height: 20px; border-radius: 50%; background: var(--olive); color: #fff;
+      font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ── THREAD PANEL (right panel) ─────────────────────── */
+    .thread-panel {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--cream);
+    }
+
+    .thread-hd {
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border);
+      background: var(--cream-light);
+      display: flex; align-items: center; gap: 12px;
+      flex-shrink: 0;
+    }
+    .thread-client-name { font-family: 'Fraunces', serif; font-size: 17px; font-weight: 600; color: var(--text); }
+    .thread-freshness   { font-size: 11px; color: var(--text-muted); margin-left: auto; }
+
+    /* Skeleton */
+    .skeleton {
+      background: linear-gradient(90deg, var(--cream-mid) 25%, var(--border) 50%, var(--cream-mid) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s ease-in-out infinite;
+      border-radius: 6px;
+    }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+    .thread-skeleton { padding: 20px 24px; display: flex; flex-direction: column; gap: 14px; }
+    .skel-bubble { height: 52px; border-radius: 16px; }
+
+    .thread-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .thread-scroll::-webkit-scrollbar { width: 4px; }
+    .thread-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    /* Date divider */
+    .date-div {
+      text-align: center; font-size: 11px; color: var(--text-muted);
+      font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin: 4px 0;
+    }
+
+    /* Message bubbles */
+    .msg-row { display: flex; flex-direction: column; max-width: 70%; }
+    .msg-row.coach-msg  { align-self: flex-end; align-items: flex-end; }
+    .msg-row.client-msg { align-self: flex-start; }
+
+    .msg-bubble {
+      padding: 10px 14px; border-radius: 18px; font-size: 14px; line-height: 1.5; word-break: break-word;
+    }
+    .msg-row.coach-msg .msg-bubble {
+      background: var(--olive); color: #fff; border-bottom-right-radius: 4px;
+    }
+    .msg-row.client-msg .msg-bubble {
+      background: var(--cream-light); border: 1px solid var(--border);
+      color: var(--text); border-bottom-left-radius: 4px;
+    }
+    .msg-row.agent-msg .msg-bubble {
+      background: var(--olive-pale); border: 1px dashed var(--olive-muted);
+      color: var(--olive-dark); border-bottom-left-radius: 4px;
+    }
+
+    .msg-meta { font-size: 11px; color: var(--text-muted); margin-top: 4px; padding: 0 4px; }
+
+    /* Empty state */
+    .thread-empty {
+      display: none; flex: 1; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 40px 32px; color: var(--text-muted);
+    }
+    .thread-empty.visible { display: flex; }
+    .thread-empty-icon { font-size: 40px; margin-bottom: 16px; }
+    .thread-empty h3 { font-family: 'Fraunces', serif; font-size: 18px; color: var(--text); margin-bottom: 8px; }
+    .thread-empty p  { font-size: 13px; max-width: 280px; line-height: 1.6; }
+
+    /* No client selected */
+    .no-thread {
+      display: flex; flex: 1; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 40px; color: var(--text-muted);
+    }
+    .no-thread-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
+    .no-thread h3 { font-family: 'Fraunces', serif; font-size: 18px; color: var(--text); margin-bottom: 8px; }
+    .no-thread p  { font-size: 13px; max-width: 260px; line-height: 1.6; }
+
+    /* ── COMPOSE ─────────────────────────────────────────── */
+    .compose-bar {
+      border-top: 1px solid var(--border);
+      background: var(--cream-light);
+      padding: 12px 20px;
+      display: flex; gap: 10px; align-items: flex-end;
+      flex-shrink: 0;
+    }
+
+    .compose-input {
+      flex: 1; background: var(--cream); border: 1px solid var(--border); border-radius: 22px;
+      padding: 10px 16px; font-family: 'Inter', sans-serif; font-size: 14px; color: var(--text);
+      resize: none; outline: none; min-height: 44px; max-height: 120px; line-height: 1.4;
+      overflow-y: auto;
+    }
+    .compose-input:focus { border-color: var(--olive-muted); }
+    .compose-input::placeholder { color: var(--text-muted); }
+
+    .send-btn {
+      width: 44px; height: 44px; border-radius: 50%; background: var(--olive); border: none;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; color: #fff; transition: background 0.15s;
+    }
+    .send-btn:disabled { background: var(--border); cursor: default; }
+    .send-btn:not(:disabled):hover { background: var(--olive-dark); }
+
+    /* ── RESPONSIVE ─────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .messages-body { grid-template-columns: 220px 1fr; }
+    }
+    @media (max-width: 720px) {
+      :root { --sidebar-w: 0px; }
+      .sidebar { display: none; }
+      .main { margin-left: 0; }
+      .messages-body { grid-template-columns: 1fr; }
+      .client-panel { display: none; }
+      .client-panel.mobile-visible { display: flex; position: absolute; inset: 0; z-index: 60; }
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- ── SIDEBAR ─────────────────────────────────────────── -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-wordmark">FitOS</div>
+      <div class="brand-tagline">Coaching Platform</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Workspace</div>
+
+      <a class="nav-link" href="/dashboard">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        Dashboard
+      </a>
+
+      <a class="nav-link active" href="/dashboard/messages">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+        </svg>
+        Messages
+        <span class="nav-badge" id="sidebar-unread-badge" style="display:none">0</span>
+      </a>
+
+      <a class="nav-link" href="/dashboard/clients">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+        </svg>
+        Clients
+      </a>
+
+      <a class="nav-link" href="/dashboard/exercises">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2z"/><path d="M8 10h8M8 14h5"/></svg>
+        Exercise Library
+      </a>
+
+      <a class="nav-link" href="/dashboard/agents">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/><path d="M12 12v9"/></svg>
+        My Agents
+      </a>
+
+      <a class="nav-link" href="/settings/agents">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+        </svg>
+        Claude Skills
+      </a>
+
+      <div class="nav-section-label" style="margin-top:6px">AI Tools</div>
+
+      <a class="nav-link" href="/dashboard/agents/builder">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+        Program Builder
+        <span style="font-size:9px;font-weight:700;background:var(--olive);color:#fff;padding:2px 6px;border-radius:10px;margin-left:auto">AI</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="coach-chip">
+        <div class="coach-avatar" id="coach-avatar-init">C</div>
+        <div>
+          <div class="coach-name-small" id="coach-name-display">Coach</div>
+          <div class="coach-role">FitOS</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ──────────────────────────────────────────────── -->
+  <div class="main">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="topbar-title">Messages</div>
+    </header>
+
+    <!-- Demo banner -->
+    <div class="demo-bar" id="demo-bar">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Demo mode — connect a Google Sheet to see real messages
+    </div>
+
+    <!-- MESSAGES BODY -->
+    <div class="messages-body">
+
+      <!-- CLIENT LIST -->
+      <div class="client-panel">
+        <div class="client-panel-hd">Conversations</div>
+        <div class="client-list" id="client-list">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- THREAD PANEL -->
+      <div class="thread-panel" id="thread-panel">
+
+        <!-- No client selected yet -->
+        <div class="no-thread" id="no-thread">
+          <div class="no-thread-icon">💬</div>
+          <h3>Select a conversation</h3>
+          <p>Choose a client from the left to view and reply to their messages.</p>
+        </div>
+
+        <!-- Thread header (shown once a client is selected) -->
+        <div class="thread-hd" id="thread-hd" style="display:none">
+          <div>
+            <div class="thread-client-name" id="thread-client-name">Client</div>
+          </div>
+          <div class="thread-freshness" id="thread-freshness"></div>
+        </div>
+
+        <!-- Skeleton loader -->
+        <div class="thread-skeleton" id="thread-skeleton" style="display:none">
+          <div class="skel-bubble skeleton" style="width:60%;align-self:flex-start"></div>
+          <div class="skel-bubble skeleton" style="width:50%;align-self:flex-end"></div>
+          <div class="skel-bubble skeleton" style="width:40%;align-self:flex-start"></div>
+        </div>
+
+        <!-- Empty state (client selected but no messages) -->
+        <div class="thread-empty" id="thread-empty">
+          <div class="thread-empty-icon">✉️</div>
+          <h3>No messages yet</h3>
+          <p>Send the first message to kick things off.</p>
+        </div>
+
+        <!-- Actual message thread -->
+        <div class="thread-scroll" id="thread-scroll" style="display:none"></div>
+
+        <!-- Compose bar (shown once a client is selected) -->
+        <div class="compose-bar" id="compose-bar" style="display:none">
+          <textarea
+            class="compose-input"
+            id="compose-input"
+            placeholder="Reply as coach…"
+            rows="1"
+            maxlength="2000"
+          ></textarea>
+          <button class="send-btn" id="send-btn" disabled aria-label="Send">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+          </button>
+        </div>
+
+      </div><!-- .thread-panel -->
+    </div><!-- .messages-body -->
+  </div><!-- .main -->
+</div><!-- .layout -->
+
+<script>
+(function () {
+  // ── Server-injected config ────────────────────────────
+  const LIVE_CFG   = window.__COACH_LIVE__ || {};
+  const coachName  = LIVE_CFG.coachName || 'Coach';
+  const isLive     = LIVE_CFG.sheetsEnabled || false;
+
+  // Update coach identity in sidebar
+  const coachInit = coachName.split(' ').filter(Boolean).map(w => w[0]).join('').toUpperCase().slice(0, 2) || 'C';
+  const avatarEl = document.getElementById('coach-avatar-init');
+  const nameEl   = document.getElementById('coach-name-display');
+  if (avatarEl) avatarEl.textContent = coachInit;
+  if (nameEl)   nameEl.textContent   = coachName;
+
+  // ── State ─────────────────────────────────────────────
+  // FitOS is a single-sheet-per-coach system: the "client" is whoever uses the PWA
+  // linked to the coach's sheet. The client list shows one entry derived from the sheet.
+  let messages       = [];
+  let selectedClient = null; // { id, name, sheetId } — always the one coach sheet client
+  let lastFetchMs    = 0;
+  let pollTimer      = null;
+  let isDemo         = false;
+  let unreadCount    = 0;
+  let isSending      = false;
+
+  // Derive client name from Profile tab or fall back to a placeholder
+  const clientName = LIVE_CFG.clientName || 'Your Client';
+
+  // ── DOM refs ──────────────────────────────────────────
+  const clientListEl   = document.getElementById('client-list');
+  const noThreadEl     = document.getElementById('no-thread');
+  const threadHdEl     = document.getElementById('thread-hd');
+  const threadSkelEl   = document.getElementById('thread-skeleton');
+  const threadEmptyEl  = document.getElementById('thread-empty');
+  const threadScrollEl = document.getElementById('thread-scroll');
+  const composeBarEl   = document.getElementById('compose-bar');
+  const composeInput   = document.getElementById('compose-input');
+  const sendBtn        = document.getElementById('send-btn');
+  const threadCNameEl  = document.getElementById('thread-client-name');
+  const threadFreshEl  = document.getElementById('thread-freshness');
+  const demoBarEl      = document.getElementById('demo-bar');
+  const sidebarBadge   = document.getElementById('sidebar-unread-badge');
+
+  // ── Helpers ───────────────────────────────────────────
+  function formatDate(tsMs) {
+    const d = new Date(tsMs);
+    const today = new Date();
+    const yesterday = new Date(today); yesterday.setDate(today.getDate() - 1);
+    if (d.toDateString() === today.toDateString()) return 'Today';
+    if (d.toDateString() === yesterday.toDateString()) return 'Yesterday';
+    return d.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' });
+  }
+
+  function formatTime(tsMs) {
+    return new Date(tsMs).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function escHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+  }
+
+  // ── Client list ───────────────────────────────────────
+  function renderClientList() {
+    // Single-client system: one row per coach's sheet
+    const hasUnread = unreadCount > 0;
+    const preview   = messages.length > 0
+      ? messages[0].body.slice(0, 50)
+      : 'No messages yet';
+    const isActive  = selectedClient != null;
+
+    clientListEl.innerHTML = `
+      <div class="client-row ${isActive ? 'active' : ''}" id="client-row-main" data-client="main">
+        <div class="client-init">
+          ${clientName.split(' ').filter(Boolean).map(w => w[0]).join('').toUpperCase().slice(0,2) || 'CL'}
+        </div>
+        <div class="client-info">
+          <div class="client-row-name">${escHtml(clientName)}</div>
+          <div class="client-row-preview">${escHtml(preview)}</div>
+        </div>
+        ${hasUnread ? `<div class="unread-dot">${unreadCount}</div>` : ''}
+      </div>
+    `;
+
+    // Update sidebar unread badge
+    if (unreadCount > 0) {
+      sidebarBadge.textContent = unreadCount;
+      sidebarBadge.style.display = '';
+      sidebarBadge.classList.add('unread');
+    } else {
+      sidebarBadge.style.display = 'none';
+    }
+
+    document.getElementById('client-row-main').addEventListener('click', () => {
+      selectClient(clientName);
+    });
+  }
+
+  // ── Select client → show thread ───────────────────────
+  function selectClient(name) {
+    selectedClient = { name };
+    threadCNameEl.textContent = name;
+    threadHdEl.style.display  = '';
+    composeBarEl.style.display = '';
+    noThreadEl.style.display   = 'none';
+
+    renderClientList();
+    renderThread();
+
+    // Mark client messages as read (coach opening thread)
+    fetch('/messages/api/mark-read', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ side: 'coach' }),
+    }).catch(() => {});
+  }
+
+  // ── Render thread ─────────────────────────────────────
+  function renderThread() {
+    if (!selectedClient) return;
+
+    if (messages.length === 0) {
+      threadScrollEl.style.display = 'none';
+      threadEmptyEl.classList.add('visible');
+      return;
+    }
+
+    threadEmptyEl.classList.remove('visible');
+    threadScrollEl.style.display = 'flex';
+
+    // Sort oldest-first for chat display
+    const sorted = [...messages].sort((a, b) => a.tsMs - b.tsMs);
+
+    let lastDateStr = '';
+    const frags = [];
+
+    for (const msg of sorted) {
+      const dateStr = formatDate(msg.tsMs);
+      if (dateStr !== lastDateStr) {
+        frags.push(`<div class="date-div">${dateStr}</div>`);
+        lastDateStr = dateStr;
+      }
+
+      let rowClass = 'client-msg';
+      if (msg.sender === 'Coach') rowClass = 'coach-msg';
+      else if (msg.sender === 'coach_agent') rowClass = 'agent-msg';
+
+      frags.push(`
+        <div class="msg-row ${rowClass}">
+          <div class="msg-bubble">${escHtml(msg.body)}</div>
+          <div class="msg-meta">${msg.tsMs ? formatTime(msg.tsMs) : ''}${msg.sender === 'coach_agent' ? ' · Agent draft' : ''}</div>
+        </div>
+      `);
+    }
+
+    threadScrollEl.innerHTML = frags.join('');
+    // Scroll to bottom
+    threadScrollEl.scrollTop = threadScrollEl.scrollHeight;
+  }
+
+  // ── Fetch messages ────────────────────────────────────
+  async function fetchMessages(showSkeleton) {
+    if (showSkeleton && selectedClient) {
+      threadSkelEl.style.display = 'flex';
+      threadScrollEl.style.display = 'none';
+    }
+
+    try {
+      const res  = await fetch('/messages/api/messages');
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+
+      messages    = data.messages || [];
+      unreadCount = data.unreadCount || 0;
+      isDemo      = !!data.demo;
+
+      demoBarEl.classList.toggle('visible', isDemo);
+      lastFetchMs = Date.now();
+      updateFreshness();
+
+      renderClientList();
+
+      // Auto-select the only client on first load
+      if (!selectedClient) selectClient(clientName);
+      else renderThread();
+
+    } catch (_) {
+      // Keep existing data on network failure
+    } finally {
+      if (showSkeleton) threadSkelEl.style.display = 'none';
+    }
+  }
+
+  function updateFreshness() {
+    if (!lastFetchMs || !selectedClient) return;
+    const secs = Math.round((Date.now() - lastFetchMs) / 1000);
+    threadFreshEl.textContent = secs < 5 ? 'Live' : `Updated ${secs}s ago`;
+  }
+
+  // ── Toast helper ──────────────────────────────────────
+  function showToast(msg, duration) {
+    let toast = document.getElementById('msg-toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'msg-toast';
+      toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#2C2A24;color:#F4EFE6;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:500;z-index:999;pointer-events:none;transition:opacity 0.3s';
+      document.body.appendChild(toast);
+    }
+    toast.textContent = msg;
+    toast.style.opacity = '1';
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(() => { toast.style.opacity = '0'; }, duration || 3000);
+  }
+
+  // ── Send message (coach side) ─────────────────────────
+  async function doSend() {
+    const body = composeInput.value.trim();
+    if (!body || isSending) return;
+
+    // Demo mode — don't send, just inform the user
+    if (isDemo) {
+      composeInput.value = '';
+      composeInput.style.height = 'auto';
+      showToast('Demo mode — connect your Google Sheet to send real messages', 3500);
+      return;
+    }
+
+    isSending = true;
+    sendBtn.disabled = true;
+    composeInput.value = '';
+    composeInput.style.height = 'auto';
+
+    // Optimistic append
+    const optimistic = {
+      id: 'opt-' + Date.now(),
+      tsMs: Date.now(),
+      timestamp: new Date().toISOString().replace('T',' ').substring(0,16),
+      sender: 'Coach',
+      body,
+      read: false,
+      thread: '',
+    };
+    messages = [optimistic, ...messages];
+    renderThread();
+
+    try {
+      const res = await fetch('/messages/api/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ body, sender: 'Coach' }),
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      // Refresh to get real data
+      await fetchMessages(false);
+    } catch (_) {
+      // Keep optimistic message visible, user can retry
+    } finally {
+      isSending = false;
+      sendBtn.disabled = composeInput.value.trim().length === 0;
+    }
+  }
+
+  // ── Compose events ────────────────────────────────────
+  composeInput.addEventListener('input', () => {
+    sendBtn.disabled = composeInput.value.trim().length === 0 || isSending;
+    composeInput.style.height = 'auto';
+    composeInput.style.height = Math.min(composeInput.scrollHeight, 120) + 'px';
+  });
+
+  composeInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if (!sendBtn.disabled) doSend();
+    }
+  });
+
+  sendBtn.addEventListener('click', doSend);
+
+  // ── Polling ───────────────────────────────────────────
+  function schedulePoll() {
+    clearTimeout(pollTimer);
+    pollTimer = setTimeout(async () => {
+      await fetchMessages(false);
+      updateFreshness();
+      schedulePoll();
+    }, 15_000); // 15s poll while tab is visible (tighter than client PWA)
+  }
+
+  setInterval(updateFreshness, 1000);
+
+  // Pause polling when tab is hidden, resume when visible
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      clearTimeout(pollTimer);
+    } else {
+      fetchMessages(false);
+      schedulePoll();
+    }
+  });
+
+  // ── Init ──────────────────────────────────────────────
+  (async function init() {
+    // Show skeleton for thread while loading
+    threadSkelEl.style.display = 'flex';
+    await fetchMessages(true);
+    schedulePoll();
+  })();
+
+})();
+</script>
+</body>
+</html>
