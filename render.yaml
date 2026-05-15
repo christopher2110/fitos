@@ -1,0 +1,63 @@
+services:
+  - type: web
+    runtime: node
+    name: fitos
+    buildCommand: npm install
+    startCommand: node migrate.js && node server.js
+    healthCheckPath: /health
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+      # Database (auto-set if using Render PostgreSQL add-on; otherwise paste your Neon URL)
+      - key: DATABASE_URL
+        sync: false
+
+      # App base URL — set to your Render service URL once deployed
+      - key: APP_BASE_URL
+        sync: false
+
+      # Anthropic API key (coach BYOK — stored encrypted per-coach, but needed for default skill runs)
+      - key: ANTHROPIC_API_KEY
+        sync: false
+
+      # AES-256-GCM encryption secret for stored API keys (min 32 chars, random)
+      - key: FITOS_KEY_SECRET
+        sync: false
+
+      # Google Service Account key JSON (base64-encoded or raw JSON string)
+      - key: GOOGLE_SERVICE_ACCOUNT_KEY
+        sync: false
+
+      # Google Sheet template ID — used by /dashboard/connect-sheet wizard
+      - key: FITOS_TEMPLATE_SHEET_ID
+        sync: false
+
+      # YouTube Data API v3 key — for Exercise Video Finder skill
+      - key: YOUTUBE_API_KEY
+        sync: false
+
+      # Postmark server token — for trial drip emails
+      - key: POSTMARK_SERVER_TOKEN
+        sync: false
+
+      # Polsia API key — used to verify Stripe payments via Polsia proxy
+      - key: POLSIA_API_KEY
+        sync: false
+
+      # Admin diagnostics key — protects /admin/diagnostics
+      - key: ADMIN_KEY
+        value: fitos-diag-2026
+
+      # Webhook secret for Render deploy event tracking (optional)
+      - key: DEPLOY_WEBHOOK_SECRET
+        sync: false
+
+      # Legacy single-coach sheet fallback (optional — multi-tenant uses DB)
+      - key: COACH_SHEET_ID
+        sync: false
+
+      # Trial access token (optional — legacy single-coach mode)
+      - key: COACH_TRIAL_TOKEN
+        sync: false
