@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#F4EFE6">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="FitOS">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <title>FitOS — Check-in</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:       #F4EFE6;
+      --cream-light: #FDFAF5;
+      --cream-mid:   #EDE6D8;
+      --olive:       #5C6B2A;
+      --olive-dark:  #3D4A1A;
+      --olive-muted: #8A9650;
+      --olive-pale:  #E8EDD6;
+      --text:        #2C2A24;
+      --text-muted:  #7A7570;
+      --border:      #DDD8CA;
+      --nav-h:       72px;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--cream);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overscroll-behavior: none;
+    }
+
+    .app {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    /* ── HEADER ──────────────────────────────────────── */
+    .header {
+      background: var(--cream);
+      padding: 52px 20px 12px;
+      flex-shrink: 0;
+    }
+
+    .header-title {
+      font-family: 'Fraunces', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
+    .header-date {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-top: 5px;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── SCROLL AREA ─────────────────────────────────── */
+    .scroll-area {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 8px 16px calc(var(--nav-h) + var(--safe-bottom) + 24px);
+    }
+
+    .scroll-area::-webkit-scrollbar { display: none; }
+
+    /* ── FORM CARD ───────────────────────────────────── */
+    .form-card {
+      background: var(--cream-light);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 16px;
+      margin-bottom: 10px;
+    }
+
+    /* ── SECTION LABEL ───────────────────────────────── */
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 16px 4px 8px;
+    }
+
+    /* ── FIELD GROUP ─────────────────────────────────── */
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .field-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: 0.01em;
+    }
+
+    .field-value {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--olive);
+      min-width: 20px;
+      text-align: right;
+    }
+
+    .field-value.empty { color: var(--text-muted); font-weight: 500; }
+
+    /* ── PIP SELECTOR ────────────────────────────────── */
+    .pip-track {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+      height: 44px;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    .pip {
+      flex: 1;
+      height: 9px;
+      border-radius: 5px;
+      background: var(--border);
+      transition: background 0.12s ease, transform 0.08s ease;
+      pointer-events: none;
+    }
+
+    .pip.filled { background: var(--olive); }
+    .pip.active-pulse { transform: scaleY(1.4); }
+
+    /* Subtle scale indicator labels */
+    .pip-scale {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 2px;
+      margin-top: -6px;
+    }
+
+    .pip-scale-label {
+      font-size: 9px;
+      font-weight: 500;
+      color: var(--text-muted);
+      opacity: 0.7;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── BODY WEIGHT ROW ─────────────────────────────── */
+    .bw-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .bw-input-wrap {
+      flex: 1;
+      position: relative;
+    }
+
+    .bw-input {
+      width: 100%;
+      height: 48px;
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0 52px 0 14px;
+      font-family: 'Inter', sans-serif;
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--text);
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .bw-input::placeholder { color: var(--text-muted); font-weight: 400; }
+
+    .bw-input:focus {
+      border-color: var(--olive);
+      box-shadow: 0 0 0 3px rgba(92, 107, 42, 0.12);
+    }
+
+    .bw-unit {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .bw-unit-toggle {
+      display: flex;
+      background: var(--cream-mid);
+      border-radius: 16px;
+      padding: 3px;
+      gap: 2px;
+      flex-shrink: 0;
+    }
+
+    .bw-unit-btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 12px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease;
+      -webkit-tap-highlight-color: transparent;
+      letter-spacing: 0.02em;
+    }
+
+    .bw-unit-btn.active {
+      background: var(--cream-light);
+      color: var(--olive-dark);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    /* ── NOTES ───────────────────────────────────────── */
+    .notes-textarea {
+      width: 100%;
+      min-height: 96px;
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--text);
+      line-height: 1.5;
+      resize: none;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      -webkit-appearance: none;
+    }
+
+    .notes-textarea::placeholder { color: var(--text-muted); }
+
+    .notes-textarea:focus {
+      border-color: var(--olive);
+      box-shadow: 0 0 0 3px rgba(92, 107, 42, 0.12);
+    }
+
+    /* ── PHOTO UPLOAD ────────────────────────────────── */
+    .photo-upload-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--cream);
+      border: 1.5px dashed var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background 0.15s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .photo-upload-label:active {
+      background: var(--cream-mid);
+      border-color: var(--olive-muted);
+    }
+
+    .photo-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--cream-mid);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--text-muted);
+    }
+
+    .photo-text { flex: 1; }
+
+    .photo-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .photo-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .photo-input { display: none; }
+
+    .photo-preview {
+      display: none;
+      width: 100%;
+      height: 160px;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .photo-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .photo-preview-remove {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: rgba(44, 42, 36, 0.7);
+      color: #FDFAF5;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    /* ── SUBMIT BUTTON ───────────────────────────────── */
+    .submit-btn {
+      width: 100%;
+      height: 56px;
+      background: var(--olive);
+      color: var(--cream-light);
+      border: none;
+      border-radius: 16px;
+      font-family: 'Fraunces', serif;
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .submit-btn:active {
+      background: var(--olive-dark);
+      transform: scale(0.98);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+
+    /* ── TOAST ───────────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: calc(var(--nav-h) + var(--safe-bottom) + 16px);
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #2C2A24;
+      color: #FDFAF5;
+      padding: 13px 22px;
+      border-radius: 40px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      white-space: nowrap;
+      z-index: 200;
+      opacity: 0;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      max-width: calc(100vw - 48px);
+    }
+
+    .toast.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── MEASUREMENTS SECTION ────────────────────────── */
+    .measure-toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      padding: 14px 16px;
+      background: var(--cream-light);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      margin-bottom: 10px;
+      transition: background 0.15s ease;
+      user-select: none;
+    }
+
+    .measure-toggle-row:active { background: var(--cream-mid); }
+
+    .measure-toggle-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .measure-toggle-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .measure-toggle-icon {
+      width: 20px;
+      height: 20px;
+      color: var(--text-muted);
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+
+    .measure-toggle-row.open .measure-toggle-icon {
+      transform: rotate(180deg);
+    }
+
+    .measure-fields {
+      display: none;
+    }
+
+    .measure-fields.open {
+      display: block;
+    }
+
+    .measure-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .measure-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .measure-unit-toggle {
+      display: flex;
+      background: var(--cream-mid);
+      border-radius: 14px;
+      padding: 2px;
+      gap: 2px;
+    }
+
+    .measure-unit-btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 10px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: background 0.12s ease, color 0.12s ease;
+      -webkit-tap-highlight-color: transparent;
+      letter-spacing: 0.02em;
+    }
+
+    .measure-unit-btn.active {
+      background: var(--cream-light);
+      color: var(--olive-dark);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    .measure-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .measure-field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .measure-field-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+    }
+
+    .measure-input-wrap {
+      position: relative;
+    }
+
+    .measure-input {
+      width: 100%;
+      height: 42px;
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0 36px 0 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text);
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .measure-input::placeholder { color: var(--text-muted); font-weight: 400; }
+
+    .measure-input:focus {
+      border-color: var(--olive);
+      box-shadow: 0 0 0 3px rgba(92, 107, 42, 0.12);
+    }
+
+    .measure-unit-suffix {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    /* ── BOTTOM NAV ──────────────────────────────────── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 480px;
+      background: var(--cream-light);
+      border-top: 1px solid var(--border);
+      display: flex;
+      padding: 0 8px;
+      padding-bottom: var(--safe-bottom);
+      height: calc(var(--nav-h) + var(--safe-bottom));
+      z-index: 100;
+    }
+
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      padding: 8px 4px;
+      cursor: pointer;
+      text-decoration: none;
+      -webkit-tap-highlight-color: transparent;
+      min-height: 44px;
+      border-radius: 12px;
+      transition: background 0.15s ease;
+    }
+
+    .nav-item:active { background: var(--cream-mid); }
+
+    .nav-icon { width: 24px; height: 24px; color: var(--text-muted); transition: color 0.15s ease; }
+    .nav-label {
+      font-size: 10px; font-weight: 600; color: var(--text-muted);
+      letter-spacing: 0.04em; text-transform: uppercase; transition: color 0.15s ease;
+    }
+
+    .nav-item.active .nav-icon { color: var(--olive); }
+    .nav-item.active .nav-label { color: var(--olive); }
+  </style>
+</head>
+<body>
+  <div class="app">
+
+    <!-- HEADER -->
+    <div class="header">
+      <div class="header-title">Check-in</div>
+      <div class="header-date" id="header-date"></div>
+    </div>
+
+    <!-- SCROLL CONTENT -->
+    <div class="scroll-area">
+
+      <!-- WELLNESS SECTION -->
+      <div class="section-label">Wellness</div>
+      <div class="form-card">
+        <div class="field-group">
+
+          <div class="field">
+            <div class="field-header">
+              <span class="field-label">Sleep quality</span>
+              <span class="field-value empty" id="val-sleep">—</span>
+            </div>
+            <div class="pip-track" id="pip-sleep" data-field="sleep"></div>
+            <div class="pip-scale">
+              <span class="pip-scale-label">Poor</span>
+              <span class="pip-scale-label">Great</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="field-header">
+              <span class="field-label">Energy level</span>
+              <span class="field-value empty" id="val-energy">—</span>
+            </div>
+            <div class="pip-track" id="pip-energy" data-field="energy"></div>
+            <div class="pip-scale">
+              <span class="pip-scale-label">Low</span>
+              <span class="pip-scale-label">High</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="field-header">
+              <span class="field-label">Muscle soreness</span>
+              <span class="field-value empty" id="val-soreness">—</span>
+            </div>
+            <div class="pip-track" id="pip-soreness" data-field="soreness"></div>
+            <div class="pip-scale">
+              <span class="pip-scale-label">None</span>
+              <span class="pip-scale-label">Severe</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="field-header">
+              <span class="field-label">Stress</span>
+              <span class="field-value empty" id="val-stress">—</span>
+            </div>
+            <div class="pip-track" id="pip-stress" data-field="stress"></div>
+            <div class="pip-scale">
+              <span class="pip-scale-label">Calm</span>
+              <span class="pip-scale-label">High</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- BODY COMP SECTION -->
+      <div class="section-label">Body</div>
+      <div class="form-card">
+        <div class="field">
+          <div class="field-label">Bodyweight</div>
+          <div class="bw-row">
+            <div class="bw-input-wrap">
+              <input
+                class="bw-input"
+                type="number"
+                inputmode="decimal"
+                placeholder="—"
+                id="bw-input"
+                step="0.1"
+                min="20"
+                max="500"
+                aria-label="Bodyweight"
+              >
+              <span class="bw-unit" id="bw-unit-label">kg</span>
+            </div>
+            <div class="bw-unit-toggle">
+              <button class="bw-unit-btn active" id="bw-btn-kg" onclick="setBWUnit('kg')">kg</button>
+              <button class="bw-unit-btn"        id="bw-btn-lb" onclick="setBWUnit('lb')">lb</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MEASUREMENTS SECTION -->
+      <div class="section-label">Measurements</div>
+
+      <!-- Toggle row (collapsed by default) -->
+      <div class="measure-toggle-row" id="measure-toggle" onclick="toggleMeasurements()">
+        <div>
+          <div class="measure-toggle-title">Body Circumferences</div>
+          <div class="measure-toggle-sub" id="measure-toggle-sub">Optional — tap to expand</div>
+        </div>
+        <svg class="measure-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </div>
+
+      <!-- Expanded fields -->
+      <div class="measure-fields form-card" id="measure-fields">
+        <div class="measure-header-row">
+          <span class="measure-label">Circumferences</span>
+          <div class="measure-unit-toggle">
+            <button class="measure-unit-btn active" id="munit-btn-cm" onclick="setMeasureUnit('cm')">cm</button>
+            <button class="measure-unit-btn" id="munit-btn-in" onclick="setMeasureUnit('in')">in</button>
+          </div>
+        </div>
+        <div class="measure-grid">
+          <div class="measure-field">
+            <div class="measure-field-label">Waist</div>
+            <div class="measure-input-wrap">
+              <input class="measure-input" type="number" inputmode="decimal" placeholder="—" id="m-waist" step="0.1" min="40" max="200">
+              <span class="measure-unit-suffix" id="msuffix-waist">cm</span>
+            </div>
+          </div>
+          <div class="measure-field">
+            <div class="measure-field-label">Hip</div>
+            <div class="measure-input-wrap">
+              <input class="measure-input" type="number" inputmode="decimal" placeholder="—" id="m-hip" step="0.1" min="40" max="200">
+              <span class="measure-unit-suffix" id="msuffix-hip">cm</span>
+            </div>
+          </div>
+          <div class="measure-field">
+            <div class="measure-field-label">Chest</div>
+            <div class="measure-input-wrap">
+              <input class="measure-input" type="number" inputmode="decimal" placeholder="—" id="m-chest" step="0.1" min="40" max="200">
+              <span class="measure-unit-suffix" id="msuffix-chest">cm</span>
+            </div>
+          </div>
+          <div class="measure-field">
+            <div class="measure-field-label">Left Arm</div>
+            <div class="measure-input-wrap">
+              <input class="measure-input" type="number" inputmode="decimal" placeholder="—" id="m-larm" step="0.1" min="10" max="80">
+              <span class="measure-unit-suffix" id="msuffix-larm">cm</span>
+            </div>
+          </div>
+          <div class="measure-field">
+            <div class="measure-field-label">Right Arm</div>
+            <div class="measure-input-wrap">
+              <input class="measure-input" type="number" inputmode="decimal" placeholder="—" id="m-rarm" step="0.1" min="10" max="80">
+              <span class="measure-unit-suffix" id="msuffix-rarm">cm</span>
+            </div>
+          </div>
+          <div class="measure-field">
+            <div class="measure-field-label">Left Thigh</div>
+            <div class="measure-input-wrap">
+              <input class="measure-input" type="number" inputmode="decimal" placeholder="—" id="m-lthigh" step="0.1" min="20" max="100">
+              <span class="measure-unit-suffix" id="msuffix-lthigh">cm</span>
+            </div>
+          </div>
+          <div class="measure-field">
+            <div class="measure-field-label">Right Thigh</div>
+            <div class="measure-input-wrap">
+              <input class="measure-input" type="number" inputmode="decimal" placeholder="—" id="m-rthigh" step="0.1" min="20" max="100">
+              <span class="measure-unit-suffix" id="msuffix-rthigh">cm</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOTES SECTION -->
+      <div class="section-label">Notes</div>
+      <div class="form-card">
+        <div class="field">
+          <textarea
+            class="notes-textarea"
+            id="notes-textarea"
+            placeholder="How did you feel today? Anything your coach should know…"
+            rows="4"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- PHOTO SECTION -->
+      <div class="section-label">Progress Photo</div>
+      <div class="form-card">
+        <label class="photo-upload-label" for="photo-input" id="photo-label">
+          <div class="photo-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+          </div>
+          <div class="photo-text">
+            <div class="photo-title">Add a progress photo</div>
+            <div class="photo-sub">Optional — saved to Drive, linked in your Sheet</div>
+          </div>
+        </label>
+        <input type="file" accept="image/*" capture="environment" class="photo-input" id="photo-input">
+        <div class="photo-preview" id="photo-preview">
+          <img id="photo-img" alt="Progress photo preview">
+          <button class="photo-preview-remove" id="photo-remove" aria-label="Remove photo">×</button>
+        </div>
+      </div>
+
+      <!-- SUBMIT -->
+      <button class="submit-btn" id="submit-btn" onclick="submitCheckin()">
+        Log Today's Check-in
+      </button>
+
+    </div><!-- .scroll-area -->
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav">
+      <a class="nav-item" href="/workouts">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 4v6m0 4v6M18 4v6m0 4v6M2 9h4m12 0h4M2 15h4m12 0h4"/>
+        </svg>
+        <span class="nav-label">Workouts</span>
+      </a>
+      <a class="nav-item active" href="/checkin">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 11l3 3L22 4"/>
+          <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+        </svg>
+        <span class="nav-label">Check-in</span>
+      </a>
+      <a class="nav-item" href="/history">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
+        <span class="nav-label">History</span>
+      </a>
+      <a class="nav-item" href="/messages">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+        </svg>
+        <span class="nav-label">Messages</span>
+      </a>
+    </nav>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast">
+      <span>✓</span>
+      <span id="toast-msg">Check-in logged!</span>
+    </div>
+
+  </div>
+
+  <!-- CONFIG injected by server -->
+  <script>window.__FITOS__ = __FITOS_CONFIG__;</script>
+
+  <script>
+  (function () {
+    const DRAFT_KEY        = 'fitos_checkin_draft';
+    const OFFLINE_QUEUE_KEY = 'fitos_checkin_queue';
+    const UNIT_KEY         = 'fitos_unit';
+    const MONTH      = ['January','February','March','April','May','June',
+                        'July','August','September','October','November','December'];
+    const DAY        = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const config     = window.__FITOS__ || {};
+    const hasSheets  = config.hasSheets === true;
+
+    // ── STATE ──────────────────────────────────────────────────
+    const MEASURE_UNIT_KEY = 'fitos_measure_unit';
+    const MEASURE_FIELDS = ['waist', 'hip', 'chest', 'larm', 'rarm', 'lthigh', 'rthigh'];
+    const CM_TO_IN = 0.393701;
+
+    const state = {
+      sleep: 0, energy: 0, soreness: 0, stress: 0,
+      bodyweight: '', bwUnit: localStorage.getItem(UNIT_KEY) || 'kg',
+      notes: '',
+      measurements: { waist: '', hip: '', chest: '', larm: '', rarm: '', lthigh: '', rthigh: '' },
+      measureUnit: localStorage.getItem(MEASURE_UNIT_KEY) || 'cm',
+      measureOpen: false,
+    };
+
+    // ── HEADER DATE ────────────────────────────────────────────
+    const now = new Date();
+    document.getElementById('header-date').textContent =
+      DAY[now.getDay()] + ', ' + MONTH[now.getMonth()] + ' ' + now.getDate();
+
+    // ── PIP SELECTORS ─────────────────────────────────────────
+    const PIP_FIELDS = ['sleep', 'energy', 'soreness', 'stress'];
+
+    PIP_FIELDS.forEach(field => {
+      const track = document.getElementById('pip-' + field);
+
+      // Build 10 pips
+      for (let i = 1; i <= 10; i++) {
+        const pip = document.createElement('div');
+        pip.className = 'pip';
+        pip.dataset.val = i;
+        track.appendChild(pip);
+      }
+
+      // Touch + click handling
+      function setValue(x) {
+        const pips = track.querySelectorAll('.pip');
+        const rect = track.getBoundingClientRect();
+        const pct = Math.max(0, Math.min(1, (x - rect.left) / rect.width));
+        const val = Math.ceil(pct * 10) || 1;
+        state[field] = val;
+
+        pips.forEach((p, idx) => {
+          p.classList.toggle('filled', idx < val);
+        });
+
+        const valEl = document.getElementById('val-' + field);
+        valEl.textContent = val + '/10';
+        valEl.classList.remove('empty');
+        saveDraft();
+      }
+
+      // Allow drag (touchmove) to scrub value
+      track.addEventListener('click', e => setValue(e.clientX));
+      track.addEventListener('touchstart', e => {
+        e.preventDefault();
+        setValue(e.touches[0].clientX);
+      }, { passive: false });
+      track.addEventListener('touchmove', e => {
+        e.preventDefault();
+        setValue(e.touches[0].clientX);
+      }, { passive: false });
+    });
+
+    // ── BODYWEIGHT UNIT ────────────────────────────────────────
+    applyBWUnit(state.bwUnit);
+
+    window.setBWUnit = function (u) {
+      state.bwUnit = u;
+      localStorage.setItem(UNIT_KEY, u);
+      applyBWUnit(u);
+      saveDraft();
+    };
+
+    function applyBWUnit(u) {
+      document.getElementById('bw-btn-kg').classList.toggle('active', u === 'kg');
+      document.getElementById('bw-btn-lb').classList.toggle('active', u === 'lb');
+      document.getElementById('bw-unit-label').textContent = u;
+    }
+
+    document.getElementById('bw-input').addEventListener('input', e => {
+      state.bodyweight = e.target.value;
+      saveDraft();
+    });
+
+    // ── NOTES ──────────────────────────────────────────────────
+    document.getElementById('notes-textarea').addEventListener('input', e => {
+      state.notes = e.target.value;
+      saveDraft();
+    });
+
+    // ── PHOTO UPLOAD ───────────────────────────────────────────
+    document.getElementById('photo-input').addEventListener('change', function () {
+      const file = this.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        document.getElementById('photo-img').src = e.target.result;
+        document.getElementById('photo-preview').style.display = 'block';
+        document.getElementById('photo-label').style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    });
+
+    document.getElementById('photo-remove').addEventListener('click', function () {
+      document.getElementById('photo-img').src = '';
+      document.getElementById('photo-preview').style.display = 'none';
+      document.getElementById('photo-label').style.display = 'flex';
+      document.getElementById('photo-input').value = '';
+    });
+
+    // ── MEASUREMENTS ───────────────────────────────────────────
+    function applyMeasureUnit(u) {
+      document.getElementById('munit-btn-cm').classList.toggle('active', u === 'cm');
+      document.getElementById('munit-btn-in').classList.toggle('active', u === 'in');
+      MEASURE_FIELDS.forEach(f => {
+        document.querySelectorAll(`[id^="msuffix-"]`).forEach(el => el.textContent = u);
+      });
+    }
+
+    window.setMeasureUnit = function (u) {
+      state.measureUnit = u;
+      localStorage.setItem(MEASURE_UNIT_KEY, u);
+      applyMeasureUnit(u);
+      saveDraft();
+    };
+
+    window.toggleMeasurements = function () {
+      state.measureOpen = !state.measureOpen;
+      const toggle = document.getElementById('measure-toggle');
+      const fields = document.getElementById('measure-fields');
+      toggle.classList.toggle('open', state.measureOpen);
+      fields.classList.toggle('open', state.measureOpen);
+      if (!state.measureOpen) {
+        updateMeasureSub();
+      } else {
+        document.getElementById('measure-toggle-sub').textContent = 'Tap to collapse';
+      }
+    };
+
+    function updateMeasureSub() {
+      const filled = MEASURE_FIELDS.filter(f => state.measurements[f] !== '').length;
+      const sub = document.getElementById('measure-toggle-sub');
+      if (filled > 0) {
+        sub.textContent = `${filled} measurement${filled > 1 ? 's' : ''} entered`;
+      } else {
+        sub.textContent = 'Optional — tap to expand';
+      }
+    }
+
+    // Wire up measurement inputs
+    MEASURE_FIELDS.forEach(f => {
+      const input = document.getElementById('m-' + f);
+      if (input) {
+        input.addEventListener('input', e => {
+          state.measurements[f] = e.target.value;
+          saveDraft();
+        });
+      }
+    });
+
+    // Apply stored measure unit
+    applyMeasureUnit(state.measureUnit);
+
+    // ── LOCAL STORAGE PERSISTENCE ──────────────────────────────
+    function saveDraft() {
+      localStorage.setItem(DRAFT_KEY, JSON.stringify({
+        sleep:        state.sleep,
+        energy:       state.energy,
+        soreness:     state.soreness,
+        stress:       state.stress,
+        bodyweight:   state.bodyweight,
+        bwUnit:       state.bwUnit,
+        notes:        state.notes,
+        measurements: state.measurements,
+        measureUnit:  state.measureUnit,
+        measureOpen:  state.measureOpen,
+        savedAt:      new Date().toISOString(),
+      }));
+    }
+
+    function loadDraft() {
+      try {
+        const raw = localStorage.getItem(DRAFT_KEY);
+        if (!raw) return;
+        const draft = JSON.parse(raw);
+
+        // Only restore if draft is from today
+        const savedDate = new Date(draft.savedAt).toDateString();
+        if (savedDate !== now.toDateString()) {
+          localStorage.removeItem(DRAFT_KEY);
+          return;
+        }
+
+        // Restore pip values
+        PIP_FIELDS.forEach(field => {
+          if (!draft[field]) return;
+          state[field] = draft[field];
+          const track = document.getElementById('pip-' + field);
+          track.querySelectorAll('.pip').forEach((p, idx) => {
+            p.classList.toggle('filled', idx < draft[field]);
+          });
+          const valEl = document.getElementById('val-' + field);
+          valEl.textContent = draft[field] + '/10';
+          valEl.classList.remove('empty');
+        });
+
+        // Restore bodyweight
+        if (draft.bodyweight) {
+          state.bodyweight = draft.bodyweight;
+          document.getElementById('bw-input').value = draft.bodyweight;
+        }
+
+        // Restore unit
+        if (draft.bwUnit) {
+          state.bwUnit = draft.bwUnit;
+          applyBWUnit(draft.bwUnit);
+        }
+
+        // Restore notes
+        if (draft.notes) {
+          state.notes = draft.notes;
+          document.getElementById('notes-textarea').value = draft.notes;
+        }
+
+        // Restore measurements
+        if (draft.measurements) {
+          state.measurements = { ...state.measurements, ...draft.measurements };
+          MEASURE_FIELDS.forEach(f => {
+            const input = document.getElementById('m-' + f);
+            if (input && draft.measurements[f]) input.value = draft.measurements[f];
+          });
+        }
+        if (draft.measureUnit) {
+          state.measureUnit = draft.measureUnit;
+          applyMeasureUnit(draft.measureUnit);
+        }
+        if (draft.measureOpen) {
+          state.measureOpen = true;
+          document.getElementById('measure-toggle').classList.add('open');
+          document.getElementById('measure-fields').classList.add('open');
+          document.getElementById('measure-toggle-sub').textContent = 'Tap to collapse';
+        }
+        updateMeasureSub();
+      } catch (e) {
+        // malformed draft — ignore
+      }
+    }
+
+    // ── OFFLINE QUEUE ──────────────────────────────────────────
+    function queueOffline(payload) {
+      const queue = JSON.parse(localStorage.getItem(OFFLINE_QUEUE_KEY) || '[]');
+      queue.push({ ...payload, _queuedAt: new Date().toISOString() });
+      localStorage.setItem(OFFLINE_QUEUE_KEY, JSON.stringify(queue));
+    }
+
+    async function flushOfflineQueue() {
+      const queue = JSON.parse(localStorage.getItem(OFFLINE_QUEUE_KEY) || '[]');
+      if (!queue.length) return;
+      const remaining = [];
+      for (const item of queue) {
+        try {
+          const r = await fetch('/api/checkins', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(item),
+          });
+          if (!r.ok) remaining.push(item);
+        } catch (_) {
+          remaining.push(item);
+        }
+      }
+      localStorage.setItem(OFFLINE_QUEUE_KEY, JSON.stringify(remaining));
+      if (remaining.length < queue.length) showToast('✓ Offline check-ins synced!');
+    }
+
+    window.addEventListener('online', () => { flushOfflineQueue(); });
+
+    // ── READ FILE AS DATA URL ───────────────────────────────────
+    function readFileAsDataURL(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = e => resolve(e.target.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // ── SUBMIT ─────────────────────────────────────────────────
+    window.submitCheckin = async function () {
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+
+      const dateStr = now.toISOString().split('T')[0];
+
+      // Convert measurements to cm for storage (all columns in Sheet are cm)
+      const mUnit = state.measureUnit;
+      function toMeasureCm(val) {
+        if (val === '' || val === null || val === undefined) return null;
+        const n = parseFloat(val);
+        if (isNaN(n)) return null;
+        return mUnit === 'in' ? Math.round(n / CM_TO_IN * 10) / 10 : n;
+      }
+
+      const payload = {
+        date:       dateStr,
+        sleep:      state.sleep   || null,
+        energy:     state.energy  || null,
+        soreness:   state.soreness || null,
+        stress:     state.stress  || null,
+        bodyweight: state.bodyweight ? parseFloat(state.bodyweight) : null,
+        bwUnit:     state.bwUnit,
+        notes:      state.notes || '',
+        measurements: {
+          waist:  toMeasureCm(state.measurements.waist),
+          hip:    toMeasureCm(state.measurements.hip),
+          chest:  toMeasureCm(state.measurements.chest),
+          larm:   toMeasureCm(state.measurements.larm),
+          rarm:   toMeasureCm(state.measurements.rarm),
+          lthigh: toMeasureCm(state.measurements.lthigh),
+          rthigh: toMeasureCm(state.measurements.rthigh),
+        },
+      };
+
+      // Attach photo as base64 if the user selected one
+      const photoInput = document.getElementById('photo-input');
+      if (photoInput.files && photoInput.files[0]) {
+        try {
+          const dataUrl = await readFileAsDataURL(photoInput.files[0]);
+          payload.photo = { data: dataUrl, filename: 'checkin-' + dateStr + '.jpg' };
+        } catch (_) {
+          // photo read failed — submit without photo
+        }
+      }
+
+      if (!hasSheets) {
+        // Demo mode — no Sheet credentials on server
+        setTimeout(() => {
+          localStorage.removeItem(DRAFT_KEY);
+          showSuccess();
+          btn.disabled = false;
+        }, 400);
+        return;
+      }
+
+      if (!navigator.onLine) {
+        queueOffline(payload);
+        localStorage.removeItem(DRAFT_KEY);
+        showToast('Saved offline — will sync when connected');
+        resetForm();
+        btn.disabled = false;
+        return;
+      }
+
+      try {
+        const r = await fetch('/api/checkins', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!r.ok) throw new Error('Server error ' + r.status);
+        localStorage.removeItem(DRAFT_KEY);
+        showSuccess();
+      } catch (err) {
+        console.error('[FitOS] Check-in failed:', err);
+        // Queue for automatic retry when connection restores
+        queueOffline(payload);
+        showToast('Saved — will sync when connected');
+      } finally {
+        btn.disabled = false;
+      }
+    };
+
+    function resetForm() {
+      PIP_FIELDS.forEach(field => {
+        state[field] = 0;
+        const track = document.getElementById('pip-' + field);
+        track.querySelectorAll('.pip').forEach(p => p.classList.remove('filled'));
+        const valEl = document.getElementById('val-' + field);
+        valEl.textContent = '—';
+        valEl.classList.add('empty');
+      });
+      state.bodyweight = '';
+      state.notes = '';
+      document.getElementById('bw-input').value = '';
+      document.getElementById('notes-textarea').value = '';
+
+      // Reset measurements
+      MEASURE_FIELDS.forEach(f => {
+        state.measurements[f] = '';
+        const input = document.getElementById('m-' + f);
+        if (input) input.value = '';
+      });
+      updateMeasureSub();
+    }
+
+    // ── SUCCESS STATE ───────────────────────────────────────────
+    function showSuccess() {
+      const btn = document.getElementById('submit-btn');
+      const origText = 'Log Today\'s Check-in';
+      btn.textContent = '✓ Check-in logged!';
+      showToast('✓ Check-in logged!');
+      resetForm();
+      setTimeout(() => { btn.textContent = origText; }, 3000);
+    }
+
+    // ── TOAST ──────────────────────────────────────────────────
+    let toastTimer = null;
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-msg').textContent = msg;
+      toast.classList.add('visible');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('visible'), 3000);
+    }
+
+    // ── INIT ───────────────────────────────────────────────────
+    loadDraft();
+
+    // Flush any check-ins that were queued while offline
+    if (hasSheets && navigator.onLine) flushOfflineQueue();
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    }
+
+  })();
+  </script>
+</body>
+</html>
