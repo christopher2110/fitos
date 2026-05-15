@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitOS Demo &mdash; Marcus Reeves</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --cream: #F4EFE6; --cream-light: #FDFAF5; --cream-mid: #EDE6D8; --olive: #5C6B2A; --olive-dark: #3D4A1A; --olive-pale: #E8EDD6; --text: #2C2A24; --text-muted: #7A7570; --border: #DDD8CA; --sidebar-w: 220px; --topbar-h: 60px; }
+    html, body { height: 100%; background: var(--cream); color: var(--text); font-family: 'Inter', sans-serif; }
+    .layout { display: flex; min-height: 100vh; }
+    .sidebar { width: var(--sidebar-w); background: var(--cream-light); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 50; }
+    .sidebar-brand { padding: 22px 20px 20px; border-bottom: 1px solid var(--border); }
+    .brand-wordmark { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; color: var(--olive); letter-spacing: -0.02em; }
+    .brand-tagline { font-size: 10px; font-weight: 500; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 6px; }
+    .demo-chip { margin: 8px 10px; padding: 6px 10px; background: #FEF3CD; border: 1px solid #F0D060; border-radius: 8px; font-size: 11px; font-weight: 600; color: #8A6220; text-align: center; }
+    .sidebar-nav { flex: 1; padding: 12px 10px; display: flex; flex-direction: column; gap: 2px; }
+    .nav-section-label { font-size: 10px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; padding: 10px 10px 4px; }
+    .nav-link { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 10px; text-decoration: none; font-size: 13.5px; font-weight: 500; color: var(--text-muted); transition: background 0.12s; }
+    .nav-link:hover { background: var(--cream-mid); color: var(--text); }
+    .nav-link.active { background: var(--olive-pale); color: var(--olive-dark); font-weight: 600; }
+    .sidebar-footer { padding: 14px; border-top: 1px solid var(--border); }
+    .coach-chip { display: flex; align-items: center; gap: 9px; }
+    .coach-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--olive); color: var(--cream-light); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; }
+    .main { margin-left: var(--sidebar-w); flex: 1; }
+    .topbar { height: var(--topbar-h); background: var(--cream-light); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 28px; position: sticky; top: 0; z-index: 40; gap: 12px; }
+    .topbar-back { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 12px; font-weight: 600; color: var(--text-muted); text-decoration: none; }
+    .topbar-back:hover { background: var(--cream-mid); }
+    .topbar-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; }
+    .page-content { padding: 28px; max-width: 900px; }
+    .profile-header { display: flex; align-items: center; gap: 20px; margin-bottom: 28px; padding: 24px; background: var(--cream-light); border: 1px solid var(--border); border-radius: 16px; }
+    .profile-avatar { width: 56px; height: 56px; border-radius: 50%; background: #8A5A2A; color: white; font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .section-card { background: var(--cream-light); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; margin-bottom: 20px; }
+    .section-card-header { padding: 16px 18px 12px; border-bottom: 1px solid var(--border); }
+    .section-card-header h3 { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 600; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead th { padding: 8px 14px; text-align: left; font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; background: var(--cream); border-bottom: 1px solid var(--border); }
+    tbody tr { border-bottom: 1px solid var(--border); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody td { padding: 10px 14px; }
+    .flag-card { background: #FEF3CD; border: 1px solid #F0D060; border-radius: 14px; padding: 18px 20px; margin-bottom: 20px; }
+    .flag-card-title { font-size: 15px; font-weight: 700; color: #8A6220; margin-bottom: 8px; }
+    .flag-card-text { font-size: 13.5px; line-height: 1.6; color: #6A4A10; }
+    .demo-cta-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--olive-dark); color: white; padding: 12px 28px; display: flex; align-items: center; justify-content: center; gap: 16px; z-index: 200; font-size: 14px; font-weight: 500; }
+    .demo-cta-bar a { display: inline-flex; align-items: center; gap: 6px; background: white; color: var(--olive-dark); font-size: 13px; font-weight: 700; padding: 8px 20px; border-radius: 20px; text-decoration: none; }
+    body { padding-bottom: 60px; }
+    @media (max-width: 600px) { .sidebar { display: none; } .main { margin-left: 0; } }
+  </style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><div class="brand-wordmark">FitOS</div><div class="brand-tagline">Coaching OS</div></div>
+    <div class="demo-chip">&#9889; Demo Mode</div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Coach</div>
+      <a href="/demo/dashboard" class="nav-link">Dashboard</a>
+      <a href="/demo/dashboard/clients" class="nav-link active">Clients</a>
+      <div class="nav-section-label">AI Tools</div>
+      <a href="/demo/dashboard/agents" class="nav-link">AI Agents</a>
+      <a href="/demo/dashboard/agents/builder" class="nav-link">Program Builder &#10024;</a>
+    </nav>
+    <div class="sidebar-footer"><div class="coach-chip"><div class="coach-avatar">CA</div><div><div style="font-size:13px;font-weight:600">Coach Alex</div><div style="font-size:11px;color:var(--text-muted)">Demo Account</div></div></div></div>
+  </aside>
+  <main class="main">
+    <div class="topbar">
+      <a href="/demo/dashboard/clients" class="topbar-back">&#8592; Clients</a>
+      <div class="topbar-title">Marcus Reeves</div>
+    </div>
+    <div class="page-content">
+      <div class="profile-header">
+        <div class="profile-avatar">MR</div>
+        <div>
+          <h2 style="font-family:'Fraunces',serif;font-size:22px;font-weight:600;margin-bottom:8px">Marcus Reeves</h2>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--text-muted)">
+            <span style="display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;background:#FEF3CD;color:#8A6220">&#9888; Fatigue Flag</span>
+            <span><strong style="color:var(--text)">Program:</strong> Peaking W2/3</span>
+            <span><strong style="color:var(--text)">BW:</strong> 92.4 kg</span>
+            <span><strong style="color:var(--text)">12 weeks in</strong></span>
+          </div>
+        </div>
+      </div>
+      <div class="flag-card">
+        <div class="flag-card-title">&#9888; Fatigue Flag &mdash; AI Agent Recommendation</div>
+        <div class="flag-card-text">Sleep dropped to 6.5h, stress at 7/10, knee ache reported. <strong>Recommended: reduce top-set load 5&ndash;8% for 3&ndash;4 days.</strong> Pre-meet emotional stress is masking real readiness. Heart rate at working sets is the better signal. <a href="/demo/dashboard/agents" style="color:#8A6220;font-weight:600">View full AI analysis &rarr;</a></div>
+      </div>
+      <div class="section-card">
+        <div class="section-card-header"><h3>Recent Workouts</h3></div>
+        <div style="padding:0">
+          <table>
+            <thead><tr><th>Date</th><th>Session</th><th>Top Exercise</th><th>Load</th><th>RPE</th></tr></thead>
+            <tbody>
+              <tr><td>May 9</td><td>Squat + Accessory</td><td>Competition Squat 3&times;3</td><td>185 kg</td><td>9</td></tr>
+              <tr><td>May 8</td><td>Bench Press Day</td><td>Competition Bench 3&times;3</td><td>130 kg</td><td>8</td></tr>
+              <tr><td>May 6</td><td>Deadlift Day</td><td>Competition Deadlift 2&times;2</td><td>220 kg</td><td>8&ndash;9</td></tr>
+              <tr><td>May 5</td><td>Squat Volume</td><td>Pause Squat 4&times;2</td><td>155 kg</td><td>7</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="section-card">
+        <div class="section-card-header"><h3>Check-In History</h3></div>
+        <table>
+          <thead><tr><th>Week</th><th>Date</th><th>BW</th><th>Sleep</th><th>Energy</th><th>Stress</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Week 12</strong></td><td>May 10</td><td>92.4 kg</td><td>6.5h</td><td>6/10</td><td>7/10</td><td style="font-size:12px">Fatigued. Knees a bit achy. Pre-meet nerves probably.</td></tr>
+            <tr><td><strong>Week 11</strong></td><td>May 3</td><td>92.1 kg</td><td>7.5h</td><td>8/10</td><td>4/10</td><td style="font-size:12px">Big week. Hit 192.5 squat double. Feeling strong.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="text-align:center;padding:20px 0">
+        <a href="/demo/dashboard/agents" style="display:inline-flex;align-items:center;gap:8px;background:var(--olive);color:white;font-size:14px;font-weight:600;padding:12px 24px;border-radius:12px;text-decoration:none">&#129302; View Full AI Fatigue Analysis &rarr;</a>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="demo-cta-bar">
+  <span>Like what you see?</span>
+  <a href="/trial/signup">Start your 14-day free trial &#8594;</a>
+</div>
+</body>
+</html>
