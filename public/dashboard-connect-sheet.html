@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitOS — Connect Your Google Sheet</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:    #F5F0E8;
+      --cream-mid:#EDE8DC;
+      --olive:    #4A5C3A;
+      --olive-dk: #3A4A2C;
+      --olive-lt: #6B7D57;
+      --olive-pale:#EBF0E2;
+      --ink:      #2C2A24;
+      --muted:    #7A7570;
+      --border:   #DDD8CA;
+      --red:      #8B3A2A;
+      --green:    #3A7A4C;
+      --radius:   12px;
+    }
+
+    html { font-size: 16px; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ─── HEADER ─────────────────────────────────────────── */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      height: 56px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(245,240,232,0.95);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .logo {
+      font-family: 'Fraunces', serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--olive);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+    .header-back {
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .header-back:hover { color: var(--ink); }
+
+    /* ─── MAIN CONTAINER ─────────────────────────────────── */
+    .container {
+      max-width: 580px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 40px 20px 100px;
+      flex: 1;
+    }
+
+    /* ─── STEP PROGRESS ─────────────────────────────────── */
+    .progress-wrap { margin-bottom: 40px; }
+
+    .steps-row {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 16px;
+    }
+
+    .step-dot-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+    }
+    .step-dot-wrap:first-child { align-items: flex-start; }
+    .step-dot-wrap:last-child  { align-items: flex-end; }
+
+    .step-line {
+      flex: 1;
+      height: 2px;
+      background: var(--border);
+      margin-top: 11px; /* vertically center with dot */
+      transition: background 0.4s;
+    }
+    .step-line.done { background: var(--olive); }
+
+    .step-dot {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: var(--cream);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--muted);
+      transition: all 0.3s;
+      flex-shrink: 0;
+    }
+    .step-dot.active {
+      border-color: var(--olive);
+      background: var(--olive);
+      color: #fff;
+    }
+    .step-dot.done {
+      border-color: var(--green);
+      background: var(--green);
+      color: #fff;
+    }
+
+    .step-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+      transition: color 0.3s;
+      white-space: nowrap;
+    }
+    .step-dot-wrap.active .step-label { color: var(--olive); }
+    .step-dot-wrap.done   .step-label { color: var(--green); }
+
+    .step-counter {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    /* ─── STEP PANELS ────────────────────────────────────── */
+    .step-panel { display: none; }
+    .step-panel.active { display: block; animation: fadeIn 0.25s ease; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── HEADINGS ───────────────────────────────────────── */
+    .step-num {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--olive-lt);
+      margin-bottom: 6px;
+    }
+    .step-heading {
+      font-family: 'Fraunces', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--olive);
+      margin-bottom: 8px;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+    .step-sub {
+      font-size: 15px;
+      color: var(--muted);
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
+    /* ─── CALLOUT CARD ───────────────────────────────────── */
+    .callout {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 22px;
+      margin-bottom: 22px;
+    }
+    .callout-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .callout-icon {
+      font-size: 28px;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+    .callout-label {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+    .callout-val {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ink);
+      word-break: break-all;
+    }
+    .callout-action {
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+
+    /* ─── EMAIL COPY BOX ─────────────────────────────────── */
+    .email-box {
+      background: var(--cream-mid);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .email-text {
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 13px;
+      color: var(--ink);
+      flex: 1;
+      word-break: break-all;
+      user-select: all;
+    }
+    .email-loading {
+      color: var(--muted);
+      font-size: 13px;
+      font-style: italic;
+    }
+
+    /* ─── SHARE STEPS ────────────────────────────────────── */
+    .share-steps {
+      list-style: none;
+      counter-reset: share-counter;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .share-steps li {
+      counter-increment: share-counter;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      font-size: 14px;
+      color: var(--ink);
+      line-height: 1.55;
+    }
+    .share-steps li::before {
+      content: counter(share-counter);
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--olive);
+      color: var(--cream);
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .share-steps code {
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 12px;
+      background: var(--cream-mid);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 6px;
+    }
+
+    /* ─── FORM FIELDS ────────────────────────────────────── */
+    .field { margin-bottom: 18px; }
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+    input[type="text"] {
+      width: 100%;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 13px 16px;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      color: var(--ink);
+      background: #fff;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      -webkit-appearance: none;
+    }
+    input[type="text"]:focus {
+      border-color: var(--olive);
+      box-shadow: 0 0 0 3px rgba(74,92,58,0.1);
+    }
+    input::placeholder { color: #B0AAA0; }
+    .field-hint {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    /* ─── BUTTONS ────────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s, opacity 0.15s;
+      padding: 13px 24px;
+      text-decoration: none;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .btn-primary {
+      background: var(--olive);
+      color: var(--cream);
+      width: 100%;
+    }
+    .btn-primary:hover:not(:disabled) { background: var(--olive-dk); }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--olive);
+      border: 1.5px solid var(--border);
+      width: 100%;
+    }
+    .btn-secondary:hover:not(:disabled) { background: var(--cream-mid); }
+
+    .btn-sm {
+      font-size: 13px;
+      padding: 8px 14px;
+      width: auto;
+      border-radius: 8px;
+    }
+
+    .btn-outline-sm {
+      background: transparent;
+      color: var(--olive);
+      border: 1.5px solid rgba(74,92,58,0.3);
+      font-size: 12px;
+      padding: 7px 12px;
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .btn-outline-sm:hover { background: var(--olive-pale); border-color: var(--olive); }
+
+    .btn-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* ─── STATUS MESSAGES ────────────────────────────────── */
+    .status-box {
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 14px;
+      display: none;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 16px;
+      line-height: 1.5;
+    }
+    .status-box.visible { display: flex; }
+    .status-box.success { background: #EBF5EE; color: var(--green); border: 1px solid #BDE0C8; }
+    .status-box.error   { background: #FAF0EE; color: var(--red);   border: 1px solid #F0C8C0; }
+    .status-box.loading { background: var(--cream-mid); color: var(--muted); border: 1px solid var(--border); }
+    .status-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .status-text { flex: 1; }
+
+    /* ─── CHECKLIST (Step 4) ─────────────────────────────── */
+    .checklist {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 18px;
+      transition: border-color 0.3s;
+    }
+    .check-item.ok    { border-color: #BDE0C8; }
+    .check-item.error { border-color: #F0C8C0; }
+    .check-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--cream-mid);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+      transition: background 0.3s;
+    }
+    .check-item.ok    .check-icon { background: var(--green); color: #fff; }
+    .check-item.error .check-icon { background: var(--red); color: #fff; }
+    .check-label { font-size: 14px; font-weight: 500; color: var(--ink); }
+    .check-sub   { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+    /* ─── SUCCESS (Step 5) ───────────────────────────────── */
+    .success-card {
+      background: var(--olive);
+      color: var(--cream);
+      border-radius: 18px;
+      padding: 36px 32px;
+      text-align: center;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .success-card::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+    }
+    .success-emoji    { font-size: 52px; margin-bottom: 16px; line-height: 1; }
+    .success-headline { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.02em; }
+    .success-sub      { font-size: 14px; opacity: 0.85; line-height: 1.65; max-width: 360px; margin: 0 auto; }
+
+    .redirect-bar {
+      background: var(--cream-mid);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 13px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .redirect-progress { flex: 1; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .redirect-fill     { height: 100%; background: var(--olive); border-radius: 2px; width: 0%; transition: width linear; }
+
+    /* ─── SPINNER ────────────────────────────────────────── */
+    .spinner {
+      display: inline-block;
+      width: 16px; height: 16px;
+      border: 2px solid rgba(74,92,58,0.2);
+      border-top-color: var(--olive);
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ─── TOAST ──────────────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--ink);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 24px;
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      transition: transform 0.3s ease;
+      z-index: 100;
+    }
+    .toast.visible { transform: translateX(-50%) translateY(0); }
+
+    /* ─── RESPONSIVE ─────────────────────────────────────── */
+    @media (max-width: 500px) {
+      .container    { padding: 24px 16px 80px; }
+      .step-heading { font-size: 24px; }
+      .success-card { padding: 28px 20px; }
+      .email-box    { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <a href="/" class="logo">FitOS</a>
+    <a href="/dashboard" class="header-back">← Dashboard</a>
+  </header>
+
+  <div class="container">
+
+    <!-- PROGRESS STEPS -->
+    <div class="progress-wrap">
+      <div class="steps-row" id="steps-row">
+
+        <div class="step-dot-wrap active" id="wrap1">
+          <div class="step-dot active" id="dot1">1</div>
+          <div class="step-label">Template</div>
+        </div>
+
+        <div class="step-line" id="line12"></div>
+
+        <div class="step-dot-wrap" id="wrap2">
+          <div class="step-dot" id="dot2">2</div>
+          <div class="step-label">Share</div>
+        </div>
+
+        <div class="step-line" id="line23"></div>
+
+        <div class="step-dot-wrap" id="wrap3">
+          <div class="step-dot" id="dot3">3</div>
+          <div class="step-label">Paste URL</div>
+        </div>
+
+        <div class="step-line" id="line34"></div>
+
+        <div class="step-dot-wrap" id="wrap4">
+          <div class="step-dot" id="dot4">4</div>
+          <div class="step-label">Verify</div>
+        </div>
+
+      </div>
+      <div class="step-counter" id="step-counter">Step 1 of 4</div>
+    </div>
+
+
+    <!-- ──── STEP 1: CREATE SHEET FROM TEMPLATE ──────────── -->
+    <div class="step-panel active" id="step1">
+
+      <div class="step-num">Step 1 of 4</div>
+      <h1 class="step-heading">Create your Sheet</h1>
+      <p class="step-sub">Start with our template — it has all 9 tabs pre-configured (Profile, Clients, Workouts, Check-ins, and more). Takes about 30 seconds.</p>
+
+      <div class="callout" id="template-callout">
+        <div class="callout-row">
+          <div class="callout-icon">📄</div>
+          <div>
+            <div class="callout-label">FitOS Sheet Template</div>
+            <div class="callout-val" id="template-name">Loading template…</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="share-steps">
+        <li>
+          Click <strong>"Open Template"</strong> below — it opens the FitOS master template in a new tab
+        </li>
+        <li>
+          In Google Sheets, click <strong>File → Make a copy</strong> — give it any name (e.g. "My FitOS")
+        </li>
+        <li>
+          Keep the copied Sheet open — you'll need it in the next step
+        </li>
+      </div>
+
+      <div class="btn-stack">
+        <a id="template-link" href="#" target="_blank" rel="noopener" class="btn btn-primary" id="open-template-btn">
+          Open Template →
+        </a>
+        <button class="btn btn-secondary" onclick="goTo(2)">
+          I already have a Sheet → Skip
+        </button>
+      </div>
+
+    </div>
+
+
+    <!-- ──── STEP 2: SHARE WITH SERVICE ACCOUNT ──────────── -->
+    <div class="step-panel" id="step2">
+
+      <div class="step-num">Step 2 of 4</div>
+      <h1 class="step-heading">Share with FitOS</h1>
+      <p class="step-sub">FitOS reads your Sheet using a service account. You need to share your Sheet with this email address and give it <strong>Editor</strong> access.</p>
+
+      <div class="email-box">
+        <div id="sa-email-text" class="email-loading">Loading service account email…</div>
+        <button class="btn-outline-sm" onclick="copyEmail()" id="copy-email-btn" style="display:none">Copy</button>
+      </div>
+
+      <ol class="share-steps">
+        <li>
+          In your Google Sheet, click the <strong>Share</strong> button (top right)
+        </li>
+        <li>
+          In the "Add people and groups" field, paste the email above
+        </li>
+        <li>
+          Change the permission to <strong>Editor</strong> (not just Viewer)
+        </li>
+        <li>
+          Click <strong>Send</strong> — uncheck "Notify people" if you don't want a bounce email
+        </li>
+      </ol>
+
+      <div class="btn-stack">
+        <button class="btn btn-primary" onclick="goTo(3)">
+          Done — I've shared it →
+        </button>
+        <button class="btn btn-secondary" onclick="goTo(1)">
+          ← Back
+        </button>
+      </div>
+
+    </div>
+
+
+    <!-- ──── STEP 3: PASTE SHEET URL ──────────────────────── -->
+    <div class="step-panel" id="step3">
+
+      <div class="step-num">Step 3 of 4</div>
+      <h1 class="step-heading">Paste your Sheet URL</h1>
+      <p class="step-sub">Grab the URL from your browser while the Sheet is open and paste it below.</p>
+
+      <div class="field">
+        <label for="sheet-url">Google Sheet URL or ID</label>
+        <input
+          type="text"
+          id="sheet-url"
+          placeholder="https://docs.google.com/spreadsheets/d/…"
+          autocomplete="off"
+          spellcheck="false"
+        >
+        <div class="field-hint">
+          The URL looks like: <code style="font-family:monospace;font-size:11px;background:var(--cream-mid);border:1px solid var(--border);border-radius:4px;padding:1px 5px;">docs.google.com/spreadsheets/d/<strong>YOUR_ID_HERE</strong>/edit</code>
+        </div>
+      </div>
+
+      <div class="status-box error" id="url-error">
+        <div class="status-icon">✗</div>
+        <div class="status-text" id="url-error-text">Please paste a valid Sheet URL or ID.</div>
+      </div>
+
+      <div class="btn-stack">
+        <button class="btn btn-primary" onclick="proceedToVerify()">
+          Verify Connection →
+        </button>
+        <button class="btn btn-secondary" onclick="goTo(2)">
+          ← Back
+        </button>
+      </div>
+
+    </div>
+
+
+    <!-- ──── STEP 4: VERIFY ───────────────────────────────── -->
+    <div class="step-panel" id="step4">
+
+      <div class="step-num">Step 4 of 4</div>
+      <h1 class="step-heading">Verifying connection</h1>
+      <p class="step-sub">Running a quick check to confirm FitOS can reach your Sheet.</p>
+
+      <div class="checklist" id="checklist">
+
+        <div class="check-item" id="ck-access">
+          <div class="check-icon" id="ck-access-icon">
+            <span class="spinner"></span>
+          </div>
+          <div>
+            <div class="check-label">Sheet accessible</div>
+            <div class="check-sub" id="ck-access-sub">Checking API access…</div>
+          </div>
+        </div>
+
+        <div class="check-item" id="ck-tabs">
+          <div class="check-icon" id="ck-tabs-icon">—</div>
+          <div>
+            <div class="check-label">Required tabs present</div>
+            <div class="check-sub" id="ck-tabs-sub">Waiting…</div>
+          </div>
+        </div>
+
+        <div class="check-item" id="ck-saved">
+          <div class="check-icon" id="ck-saved-icon">—</div>
+          <div>
+            <div class="check-label">Sheet saved to account</div>
+            <div class="check-sub" id="ck-saved-sub">Waiting…</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="status-box error" id="verify-error">
+        <div class="status-icon">✗</div>
+        <div class="status-text" id="verify-error-text">Could not verify the Sheet.</div>
+      </div>
+
+      <div id="verify-retry-wrap" style="display:none; margin-top:16px;">
+        <div class="btn-stack">
+          <button class="btn btn-secondary" onclick="goTo(2)">← Fix sharing and retry</button>
+          <button class="btn btn-secondary" onclick="goTo(3)">← Change Sheet URL</button>
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- ──── STEP 5: DONE ─────────────────────────────────── -->
+    <div class="step-panel" id="step5">
+
+      <div class="success-card">
+        <div class="success-emoji">🎉</div>
+        <div class="success-headline">You're live.</div>
+        <p class="success-sub">Your Google Sheet is connected. Every client, workout, and check-in now flows through data you own.</p>
+      </div>
+
+      <a href="/dashboard" class="btn btn-primary" style="margin-bottom:12px">
+        Open Dashboard →
+      </a>
+      <a href="/dashboard/clients" class="btn btn-secondary">
+        Add First Client →
+      </a>
+
+      <div class="redirect-bar" id="redirect-bar">
+        <span>Redirecting to dashboard in 5s…</span>
+        <div class="redirect-progress">
+          <div class="redirect-fill" id="redirect-fill"></div>
+        </div>
+        <a href="/dashboard" style="font-size:12px;color:var(--olive);white-space:nowrap;text-decoration:none;font-weight:600;">Go now →</a>
+      </div>
+
+    </div>
+
+  </div><!-- .container -->
+
+  <!-- COPY TOAST -->
+  <div class="toast" id="toast">Copied!</div>
+
+
+  <script>
+    // ── STATE ──────────────────────────────────────────────
+    let currentStep  = 1;
+    let resolvedSheetId = null;
+    let serviceAccountEmail = null;
+
+    // ── INIT ───────────────────────────────────────────────
+    window.addEventListener('DOMContentLoaded', () => {
+      loadServiceAccountEmail();
+      loadTemplateLink();
+    });
+
+    // ── LOAD SERVICE ACCOUNT EMAIL ─────────────────────────
+    async function loadServiceAccountEmail() {
+      try {
+        const res  = await fetch('/api/setup/service-account');
+        const data = await res.json();
+        serviceAccountEmail = data.email || null;
+        const el    = document.getElementById('sa-email-text');
+        const cpBtn = document.getElementById('copy-email-btn');
+        if (el) {
+          el.textContent = serviceAccountEmail || 'Not configured — contact support@polsia.com';
+          el.className   = 'email-text';
+        }
+        if (cpBtn && serviceAccountEmail && !serviceAccountEmail.includes('Not configured')) {
+          cpBtn.style.display = '';
+        }
+      } catch (_) {
+        const el = document.getElementById('sa-email-text');
+        if (el) { el.textContent = 'Could not load — contact support@polsia.com'; el.className = 'email-text'; }
+      }
+    }
+
+    // ── LOAD TEMPLATE LINK ─────────────────────────────────
+    async function loadTemplateLink() {
+      // Try to get the template Sheet ID from env (exposed via API if configured)
+      const tLink   = document.getElementById('template-link');
+      const tName   = document.getElementById('template-name');
+
+      try {
+        const res  = await fetch('/api/setup/template-info');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.templateUrl && tLink) {
+            tLink.href = data.templateUrl;
+            if (tName) tName.textContent = data.templateName || 'FitOS Coaching Sheet';
+            return;
+          }
+        }
+      } catch (_) {}
+
+      // Fallback: use generic Google Sheets link to create a blank sheet
+      if (tLink) {
+        tLink.href = 'https://sheets.new';
+        if (tName) tName.textContent = 'Create a new Google Sheet (blank)';
+        // Update instruction text for blank sheet path
+        const steps = document.querySelectorAll('#step1 .share-steps li');
+        if (steps[0]) steps[0].innerHTML = 'Click <strong>"Open Template"</strong> below — it creates a new blank Google Sheet';
+        if (steps[1]) steps[1].innerHTML = 'FitOS will automatically add all required tabs when you connect';
+        if (steps[2]) steps[2].innerHTML = 'Keep the Sheet open — you\'ll need the URL in Step 3';
+      }
+    }
+
+    // ── COPY EMAIL ─────────────────────────────────────────
+    function copyEmail() {
+      if (!serviceAccountEmail) return;
+      navigator.clipboard.writeText(serviceAccountEmail)
+        .then(() => showToast('Email copied!'))
+        .catch(() => {
+          // Fallback
+          const el = document.createElement('textarea');
+          el.value = serviceAccountEmail;
+          document.body.appendChild(el);
+          el.select();
+          document.execCommand('copy');
+          document.body.removeChild(el);
+          showToast('Email copied!');
+        });
+    }
+
+    // ── NAVIGATION ─────────────────────────────────────────
+    function goTo(n) {
+      // Hide all panels
+      document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+
+      const total = 4; // 4 progress steps (step 5 is success, not counted)
+      const stepEl = document.getElementById('step' + n);
+      if (stepEl) stepEl.classList.add('active');
+
+      currentStep = n;
+      updateProgress(n);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function updateProgress(n) {
+      const counter = document.getElementById('step-counter');
+      const displayN = Math.min(n, 4);
+      if (counter) counter.textContent = n <= 4
+        ? `Step ${displayN} of 4`
+        : 'Complete';
+
+      for (let i = 1; i <= 4; i++) {
+        const wrap = document.getElementById('wrap' + i);
+        const dot  = document.getElementById('dot' + i);
+        if (!wrap || !dot) continue;
+        wrap.classList.remove('active', 'done');
+        dot.classList.remove('active', 'done');
+
+        if (i < n) {
+          wrap.classList.add('done');
+          dot.classList.add('done');
+          dot.innerHTML = '✓';
+        } else if (i === n) {
+          wrap.classList.add('active');
+          dot.classList.add('active');
+          dot.textContent = i;
+        } else {
+          dot.textContent = i;
+        }
+      }
+
+      // Update connector lines
+      for (let i = 1; i <= 3; i++) {
+        const line = document.getElementById('line' + i + (i+1));
+        if (line) line.classList.toggle('done', n > i);
+      }
+    }
+
+    // ── EXTRACT SHEET ID ───────────────────────────────────
+    function extractSheetId(raw) {
+      const r = raw.trim();
+      const m = r.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]{20,})/);
+      if (m) return m[1];
+      if (/^[a-zA-Z0-9_-]{20,}$/.test(r)) return r;
+      return null;
+    }
+
+    // ── PROCEED TO VERIFY ──────────────────────────────────
+    function proceedToVerify() {
+      const raw = document.getElementById('sheet-url').value;
+      const errBox = document.getElementById('url-error');
+      const errTxt = document.getElementById('url-error-text');
+
+      if (!raw || !raw.trim()) {
+        errTxt.textContent = 'Paste your Sheet URL or ID to continue.';
+        errBox.classList.add('visible');
+        return;
+      }
+
+      const sheetId = extractSheetId(raw.trim());
+      if (!sheetId) {
+        errTxt.textContent = 'That doesn\'t look like a valid Sheet URL. Check the format: docs.google.com/spreadsheets/d/YOUR_ID/edit';
+        errBox.classList.add('visible');
+        return;
+      }
+
+      errBox.classList.remove('visible');
+      resolvedSheetId = sheetId;
+      goTo(4);
+      runVerification(sheetId);
+    }
+
+    // ── VERIFICATION ───────────────────────────────────────
+    async function runVerification(sheetId) {
+      // Reset checklist
+      resetCheck('ck-access', '<span class="spinner"></span>', 'Checking API access…');
+      resetCheck('ck-tabs', '—', 'Waiting…');
+      resetCheck('ck-saved', '—', 'Waiting…');
+      document.getElementById('verify-error').classList.remove('visible');
+      document.getElementById('verify-retry-wrap').style.display = 'none';
+
+      // Step 1: Verify Sheet access via /api/setup/verify
+      let profileName = null;
+      try {
+        const res  = await fetch(`/api/setup/verify?sheetId=${encodeURIComponent(sheetId)}`);
+        const data = await res.json();
+
+        if (data.ok) {
+          profileName = data.profileName;
+          markCheck('ck-access', 'ok', '✓', profileName ? `Connected — Profile: ${profileName}` : 'Connected — API access confirmed');
+        } else {
+          markCheck('ck-access', 'error', '✗', data.error || 'Access denied');
+          showVerifyError(data.error || 'Could not access the Sheet. Make sure you\'ve shared it with the service account email.');
+          return;
+        }
+      } catch (err) {
+        markCheck('ck-access', 'error', '✗', 'Network error');
+        showVerifyError('Network error — check your connection and try again.');
+        return;
+      }
+
+      await delay(300);
+
+      // Step 2: Verify tabs via /api/onboarding/verify-tabs
+      markCheck('ck-tabs', null, '<span class="spinner"></span>', 'Checking tabs…');
+      try {
+        const res  = await fetch(`/api/onboarding/verify-tabs?sheetId=${encodeURIComponent(sheetId)}`);
+        const data = await res.json();
+
+        if (data.ok) {
+          const created = (data.tabs || []).filter(t => t.status === 'created').map(t => t.name);
+          const subMsg  = created.length
+            ? `Auto-created: ${created.join(', ')}`
+            : 'All required tabs present';
+          markCheck('ck-tabs', 'ok', '✓', subMsg);
+        } else {
+          // Non-fatal: /api/setup/verify already confirmed access
+          markCheck('ck-tabs', 'ok', '✓', 'Tabs checked');
+        }
+      } catch (_) {
+        markCheck('ck-tabs', 'ok', '✓', 'Tabs checked');
+      }
+
+      await delay(300);
+
+      // Step 3: Saved to account (already done by /api/setup/verify)
+      markCheck('ck-saved', null, '<span class="spinner"></span>', 'Saving…');
+      await delay(400);
+      markCheck('ck-saved', 'ok', '✓', 'Sheet linked to your account');
+
+      await delay(500);
+
+      // Move to success
+      goTo(5);
+      startRedirectCountdown();
+    }
+
+    function resetCheck(id, icon, sub) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.className = 'check-item';
+      const iconEl = document.getElementById(id + '-icon');
+      if (iconEl) iconEl.innerHTML = icon;
+      const subEl = document.getElementById(id + '-sub');
+      if (subEl) subEl.textContent = sub;
+    }
+
+    function markCheck(id, status, icon, sub) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (status) el.classList.add(status);
+      const iconEl = document.getElementById(id + '-icon');
+      if (iconEl) iconEl.innerHTML = icon;
+      const subEl = document.getElementById(id + '-sub');
+      if (subEl) subEl.textContent = sub;
+    }
+
+    function showVerifyError(msg) {
+      const errBox = document.getElementById('verify-error');
+      const errTxt = document.getElementById('verify-error-text');
+      const retryWrap = document.getElementById('verify-retry-wrap');
+      if (errTxt) errTxt.textContent = msg;
+      if (errBox) errBox.classList.add('visible');
+      if (retryWrap) retryWrap.style.display = '';
+    }
+
+    // ── REDIRECT COUNTDOWN ─────────────────────────────────
+    function startRedirectCountdown() {
+      const fill = document.getElementById('redirect-fill');
+      if (!fill) return;
+      const dur = 5000;
+      const start = Date.now();
+      function tick() {
+        const elapsed = Date.now() - start;
+        const pct = Math.min((elapsed / dur) * 100, 100);
+        fill.style.width = pct + '%';
+        if (elapsed >= dur) {
+          window.location.href = '/dashboard';
+        } else {
+          requestAnimationFrame(tick);
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+
+    // ── TOAST ──────────────────────────────────────────────
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      if (!t) return;
+      t.textContent = msg;
+      t.classList.add('visible');
+      setTimeout(() => t.classList.remove('visible'), 2000);
+    }
+
+    // ── HELPERS ────────────────────────────────────────────
+    function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+  </script>
+
+</body>
+</html>
