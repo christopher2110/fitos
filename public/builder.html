@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitOS — AI Program Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:        #F4EFE6;
+      --cream-light:  #FDFAF5;
+      --cream-mid:    #EDE6D8;
+      --olive:        #5C6B2A;
+      --olive-dark:   #3D4A1A;
+      --olive-muted:  #8A9650;
+      --olive-pale:   #E8EDD6;
+      --text:         #2C2A24;
+      --text-muted:   #7A7570;
+      --border:       #DDD8CA;
+      --sidebar-w:    220px;
+      --topbar-h:     60px;
+      --red:          #C84B4B;
+      --red-pale:     #FEF0F0;
+      --green:        #3A7040;
+      --green-pale:   #EAF2EA;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--cream);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .layout { display: flex; min-height: 100vh; }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--cream-light);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 50;
+    }
+
+    .sidebar-brand {
+      padding: 22px 20px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand-wordmark {
+      font-family: 'Fraunces', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--olive);
+      letter-spacing: -0.02em;
+    }
+
+    .brand-tagline {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-top: 6px;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 12px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      overflow-y: auto;
+    }
+
+    .nav-section-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 10px 10px 4px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: background 0.12s, color 0.12s;
+    }
+
+    .nav-link:hover { background: var(--cream-mid); color: var(--text); }
+    .nav-link.active { background: var(--olive-pale); color: var(--olive); }
+
+    .nav-icon {
+      width: 16px; height: 16px;
+      flex-shrink: 0;
+      stroke: currentColor;
+    }
+
+    .sidebar-footer {
+      padding: 14px 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .coach-chip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .coach-avatar {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: var(--olive);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .coach-name-small { font-size: 13px; font-weight: 600; color: var(--text); }
+    .coach-role { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+
+    /* ── MAIN ── */
+    .main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    .topbar {
+      height: var(--topbar-h);
+      background: var(--cream-light);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      flex-shrink: 0;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .topbar-title {
+      font-family: 'Fraunces', serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .topbar-badge {
+      font-size: 10px;
+      font-weight: 600;
+      background: var(--olive);
+      color: #fff;
+      padding: 3px 8px;
+      border-radius: 20px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .topbar-back {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 8px;
+      transition: background 0.12s;
+    }
+
+    .topbar-back:hover { background: var(--cream-mid); color: var(--text); }
+
+    /* ── TWO-PANE ── */
+    .panes {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      height: calc(100vh - var(--topbar-h));
+    }
+
+    /* Left pane: chat */
+    .chat-pane {
+      width: 420px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--border);
+      background: var(--cream-light);
+    }
+
+    .chat-header {
+      padding: 16px 20px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .chat-header-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .chat-header-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .chat-thread {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Empty state */
+    .chat-empty {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 32px 24px;
+      color: var(--text-muted);
+    }
+
+    .chat-empty-icon {
+      font-size: 40px;
+      margin-bottom: 14px;
+      opacity: 0.6;
+    }
+
+    .chat-empty-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .chat-empty-desc {
+      font-size: 13px;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .prompt-chips {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .prompt-chip {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: var(--text);
+      cursor: pointer;
+      text-align: left;
+      transition: border-color 0.12s, background 0.12s;
+      line-height: 1.4;
+    }
+
+    .prompt-chip:hover {
+      border-color: var(--olive-muted);
+      background: var(--olive-pale);
+    }
+
+    /* Chat messages */
+    .msg {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .msg-role {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 0 2px;
+    }
+
+    .msg-bubble {
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--text);
+    }
+
+    .msg.user .msg-role { color: var(--olive); align-self: flex-end; }
+    .msg.user .msg-bubble {
+      background: var(--olive);
+      color: #fff;
+      border-bottom-right-radius: 4px;
+      align-self: flex-end;
+      max-width: 92%;
+    }
+
+    .msg.assistant .msg-bubble {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-bottom-left-radius: 4px;
+      max-width: 100%;
+    }
+
+    .msg.assistant.has-program .msg-bubble {
+      border-color: var(--olive-muted);
+      background: var(--olive-pale);
+    }
+
+    .msg-program-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--olive);
+      background: rgba(92,107,42,0.12);
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-top: 8px;
+    }
+
+    .msg-error .msg-bubble {
+      background: var(--red-pale);
+      border: 1px solid var(--red);
+      color: var(--red);
+    }
+
+    .thinking-bubble {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      border-bottom-left-radius: 4px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner {
+      width: 14px; height: 14px;
+      border: 2px solid transparent;
+      border-top-color: currentColor;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+
+    /* Chat input */
+    .chat-input-area {
+      padding: 14px 16px;
+      border-top: 1px solid var(--border);
+      background: var(--cream-light);
+    }
+
+    .error-banner {
+      background: var(--red-pale);
+      border: 1px solid var(--red);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: var(--red);
+      margin-bottom: 10px;
+      display: none;
+      line-height: 1.45;
+    }
+
+    .error-banner.visible { display: block; }
+    .error-banner a { color: var(--red); font-weight: 600; }
+
+    .input-row {
+      display: flex;
+      gap: 8px;
+      align-items: flex-end;
+    }
+
+    .chat-textarea {
+      flex: 1;
+      min-height: 42px;
+      max-height: 120px;
+      padding: 10px 14px;
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      outline: none;
+      resize: none;
+      line-height: 1.5;
+      transition: border-color 0.12s;
+      overflow-y: auto;
+    }
+
+    .chat-textarea:focus { border-color: var(--olive-muted); }
+    .chat-textarea::placeholder { color: var(--text-muted); }
+
+    .btn-send {
+      width: 42px; height: 42px;
+      border-radius: 12px;
+      background: var(--olive);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.12s;
+    }
+
+    .btn-send:hover:not(:disabled) { background: var(--olive-dark); }
+    .btn-send:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .btn-clear {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      margin-top: 6px;
+      display: block;
+      transition: background 0.12s;
+    }
+
+    .btn-clear:hover { background: var(--cream-mid); color: var(--text); }
+
+    /* Right pane: preview */
+    .preview-pane {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--cream);
+    }
+
+    .preview-header {
+      padding: 14px 24px;
+      border-bottom: 1px solid var(--border);
+      background: var(--cream-light);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-shrink: 0;
+    }
+
+    .preview-title-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .preview-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .program-name-badge {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--olive);
+      background: var(--olive-pale);
+      border: 1px solid rgba(92,107,42,0.2);
+      padding: 3px 10px;
+      border-radius: 20px;
+      display: none;
+    }
+
+    .program-name-badge.visible { display: inline-block; }
+
+    .assign-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .form-select {
+      height: 36px;
+      padding: 0 12px;
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 13px;
+      color: var(--text);
+      outline: none;
+      cursor: pointer;
+      min-width: 160px;
+    }
+
+    .form-select:focus { border-color: var(--olive-muted); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      height: 36px;
+      padding: 0 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: background 0.12s, opacity 0.12s;
+      white-space: nowrap;
+    }
+
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-primary { background: var(--olive); color: #fff; }
+    .btn-primary:hover:not(:disabled) { background: var(--olive-dark); }
+    .btn-ghost { background: var(--cream-mid); color: var(--text); border: 1px solid var(--border); }
+    .btn-ghost:hover:not(:disabled) { background: var(--border); }
+
+    /* Preview content */
+    .preview-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 24px;
+    }
+
+    .preview-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      text-align: center;
+      color: var(--text-muted);
+      padding: 40px;
+    }
+
+    .preview-empty-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.4;
+    }
+
+    .preview-empty-text {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* Week sections */
+    .week-section {
+      margin-bottom: 28px;
+    }
+
+    .week-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .week-label {
+      font-family: 'Fraunces', serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .phase-badge {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: var(--cream-mid);
+      padding: 3px 8px;
+      border-radius: 20px;
+    }
+
+    /* Day cards */
+    .day-card {
+      background: var(--cream-light);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .day-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      background: var(--cream);
+    }
+
+    .day-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .day-focus {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* Exercise table */
+    .exercise-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    .exercise-table th {
+      padding: 8px 12px;
+      text-align: left;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: rgba(0,0,0,0.02);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .exercise-table td {
+      padding: 9px 12px;
+      border-bottom: 1px solid rgba(221,216,202,0.5);
+      color: var(--text);
+      vertical-align: middle;
+    }
+
+    .exercise-table tr:last-child td { border-bottom: none; }
+    .exercise-table tr:hover td { background: rgba(0,0,0,0.015); }
+
+    /* Editable cells */
+    .cell-edit {
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 5px;
+      font-size: 12px;
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      padding: 2px 6px;
+      min-width: 40px;
+      max-width: 80px;
+      outline: none;
+      transition: border-color 0.12s, background 0.12s;
+    }
+
+    .cell-edit:focus {
+      border-color: var(--olive-muted);
+      background: var(--cream);
+    }
+
+    .cell-edit.wide { max-width: 140px; }
+
+    td.name-cell { font-weight: 600; min-width: 130px; }
+
+    /* Assign success banner */
+    .assign-success {
+      background: var(--green-pale);
+      border: 1px solid var(--green);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: var(--green);
+      margin-bottom: 16px;
+      display: none;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .assign-success.visible { display: flex; }
+    .assign-success a { color: var(--green); font-weight: 600; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg, .week-section { animation: fadeIn 0.2s ease-out; }
+
+    /* Responsive: stack panes on narrow screens */
+    @media (max-width: 900px) {
+      .panes { flex-direction: column; height: auto; }
+      .chat-pane { width: 100%; border-right: none; border-bottom: 1px solid var(--border); max-height: 55vh; }
+      .preview-pane { min-height: 300px; }
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-wordmark">FitOS</div>
+      <div class="brand-tagline">Coaching Platform</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Workspace</div>
+
+      <a class="nav-link" href="/dashboard">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        Dashboard
+      </a>
+
+      <a class="nav-link" href="/dashboard/messages">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+        </svg>
+        Messages
+      </a>
+
+      <a class="nav-link" href="/dashboard/clients">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+        </svg>
+        Clients
+      </a>
+
+      <div class="nav-section-label" style="margin-top:6px">AI Tools</div>
+
+      <a class="nav-link active" href="/dashboard/agents/builder">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+        Program Builder
+      </a>
+
+      <a class="nav-link" href="/settings/agents">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+        </svg>
+        Agent Settings
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="coach-chip">
+        <div class="coach-avatar" id="coach-avatar-init">C</div>
+        <div>
+          <div class="coach-name-small" id="coach-name-display">Coach</div>
+          <div class="coach-role">FitOS</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <div class="main">
+
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="topbar-title">Program Builder</div>
+        <span class="topbar-badge">AI</span>
+      </div>
+      <a href="/dashboard" class="topbar-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5M12 5l-7 7 7 7"/>
+        </svg>
+        Dashboard
+      </a>
+    </header>
+
+    <div class="panes">
+
+      <!-- ── CHAT PANE ── -->
+      <div class="chat-pane">
+
+        <div class="chat-header">
+          <div class="chat-header-title">Chat with Claude</div>
+          <div class="chat-header-sub">Describe the program you want to build. Claude will draft it in the preview pane.</div>
+        </div>
+
+        <div class="chat-thread" id="chat-thread">
+          <!-- Empty state shown until first message -->
+          <div class="chat-empty" id="chat-empty">
+            <div class="chat-empty-icon">🏋️</div>
+            <div class="chat-empty-title">Start with a prompt</div>
+            <div class="chat-empty-desc">Tell Claude what you want to build — goals, duration, days per week, level.</div>
+            <div class="prompt-chips">
+              <button class="prompt-chip" onclick="usePrompt(this)">Build a 4-week hypertrophy block for an intermediate lifter, 4 days/wk, upper/lower split</button>
+              <button class="prompt-chip" onclick="usePrompt(this)">6-week strength program for a beginner, 3 days/wk, full-body</button>
+              <button class="prompt-chip" onclick="usePrompt(this)">8-week fat-loss program, 5 days/wk, mixed cardio + lifting for an intermediate female</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="chat-input-area">
+          <div class="error-banner" id="error-banner"></div>
+          <div class="input-row">
+            <textarea
+              class="chat-textarea"
+              id="chat-input"
+              placeholder="Describe the program…"
+              rows="2"
+            ></textarea>
+            <button class="btn-send" id="btn-send" title="Send">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13"/>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+              </svg>
+            </button>
+          </div>
+          <button class="btn-clear" id="btn-clear" onclick="clearChat()" style="display:none">Clear conversation</button>
+        </div>
+      </div>
+
+      <!-- ── PREVIEW PANE ── -->
+      <div class="preview-pane">
+
+        <div class="preview-header">
+          <div class="preview-title-row">
+            <div class="preview-title">Live Preview</div>
+            <span class="program-name-badge" id="program-name-badge"></span>
+          </div>
+          <div class="assign-controls">
+            <select class="form-select" id="client-select" disabled>
+              <option value="">Loading clients…</option>
+            </select>
+            <button class="btn btn-primary" id="btn-assign" disabled onclick="assignProgram()">
+              Assign Program
+            </button>
+          </div>
+        </div>
+
+        <div class="preview-content" id="preview-content">
+
+          <div class="assign-success" id="assign-success">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            <span id="assign-success-msg"></span>
+          </div>
+
+          <div class="preview-empty" id="preview-empty">
+            <div class="preview-empty-icon">📋</div>
+            <div class="preview-empty-text">The program Claude builds will appear here as an editable table.<br><br>Tweak sets, reps, and load inline, then assign to a client.</div>
+          </div>
+          <!-- Program weeks rendered here by JS -->
+          <div id="preview-weeks"></div>
+
+        </div>
+      </div>
+
+    </div><!-- /panes -->
+  </div><!-- /main -->
+</div><!-- /layout -->
+
+<script>
+  // ── State ──────────────────────────────────────────────────────────────────
+  let chatHistory = [];        // [{ role: 'user'|'assistant', content: string }]
+  let currentProgram = null;   // parsed program object from last Claude response
+  let isThinking = false;
+
+  // ── Init ───────────────────────────────────────────────────────────────────
+  (async function init() {
+    await loadClients();
+    restoreSession();
+    document.getElementById('chat-input').addEventListener('keydown', onInputKeydown);
+    document.getElementById('btn-send').addEventListener('click', sendMessage);
+  })();
+
+  // ── Clients ────────────────────────────────────────────────────────────────
+  async function loadClients() {
+    try {
+      const res  = await fetch('/api/agents/builder/clients');
+      const data = await res.json();
+      const sel  = document.getElementById('client-select');
+
+      if (!data.ok || data.demo) {
+        sel.innerHTML = '<option value="">— no clients (Sheet not connected) —</option>';
+        return;
+      }
+
+      const clients = data.clients || [];
+      if (clients.length === 0) {
+        sel.innerHTML = '<option value="">— no clients added yet —</option>';
+        return;
+      }
+
+      sel.innerHTML = `<option value="">Select a client…</option>` +
+        clients.map(c => `<option value="${escAttr(c.email)}" data-name="${escAttr(c.name)}">${escHtml(c.name)}</option>`).join('');
+      sel.disabled = false;
+
+      sel.addEventListener('change', () => {
+        document.getElementById('btn-assign').disabled = !sel.value || !currentProgram;
+      });
+    } catch (_) {
+      document.getElementById('client-select').innerHTML = '<option value="">— failed to load —</option>';
+    }
+  }
+
+  // ── Sending messages ───────────────────────────────────────────────────────
+  function onInputKeydown(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  }
+
+  async function sendMessage() {
+    const input = document.getElementById('chat-input');
+    const msg   = input.value.trim();
+    if (!msg || isThinking) return;
+
+    hideError();
+    input.value = '';
+    autoResize(input);
+    hideChatEmpty();
+    showClear();
+
+    // Append user bubble
+    appendMessage('user', msg);
+    chatHistory.push({ role: 'user', content: msg });
+    saveSession();
+
+    // Show thinking indicator
+    const thinkingId = appendThinking();
+    setThinking(true);
+
+    try {
+      const res  = await fetch('/api/agents/builder/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: msg, history: chatHistory.slice(0, -1) }),
+      });
+      const data = await res.json();
+
+      removeThinking(thinkingId);
+
+      if (!data.ok) {
+        showError(data.error || 'Something went wrong.', data.redirect);
+        chatHistory.pop(); // Remove the failed user message
+        saveSession();
+      } else {
+        const summary = data.summary || '';
+        const program = data.program;
+
+        // Append assistant bubble
+        appendMessage('assistant', summary, !!program);
+
+        chatHistory.push({ role: 'assistant', content: data.raw || summary });
+        saveSession();
+
+        if (program) {
+          currentProgram = program;
+          renderPreview(program);
+          syncAssignBtn();
+        }
+      }
+    } catch (err) {
+      removeThinking(thinkingId);
+      showError('Network error: ' + err.message);
+      chatHistory.pop();
+      saveSession();
+    } finally {
+      setThinking(false);
+      input.focus();
+    }
+  }
+
+  function usePrompt(btn) {
+    const input = document.getElementById('chat-input');
+    input.value = btn.textContent.trim();
+    input.focus();
+    sendMessage();
+  }
+
+  // ── Chat rendering ─────────────────────────────────────────────────────────
+  function appendMessage(role, content, hasProgram = false) {
+    const thread = document.getElementById('chat-thread');
+    const div    = document.createElement('div');
+    div.className = `msg ${role}${hasProgram ? ' has-program' : ''}`;
+
+    const roleLabel = role === 'user' ? 'You' : 'Claude';
+    const programTag = hasProgram
+      ? `<div class="msg-program-tag">📋 Program drafted — see preview →</div>`
+      : '';
+
+    div.innerHTML = `
+      <div class="msg-role">${roleLabel}</div>
+      <div class="msg-bubble">${escHtml(content)}${programTag}</div>
+    `;
+
+    thread.appendChild(div);
+    thread.scrollTop = thread.scrollHeight;
+    return div;
+  }
+
+  let thinkingCounter = 0;
+  function appendThinking() {
+    const id     = `thinking-${++thinkingCounter}`;
+    const thread = document.getElementById('chat-thread');
+    const div    = document.createElement('div');
+    div.id = id;
+    div.className = 'msg assistant';
+    div.innerHTML = `
+      <div class="msg-role">Claude</div>
+      <div class="thinking-bubble">
+        <div class="spinner"></div>
+        Drafting program…
+      </div>
+    `;
+    thread.appendChild(div);
+    thread.scrollTop = thread.scrollHeight;
+    return id;
+  }
+
+  function removeThinking(id) {
+    const el = document.getElementById(id);
+    if (el) el.remove();
+  }
+
+  function hideChatEmpty() {
+    const el = document.getElementById('chat-empty');
+    if (el) el.style.display = 'none';
+  }
+
+  function showClear() {
+    document.getElementById('btn-clear').style.display = 'block';
+  }
+
+  function clearChat() {
+    chatHistory = [];
+    currentProgram = null;
+    saveSession();
+
+    const thread = document.getElementById('chat-thread');
+    thread.innerHTML = '';
+    // Re-add empty state
+    const empty = document.createElement('div');
+    empty.id = 'chat-empty';
+    empty.className = 'chat-empty';
+    empty.innerHTML = `
+      <div class="chat-empty-icon">🏋️</div>
+      <div class="chat-empty-title">Start with a prompt</div>
+      <div class="chat-empty-desc">Tell Claude what you want to build — goals, duration, days per week, level.</div>
+      <div class="prompt-chips">
+        <button class="prompt-chip" onclick="usePrompt(this)">Build a 4-week hypertrophy block for an intermediate lifter, 4 days/wk, upper/lower split</button>
+        <button class="prompt-chip" onclick="usePrompt(this)">6-week strength program for a beginner, 3 days/wk, full-body</button>
+        <button class="prompt-chip" onclick="usePrompt(this)">8-week fat-loss program, 5 days/wk, mixed cardio + lifting for an intermediate female</button>
+      </div>`;
+    thread.appendChild(empty);
+
+    document.getElementById('btn-clear').style.display = 'none';
+
+    // Clear preview
+    document.getElementById('preview-weeks').innerHTML = '';
+    document.getElementById('preview-empty').style.display = '';
+    document.getElementById('program-name-badge').className = 'program-name-badge';
+    document.getElementById('btn-assign').disabled = true;
+    document.getElementById('assign-success').className = 'assign-success';
+
+    hideError();
+  }
+
+  // ── Preview rendering ──────────────────────────────────────────────────────
+  function renderPreview(program) {
+    const weeksEl = document.getElementById('preview-weeks');
+    const empty   = document.getElementById('preview-empty');
+    const badge   = document.getElementById('program-name-badge');
+
+    empty.style.display = 'none';
+    badge.textContent = program.name || 'Draft Program';
+    badge.className = 'program-name-badge visible';
+
+    weeksEl.innerHTML = (program.weeks || []).map((week, wi) => {
+      const days = (week.days || []).map((day, di) => {
+        const exercises = (day.exercises || []).map((ex, ei) => {
+          const key = `${wi}_${di}_${ei}`;
+          return `<tr>
+            <td class="name-cell"><input class="cell-edit wide" data-key="${key}" data-field="name" value="${escAttr(ex.name)}" placeholder="Exercise"></td>
+            <td><input class="cell-edit" data-key="${key}" data-field="sets" value="${escAttr(ex.sets)}" placeholder="–"></td>
+            <td><input class="cell-edit" data-key="${key}" data-field="reps" value="${escAttr(ex.reps)}" placeholder="–"></td>
+            <td><input class="cell-edit" data-key="${key}" data-field="load" value="${escAttr(ex.load)}" placeholder="–"></td>
+            <td><input class="cell-edit" data-key="${key}" data-field="rest" value="${escAttr(ex.rest)}" placeholder="–"></td>
+            <td><input class="cell-edit wide" data-key="${key}" data-field="notes" value="${escAttr(ex.notes)}" placeholder="–"></td>
+          </tr>`;
+        }).join('');
+
+        return `<div class="day-card">
+          <div class="day-header">
+            <span class="day-name">${escHtml(day.day)}</span>
+            <span class="day-focus">${escHtml(day.focus)}</span>
+          </div>
+          <table class="exercise-table">
+            <thead>
+              <tr>
+                <th>Exercise</th>
+                <th>Sets</th>
+                <th>Reps</th>
+                <th>Load</th>
+                <th>Rest (s)</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>${exercises}</tbody>
+          </table>
+        </div>`;
+      }).join('');
+
+      return `<div class="week-section">
+        <div class="week-header">
+          <div class="week-label">Week ${week.week}</div>
+          ${week.phase ? `<span class="phase-badge">${escHtml(week.phase)}</span>` : ''}
+        </div>
+        ${days}
+      </div>`;
+    }).join('');
+
+    // Bind inline edit listeners — update currentProgram live
+    weeksEl.querySelectorAll('.cell-edit').forEach(input => {
+      input.addEventListener('input', () => {
+        const [wi, di, ei] = input.dataset.key.split('_').map(Number);
+        const field = input.dataset.field;
+        if (currentProgram && currentProgram.weeks[wi] &&
+            currentProgram.weeks[wi].days[di] &&
+            currentProgram.weeks[wi].days[di].exercises[ei]) {
+          currentProgram.weeks[wi].days[di].exercises[ei][field] = input.value;
+        }
+      });
+    });
+
+    document.getElementById('preview-content').scrollTop = 0;
+  }
+
+  // ── Assign to client ───────────────────────────────────────────────────────
+  async function assignProgram() {
+    const sel = document.getElementById('client-select');
+    const clientEmail = sel.value;
+    if (!clientEmail || !currentProgram) return;
+
+    const selectedOpt = sel.options[sel.selectedIndex];
+    const clientName  = selectedOpt.dataset.name || clientEmail;
+
+    const btn = document.getElementById('btn-assign');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner" style="border-top-color:#fff"></span> Assigning…';
+
+    hideError();
+
+    try {
+      const res  = await fetch('/api/agents/builder/assign', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clientEmail, clientName, program: currentProgram }),
+      });
+      const data = await res.json();
+
+      if (data.ok) {
+        const clientId = encodeURIComponent(clientEmail);
+        const successEl = document.getElementById('assign-success');
+        document.getElementById('assign-success-msg').innerHTML =
+          `✓ <strong>${escHtml(data.assigned)}</strong> exercises assigned to <strong>${escHtml(clientName)}</strong>. ` +
+          `<a href="/dashboard/clients/${clientId}/workouts">View program →</a>`;
+        successEl.className = 'assign-success visible';
+        document.getElementById('preview-content').scrollTop = 0;
+      } else {
+        showError(data.error || 'Assignment failed');
+      }
+    } catch (err) {
+      showError('Network error: ' + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Assign Program';
+      syncAssignBtn();
+    }
+  }
+
+  function syncAssignBtn() {
+    const sel = document.getElementById('client-select');
+    document.getElementById('btn-assign').disabled = !sel.value || !currentProgram;
+  }
+
+  // ── Error handling ─────────────────────────────────────────────────────────
+  function showError(msg, redirectHref) {
+    const banner = document.getElementById('error-banner');
+    const link   = redirectHref
+      ? ` <a href="${escAttr(redirectHref)}">Fix this →</a>`
+      : '';
+    banner.innerHTML = escHtml(msg) + link;
+    banner.className = 'error-banner visible';
+  }
+
+  function hideError() {
+    document.getElementById('error-banner').className = 'error-banner';
+  }
+
+  // ── Session persistence (localStorage) ────────────────────────────────────
+  const SESSION_KEY = 'fitos_builder_session';
+
+  function saveSession() {
+    try {
+      localStorage.setItem(SESSION_KEY, JSON.stringify({
+        history: chatHistory,
+        program: currentProgram,
+      }));
+    } catch (_) {}
+  }
+
+  function restoreSession() {
+    try {
+      const raw = localStorage.getItem(SESSION_KEY);
+      if (!raw) return;
+      const session = JSON.parse(raw);
+      if (!session.history || session.history.length === 0) return;
+
+      chatHistory = session.history;
+      hideChatEmpty();
+      showClear();
+
+      // Re-render messages
+      for (const msg of chatHistory) {
+        if (msg.role === 'user' || msg.role === 'assistant') {
+          // Detect if message contains a program JSON
+          let parsed = null;
+          try { parsed = JSON.parse(msg.content); } catch (_) {}
+          const hasProgram = msg.role === 'assistant' && parsed && parsed.program;
+          appendMessage(msg.role, parsed ? (parsed.summary || msg.content) : msg.content, !!hasProgram);
+        }
+      }
+
+      if (session.program) {
+        currentProgram = session.program;
+        renderPreview(session.program);
+        syncAssignBtn();
+      }
+    } catch (_) {
+      // Corrupted session — start fresh
+      localStorage.removeItem(SESSION_KEY);
+    }
+  }
+
+  // ── Helpers ────────────────────────────────────────────────────────────────
+  function setThinking(val) {
+    isThinking = val;
+    document.getElementById('btn-send').disabled = val;
+    document.getElementById('chat-input').disabled = val;
+  }
+
+  function autoResize(el) {
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+  }
+
+  document.getElementById('chat-input').addEventListener('input', function() {
+    autoResize(this);
+  });
+
+  function escHtml(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function escAttr(str) {
+    return String(str || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+</script>
+</body>
+</html>
