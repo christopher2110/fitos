@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Import Data — FitOS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cream: #F5F1E8; --cream-light: #FDFAF5; --cream-mid: #EDE6D8;
+      --olive: #5C6E3F; --olive-dark: #3D4A1A; --olive-pale: #E8EDD6;
+      --text: #2C2A24; --text-muted: #7A7570; --border: #DDD8CA;
+      --green: #2E7D32; --green-pale: #EDF7EE;
+      --red: #C0392B; --red-pale: #FDECEA;
+      --blue-pale: #EEF4FB;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+    /* ── Nav ── */
+    .nav { background: var(--olive-dark); padding: 0 24px; height: 56px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700; color: #F5F1E8; text-decoration: none; letter-spacing: -0.02em; }
+    .nav-links { display: flex; align-items: center; gap: 20px; }
+    .nav-link { font-size: 13px; font-weight: 500; color: rgba(245,241,232,0.65); text-decoration: none; transition: color 0.15s; }
+    .nav-link:hover { color: #F5F1E8; }
+
+    /* ── Layout ── */
+    .page { max-width: 860px; margin: 0 auto; padding: 40px 24px 80px; }
+    .page-header { margin-bottom: 32px; }
+    .page-title { font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 700; color: var(--olive-dark); letter-spacing: -0.02em; margin-bottom: 8px; }
+    .page-sub { font-size: 15px; color: var(--text-muted); max-width: 560px; }
+
+    /* ── Source picker ── */
+    .source-row { display: flex; gap: 12px; margin-bottom: 32px; flex-wrap: wrap; }
+    .source-btn { flex: 1; min-width: 140px; background: #fff; border: 2px solid var(--border); border-radius: 12px; padding: 16px 20px; cursor: pointer; text-align: left; transition: border-color 0.15s, box-shadow 0.15s; }
+    .source-btn:hover { border-color: var(--olive); }
+    .source-btn.active { border-color: var(--olive); background: var(--olive-pale); box-shadow: 0 0 0 3px rgba(92,110,63,0.12); }
+    .source-btn-label { font-size: 13px; font-weight: 600; color: var(--text); display: block; margin-bottom: 4px; }
+    .source-btn-sub { font-size: 12px; color: var(--text-muted); }
+
+    /* ── Steps ── */
+    .step { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 28px; margin-bottom: 20px; }
+    .step-title { font-size: 14px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; font-family: 'JetBrains Mono', monospace; margin-bottom: 16px; }
+
+    /* ── Drop zone ── */
+    .drop-zone { border: 2px dashed var(--border); border-radius: 12px; padding: 40px 24px; text-align: center; cursor: pointer; transition: border-color 0.2s, background 0.2s; position: relative; }
+    .drop-zone:hover, .drop-zone.drag-over { border-color: var(--olive); background: var(--olive-pale); }
+    .drop-zone.has-file { border-color: var(--green); background: var(--green-pale); border-style: solid; }
+    .drop-icon { font-size: 32px; margin-bottom: 12px; }
+    .drop-label { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
+    .drop-sub { font-size: 13px; color: var(--text-muted); }
+    .drop-file-name { font-size: 13px; font-weight: 600; color: var(--green); margin-top: 8px; }
+    .drop-input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+
+    /* ── File type override ── */
+    .file-type-row { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+    .file-type-btn { flex: 1; min-width: 100px; background: var(--cream); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--text-muted); text-align: center; transition: all 0.15s; }
+    .file-type-btn:hover { border-color: var(--olive); color: var(--text); }
+    .file-type-btn.active { border-color: var(--olive); background: var(--olive-pale); color: var(--olive-dark); font-weight: 600; }
+
+    /* ── Preview table ── */
+    .preview-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 10px; }
+    .preview-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .preview-table th { background: var(--cream-mid); padding: 8px 12px; text-align: left; font-weight: 600; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 11px; white-space: nowrap; }
+    .preview-table td { padding: 8px 12px; border-top: 1px solid var(--border); color: var(--text); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* ── Detection badge ── */
+    .detection-row { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+    .badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+    .badge-green { background: var(--green-pale); color: var(--green); }
+    .badge-muted { background: var(--cream-mid); color: var(--text-muted); }
+    .badge-blue { background: var(--blue-pale); color: #1565C0; }
+    .detect-label { font-size: 13px; color: var(--text-muted); }
+
+    /* ── Buttons ── */
+    .btn { display: inline-flex; align-items: center; gap: 7px; padding: 11px 22px; border-radius: 24px; font-size: 14px; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; border: none; transition: background 0.18s, transform 0.12s; }
+    .btn:disabled { opacity: 0.45; pointer-events: none; }
+    .btn-primary { background: var(--olive); color: #FDFAF5; }
+    .btn-primary:hover { background: var(--olive-dark); transform: translateY(-1px); }
+    .btn-secondary { background: #fff; color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--olive); }
+    .btn-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+    /* ── Progress ── */
+    .progress-bar-wrap { background: var(--cream-mid); border-radius: 99px; height: 6px; overflow: hidden; margin: 12px 0; }
+    .progress-bar { background: var(--olive); height: 100%; width: 0%; transition: width 0.4s ease; border-radius: 99px; }
+
+    /* ── Result card ── */
+    .result-card { border-radius: 12px; padding: 20px 24px; margin-top: 20px; display: none; }
+    .result-card.success { background: var(--green-pale); border: 1px solid #A5D6A7; }
+    .result-card.error   { background: var(--red-pale);   border: 1px solid #FFCDD2; }
+    .result-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+    .result-title.success { color: var(--green); }
+    .result-title.error   { color: var(--red); }
+    .result-stats { display: flex; gap: 24px; margin-top: 12px; flex-wrap: wrap; }
+    .result-stat { font-size: 13px; color: var(--text-muted); }
+    .result-stat strong { color: var(--text); font-weight: 600; display: block; font-size: 18px; }
+
+    /* ── CTA strip ── */
+    .cta-strip { background: var(--olive-pale); border: 1px solid #C5D190; border-radius: 12px; padding: 18px 22px; margin-top: 24px; display: none; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .cta-strip.show { display: flex; }
+    .cta-strip-text { font-size: 14px; color: var(--olive-dark); }
+    .cta-strip-text strong { display: block; font-weight: 600; margin-bottom: 2px; }
+    .cta-link { font-size: 13px; font-weight: 600; color: var(--olive); text-decoration: none; border-bottom: 1px solid rgba(92,110,63,0.4); padding-bottom: 1px; white-space: nowrap; }
+    .cta-link:hover { color: var(--olive-dark); }
+
+    /* ── Guide link ── */
+    .guide-link { font-size: 13px; color: var(--text-muted); margin-top: 8px; }
+    .guide-link a { color: var(--olive); text-decoration: none; border-bottom: 1px solid rgba(92,110,63,0.3); }
+    .guide-link a:hover { color: var(--olive-dark); }
+
+    /* ── Notice ── */
+    .notice { background: var(--cream-mid); border-radius: 8px; padding: 10px 14px; font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/dashboard" class="nav-logo">FitOS</a>
+  <div class="nav-links">
+    <a href="/dashboard/clients" class="nav-link">Clients</a>
+    <a href="/dashboard/exercises" class="nav-link">Exercises</a>
+    <a href="/dashboard" class="nav-link">Dashboard</a>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="page-header">
+    <h1 class="page-title">Import Your Data</h1>
+    <p class="page-sub">Bring over your clients and workout history from Trainerize, TrueCoach, or any CSV export in under 60 seconds.</p>
+    <p class="guide-link">New to this? Read the <a href="/docs/migration">step-by-step migration guide</a>.</p>
+  </div>
+
+  <!-- Step 1: Source -->
+  <div class="step">
+    <div class="step-title">Step 1 — Choose your source</div>
+    <div class="source-row">
+      <button class="source-btn active" data-source="trainerize" onclick="selectSource('trainerize', this)">
+        <span class="source-btn-label">Trainerize</span>
+        <span class="source-btn-sub">Clients &amp; Training Log</span>
+      </button>
+      <button class="source-btn" data-source="truecoach" onclick="selectSource('truecoach', this)">
+        <span class="source-btn-label">TrueCoach</span>
+        <span class="source-btn-sub">Clients &amp; Results</span>
+      </button>
+      <button class="source-btn" data-source="generic" onclick="selectSource('generic', this)">
+        <span class="source-btn-label">Generic CSV</span>
+        <span class="source-btn-sub">Any CSV export</span>
+      </button>
+    </div>
+    <p id="source-hint" class="notice">Export from Trainerize: Settings &rarr; Data &rarr; Export &rarr; download Clients CSV and Training Log CSV.</p>
+  </div>
+
+  <!-- Step 2: Upload -->
+  <div class="step">
+    <div class="step-title">Step 2 — Upload CSV file</div>
+    <div class="notice">Upload one file at a time. Start with Clients, then Workouts (Training Log / Results).</div>
+
+    <div class="drop-zone" id="drop-zone"
+         ondragover="handleDragOver(event)"
+         ondragleave="handleDragLeave(event)"
+         ondrop="handleDrop(event)"
+         onclick="document.getElementById('file-input').click()">
+      <div class="drop-icon">&#8613;</div>
+      <div class="drop-label">Drag &amp; drop CSV here, or click to browse</div>
+      <div class="drop-sub">Max 5 MB &bull; CSV files only</div>
+      <div class="drop-file-name" id="drop-filename"></div>
+      <input type="file" id="file-input" class="drop-input" accept=".csv,text/csv" onchange="handleFileSelect(event)">
+    </div>
+
+    <div style="margin-top:16px;">
+      <div style="font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:8px;">File type (auto-detected, or override):</div>
+      <div class="file-type-row">
+        <button class="file-type-btn" data-type="auto" onclick="selectFileType('auto', this)">Auto-detect</button>
+        <button class="file-type-btn" data-type="clients" onclick="selectFileType('clients', this)">Clients</button>
+        <button class="file-type-btn" data-type="workouts" onclick="selectFileType('workouts', this)">Workouts / Log</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 3: Preview -->
+  <div class="step" id="preview-step" style="display:none;">
+    <div class="step-title">Step 3 — Preview &amp; confirm</div>
+    <div class="detection-row" id="detection-row"></div>
+    <div class="preview-wrap" id="preview-table-wrap"></div>
+    <p id="row-count-label" style="font-size:13px;color:var(--text-muted);margin-top:10px;"></p>
+
+    <div style="margin-top:20px;" class="btn-row">
+      <button class="btn btn-primary" id="import-btn" onclick="runImport()" disabled>
+        Import into Sheet
+      </button>
+      <button class="btn btn-secondary" onclick="resetImport()">
+        Start over
+      </button>
+    </div>
+    <div class="progress-bar-wrap" id="progress-wrap" style="display:none;">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+  </div>
+
+  <!-- Result -->
+  <div class="result-card" id="result-card">
+    <div class="result-title" id="result-title"></div>
+    <div id="result-message" style="font-size:14px;color:var(--text-muted);margin-top:4px;"></div>
+    <div class="result-stats" id="result-stats"></div>
+  </div>
+
+  <!-- Post-import CTAs -->
+  <div class="cta-strip" id="cta-strip">
+    <div class="cta-strip-text">
+      <strong>Exercises imported? Auto-fill YouTube video demos.</strong>
+      The Exercise Video Finder scans your exercise library and links demo videos from trusted coaches.
+    </div>
+    <a href="/dashboard/exercises" class="cta-link">Go to Exercise Library &rarr;</a>
+  </div>
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────────
+var state = {
+  source:   'trainerize',
+  fileType: 'auto',
+  file:     null,
+  preview:  null,
+  detected: null,
+};
+
+var SOURCE_HINTS = {
+  trainerize: 'Export from Trainerize: Settings &rarr; Data &rarr; Export &rarr; download Clients CSV and Training Log CSV.',
+  truecoach:  'Export from TrueCoach: Settings &rarr; Data Export &rarr; Clients or Results. Select your date range and download.',
+  generic:    'Upload any CSV with column headers. The importer will try to match Name, Email, Exercise, Date, Sets, Reps, Weight.',
+};
+
+// ── Source selector ────────────────────────────────────────────────────────────
+function selectSource(source, btn) {
+  state.source = source;
+  document.querySelectorAll('.source-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('source-hint').innerHTML = SOURCE_HINTS[source] || '';
+  resetPreview();
+}
+
+// ── File type override ─────────────────────────────────────────────────────────
+function selectFileType(type, btn) {
+  state.fileType = type;
+  document.querySelectorAll('.file-type-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  // Re-run preview if we already have a file
+  if (state.file) preview();
+}
+
+// Mark 'auto' as default active on load
+document.querySelector('.file-type-btn[data-type="auto"]').classList.add('active');
+
+// ── Drag and drop ──────────────────────────────────────────────────────────────
+function handleDragOver(e) {
+  e.preventDefault();
+  document.getElementById('drop-zone').classList.add('drag-over');
+}
+function handleDragLeave(e) {
+  document.getElementById('drop-zone').classList.remove('drag-over');
+}
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('drop-zone').classList.remove('drag-over');
+  var files = e.dataTransfer.files;
+  if (files && files[0]) setFile(files[0]);
+}
+function handleFileSelect(e) {
+  if (e.target.files && e.target.files[0]) setFile(e.target.files[0]);
+}
+
+function setFile(file) {
+  if (!file.name.match(/\.csv$/i)) {
+    alert('Please upload a CSV file.');
+    return;
+  }
+  state.file = file;
+  var dz = document.getElementById('drop-zone');
+  dz.classList.add('has-file');
+  document.getElementById('drop-filename').textContent = file.name + ' (' + formatBytes(file.size) + ')';
+  preview();
+}
+
+function formatBytes(b) {
+  if (b < 1024) return b + ' B';
+  if (b < 1024 * 1024) return (b / 1024).toFixed(1) + ' KB';
+  return (b / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
+// ── Preview ────────────────────────────────────────────────────────────────────
+async function preview() {
+  if (!state.file) return;
+
+  var fd = new FormData();
+  fd.append('file', state.file);
+  fd.append('source', state.source);
+
+  var btn = document.getElementById('import-btn');
+  btn.disabled = true;
+  btn.textContent = 'Analyzing...';
+
+  try {
+    var r = await fetch('/api/import/preview', { method: 'POST', body: fd });
+    var data = await r.json();
+
+    if (!data.ok) {
+      showError('Preview failed: ' + data.error);
+      return;
+    }
+
+    state.preview = data;
+    state.detected = data.fileType;
+
+    renderPreview(data);
+    document.getElementById('preview-step').style.display = 'block';
+    document.getElementById('preview-step').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    btn.disabled = false;
+    btn.textContent = 'Import into Sheet';
+
+  } catch (err) {
+    showError('Could not connect to server: ' + err.message);
+  }
+}
+
+function renderPreview(data) {
+  // Detection badge
+  var detRow = document.getElementById('detection-row');
+  detRow.innerHTML = '';
+
+  var typeLabel = data.fileType === 'clients' ? 'Clients file' : data.fileType === 'workouts' ? 'Workouts / Log file' : 'Unknown type';
+  var conf = Math.round((data.confidence || 0) * 100);
+  detRow.innerHTML =
+    '<span class="badge badge-blue">' + (data.source.charAt(0).toUpperCase() + data.source.slice(1)) + '</span>' +
+    '<span class="badge ' + (data.fileType !== 'unknown' ? 'badge-green' : 'badge-muted') + '">' + typeLabel + '</span>' +
+    (conf > 0 ? '<span class="detect-label">Confidence: ' + conf + '%</span>' : '') +
+    '<span class="detect-label">' + (data.totalRows || 0) + ' data rows detected</span>';
+
+  // Row count
+  document.getElementById('row-count-label').textContent = 'Showing first ' + (data.preview ? Math.min(data.preview.length, 5) : 0) + ' rows of ' + (data.totalRows || 0) + ' total.';
+
+  // Preview table
+  var wrap = document.getElementById('preview-table-wrap');
+  if (!data.headers || !data.preview || data.preview.length === 0) {
+    wrap.innerHTML = '<p style="padding:16px;font-size:13px;color:var(--text-muted);">No preview data available.</p>';
+    return;
+  }
+
+  var html = '<table class="preview-table"><thead><tr>';
+  data.headers.forEach(function(h) { html += '<th>' + escHtml(h) + '</th>'; });
+  html += '</tr></thead><tbody>';
+  data.preview.forEach(function(row) {
+    html += '<tr>';
+    row.forEach(function(cell) { html += '<td title="' + escHtml(cell) + '">' + escHtml(cell) + '</td>'; });
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+}
+
+// ── Import ─────────────────────────────────────────────────────────────────────
+async function runImport() {
+  if (!state.file) return;
+
+  var btn = document.getElementById('import-btn');
+  btn.disabled = true;
+  btn.textContent = 'Importing...';
+
+  // Show progress bar
+  var progressWrap = document.getElementById('progress-wrap');
+  var progressBar  = document.getElementById('progress-bar');
+  progressWrap.style.display = 'block';
+  progressBar.style.width = '30%';
+
+  // Determine effective file type
+  var effectiveType = state.fileType === 'auto' ? (state.detected || '') : state.fileType;
+
+  var fd = new FormData();
+  fd.append('file', state.file);
+  fd.append('source', state.source);
+  if (effectiveType && effectiveType !== 'auto') fd.append('fileType', effectiveType);
+
+  try {
+    progressBar.style.width = '65%';
+    var r = await fetch('/api/import/run', { method: 'POST', body: fd });
+    progressBar.style.width = '100%';
+    var data = await r.json();
+
+    setTimeout(function() { progressWrap.style.display = 'none'; progressBar.style.width = '0%'; }, 600);
+
+    if (!data.ok) {
+      showError(data.error || 'Import failed.');
+      btn.disabled = false;
+      btn.textContent = 'Import into Sheet';
+      return;
+    }
+
+    showSuccess(data);
+    btn.textContent = 'Import into Sheet';
+
+  } catch (err) {
+    progressWrap.style.display = 'none';
+    showError('Network error: ' + err.message);
+    btn.disabled = false;
+    btn.textContent = 'Import into Sheet';
+  }
+}
+
+function showSuccess(data) {
+  var card = document.getElementById('result-card');
+  card.className = 'result-card success';
+  card.style.display = 'block';
+
+  document.getElementById('result-title').textContent = 'Import complete!';
+  document.getElementById('result-title').className = 'result-title success';
+  document.getElementById('result-message').textContent = data.message || '';
+
+  var stats = '';
+  if (data.imported !== undefined) stats += '<div class="result-stat"><strong>' + data.imported + '</strong>Imported</div>';
+  if (data.skipped  !== undefined) stats += '<div class="result-stat"><strong>' + data.skipped  + '</strong>Skipped</div>';
+  if (data.duplicates !== undefined && data.duplicates > 0) stats += '<div class="result-stat"><strong>' + data.duplicates + '</strong>Duplicates</div>';
+  document.getElementById('result-stats').innerHTML = stats;
+
+  card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // Show CTA strip for exercise video finder if clients were imported
+  if ((state.detected === 'clients' || state.fileType === 'clients') && data.imported > 0) {
+    document.getElementById('cta-strip').classList.add('show');
+  }
+}
+
+function showError(msg) {
+  var card = document.getElementById('result-card');
+  card.className = 'result-card error';
+  card.style.display = 'block';
+  document.getElementById('result-title').textContent = 'Import failed';
+  document.getElementById('result-title').className = 'result-title error';
+  document.getElementById('result-message').textContent = msg;
+  document.getElementById('result-stats').innerHTML = '';
+  card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function resetPreview() {
+  state.file = null;
+  state.preview = null;
+  state.detected = null;
+  document.getElementById('preview-step').style.display = 'none';
+  document.getElementById('result-card').style.display = 'none';
+  document.getElementById('cta-strip').classList.remove('show');
+  document.getElementById('drop-zone').classList.remove('has-file', 'drag-over');
+  document.getElementById('drop-filename').textContent = '';
+  document.getElementById('file-input').value = '';
+  document.getElementById('import-btn').disabled = true;
+  document.getElementById('import-btn').textContent = 'Import into Sheet';
+}
+
+function resetImport() {
+  resetPreview();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function escHtml(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Check sheet setup on load
+(function() {
+  var live = (typeof window.__COACH_LIVE__ !== 'undefined') ? window.__COACH_LIVE__ : {};
+  if (live.sheetsEnabled === false) {
+    var notice = document.createElement('div');
+    notice.style.cssText = 'background:#FDECEA;border:1px solid #FFCDD2;border-radius:10px;padding:14px 18px;font-size:14px;color:#C0392B;margin-bottom:24px;';
+    notice.innerHTML = '<strong>Sheet not connected.</strong> Connect your Google Sheet at <a href="/setup" style="color:#C0392B;font-weight:600;">Setup</a> before importing.';
+    document.querySelector('.page').insertBefore(notice, document.querySelector('.step'));
+  }
+})();
+</script>
+</body>
+</html>
