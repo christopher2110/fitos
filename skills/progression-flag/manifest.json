@@ -1,0 +1,15 @@
+{
+  "id": "progression-flag",
+  "name": "Progression Flag",
+  "description": "Scans the last 4 weeks of workout history and identifies exercises where the client has stalled or regressed. Flags them for the coach in the Activity feed with a suggested next step.",
+  "version": "1.0.0",
+  "model": "claude-haiku-4-5",
+  "inputs": [
+    { "tab": "Workouts", "range": "Workouts!A1:K500" },
+    { "tab": "Program",  "range": "Program!A2:K500" }
+  ],
+  "outputs": [
+    { "tab": "Activity", "action": "append" }
+  ],
+  "requires_tools": []
+}
