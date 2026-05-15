@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitOS — My Agents</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:        #F4EFE6;
+      --cream-light:  #FDFAF5;
+      --cream-mid:    #EDE6D8;
+      --olive:        #5C6B2A;
+      --olive-dark:   #3D4A1A;
+      --olive-muted:  #8A9650;
+      --olive-pale:   #E8EDD6;
+      --text:         #2C2A24;
+      --text-muted:   #7A7570;
+      --border:       #DDD8CA;
+      --sidebar-w:    220px;
+      --topbar-h:     60px;
+      --red:          #C84B4B;
+      --red-pale:     #FEF0F0;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--cream);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .layout { display: flex; min-height: 100vh; }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--cream-light);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 50;
+    }
+    .sidebar-brand { padding: 22px 20px 20px; border-bottom: 1px solid var(--border); }
+    .brand-wordmark { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; color: var(--olive); letter-spacing: -0.02em; }
+    .brand-tagline { font-size: 10px; font-weight: 500; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 6px; }
+    .sidebar-nav { flex: 1; padding: 12px 10px; display: flex; flex-direction: column; gap: 2px; }
+    .nav-section-label { font-size: 10px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; padding: 10px 10px 4px; }
+    .nav-link { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 10px; text-decoration: none; font-size: 13.5px; font-weight: 500; color: var(--text-muted); transition: background 0.12s, color 0.12s; cursor: pointer; }
+    .nav-link:hover { background: var(--cream-mid); color: var(--text); }
+    .nav-link.active { background: var(--olive-pale); color: var(--olive-dark); font-weight: 600; }
+    .nav-icon { width: 17px; height: 17px; flex-shrink: 0; opacity: 0.7; }
+    .nav-link.active .nav-icon { opacity: 1; }
+    .sidebar-footer { padding: 14px; border-top: 1px solid var(--border); }
+    .coach-chip { display: flex; align-items: center; gap: 9px; }
+    .coach-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--olive); color: var(--cream-light); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: 'Fraunces', serif; }
+    .coach-name-small { font-size: 13px; font-weight: 600; color: var(--text); }
+    .coach-role { font-size: 11px; color: var(--text-muted); }
+
+    /* ── MAIN ── */
+    .main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+    .topbar { height: var(--topbar-h); background: var(--cream-light); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 28px; position: sticky; top: 0; z-index: 40; }
+    .topbar-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; color: var(--text); letter-spacing: -0.01em; }
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
+    .page-content { padding: 28px; flex: 1; }
+
+    /* ── BUTTONS ── */
+    .btn { display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.12s; text-decoration: none; border: none; font-family: inherit; }
+    .btn-primary { background: var(--olive); color: var(--cream-light); }
+    .btn-primary:hover { background: var(--olive-dark); }
+    .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
+    .btn-ghost:hover { background: var(--cream-mid); color: var(--text); }
+    .btn-sm { padding: 6px 12px; font-size: 12px; }
+    .btn-danger { background: var(--red-pale); color: var(--red); border: 1px solid #f0d0d0; }
+    .btn-danger:hover { background: #fce0e0; }
+
+    /* ── PAGE HEADER ── */
+    .page-hd { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 28px; }
+    .page-hd-text h1 { font-family: 'Fraunces', serif; font-size: 26px; font-weight: 600; color: var(--text); margin-bottom: 4px; letter-spacing: -0.01em; }
+    .page-hd-text p { font-size: 13px; color: var(--text-muted); }
+
+    /* ── EMPTY STATE ── */
+    .empty-state { background: var(--cream-light); border: 1px solid var(--border); border-radius: 20px; padding: 60px 40px; text-align: center; max-width: 520px; margin: 40px auto; }
+    .empty-icon { font-size: 48px; margin-bottom: 16px; }
+    .empty-state h2 { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; margin-bottom: 10px; color: var(--text); }
+    .empty-state p { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 24px; }
+
+    /* ── AGENTS GRID ── */
+    .agents-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+
+    .agent-card {
+      background: var(--cream-light);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: border-color 0.12s;
+    }
+    .agent-card:hover { border-color: var(--olive-muted); }
+
+    .agent-card-header { display: flex; align-items: flex-start; gap: 12px; }
+    .agent-icon { font-size: 28px; width: 44px; height: 44px; border-radius: 12px; background: var(--cream); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .agent-meta { flex: 1; min-width: 0; }
+    .agent-name { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .agent-desc { font-size: 12px; color: var(--text-muted); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+    .agent-scopes { display: flex; flex-wrap: wrap; gap: 5px; }
+    .scope-tag { font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 8px; background: var(--cream-mid); color: var(--text-muted); }
+    .scope-tag.write { background: var(--olive-pale); color: var(--olive-dark); }
+
+    .agent-card-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 2px; border-top: 1px solid var(--border); }
+    .agent-id { font-size: 10px; color: var(--text-muted); font-family: monospace; }
+    .agent-actions { display: flex; gap: 6px; }
+
+    /* ── EXAMPLES SECTION ── */
+    .section-hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; margin-top: 36px; }
+    .section-title { font-family: 'Fraunces', serif; font-size: 17px; font-weight: 600; color: var(--text); letter-spacing: -0.01em; }
+    .section-sub { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+
+    .examples-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+
+    .example-card {
+      background: var(--cream-light);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+    .example-card:hover { border-color: var(--olive-muted); background: var(--olive-pale); }
+    .example-card-icon { font-size: 24px; margin-bottom: 10px; }
+    .example-card-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 5px; }
+    .example-card-desc { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
+    .example-card-cta { font-size: 11px; font-weight: 600; color: var(--olive); margin-top: 10px; }
+
+    /* ── RUN MODAL ── */
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 200; padding: 20px; }
+    .modal-backdrop.hidden { display: none; }
+    .modal { background: var(--cream-light); border-radius: 20px; padding: 28px; max-width: 480px; width: 100%; box-shadow: 0 24px 48px rgba(0,0,0,0.15); }
+    .modal-title { font-family: 'Fraunces', serif; font-size: 19px; font-weight: 600; margin-bottom: 6px; }
+    .modal-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+    .modal-label { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; display: block; }
+    .modal-textarea { width: 100%; height: 90px; border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; font-family: 'Inter', sans-serif; font-size: 13px; resize: none; background: var(--cream); color: var(--text); outline: none; }
+    .modal-textarea:focus { border-color: var(--olive-muted); }
+    .modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
+
+    /* ── RUN STATUS ── */
+    .run-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 300; }
+    .run-overlay.hidden { display: none; }
+    .run-box { background: var(--cream-light); border-radius: 20px; padding: 32px 28px; max-width: 520px; width: 100%; text-align: center; }
+    .run-spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--olive); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .run-title { font-family: 'Fraunces', serif; font-size: 19px; font-weight: 600; margin-bottom: 6px; }
+    .run-status-text { font-size: 13px; color: var(--text-muted); }
+    .run-output { margin-top: 16px; background: var(--cream); border: 1px solid var(--border); border-radius: 12px; padding: 14px; text-align: left; font-size: 13px; line-height: 1.6; max-height: 300px; overflow-y: auto; white-space: pre-wrap; }
+    .run-usage { font-size: 11px; color: var(--text-muted); margin-top: 12px; }
+
+    @media (max-width: 760px) {
+      :root { --sidebar-w: 0px; }
+      .sidebar { display: none; }
+    }
+
+    /* -- SCHEDULE BADGE -- */
+    .schedule-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 20px; margin-top: 4px; }
+    .schedule-badge.active   { background: var(--olive-pale); color: var(--olive-dark); }
+    .schedule-badge.paused   { background: #f5f5f0; color: var(--text-muted); }
+    .schedule-badge.errored  { background: var(--red-pale); color: var(--red); }
+    .sched-modal { max-width: 540px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-group label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .form-group select, .form-group input[type=time] { border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font-family: inherit; font-size: 13px; background: var(--cream); color: var(--text); outline: none; width: 100%; }
+    .form-group select:focus, .form-group input:focus { border-color: var(--olive-muted); }
+    .next-run-preview { font-size: 12px; color: var(--text-muted); margin-top: 4px; padding: 8px 12px; background: var(--cream); border-radius: 8px; border: 1px solid var(--border); }
+    .run-row { padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 12px; display: flex; gap: 10px; align-items: baseline; }
+    .run-row:last-child { border-bottom: none; }
+    .run-status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
+    .run-status-dot.completed { background: var(--olive); }
+    .run-status-dot.failed    { background: var(--red); }
+    .run-status-dot.running   { background: #f59e0b; }
+    .run-list { max-height: 340px; overflow-y: auto; border: 1px solid var(--border); border-radius: 10px; }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-wordmark">FitOS</div>
+      <div class="brand-tagline">Coaching Platform</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Workspace</div>
+      <a class="nav-link" href="/dashboard">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a class="nav-link" href="/dashboard/messages">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Messages
+      </a>
+      <a class="nav-link" href="/dashboard/clients">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Clients
+      </a>
+      <a class="nav-link active" href="/dashboard/agents">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/><path d="M12 12v9"/></svg>
+        My Agents
+      </a>
+      <div class="nav-section-label" style="margin-top:6px">AI Tools</div>
+      <a class="nav-link" href="/dashboard/agents/builder">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        Program Builder
+        <span style="font-size:9px;font-weight:700;background:var(--olive);color:#fff;padding:2px 6px;border-radius:10px;margin-left:auto">AI</span>
+      </a>
+      <a class="nav-link" href="/settings/agents">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        Claude Skills
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="coach-chip">
+        <div class="coach-avatar" id="coach-avatar">C</div>
+        <div>
+          <div class="coach-name-small" id="coach-name">Coach</div>
+          <div class="coach-role">FitOS</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-title">My Agents</div>
+      <div class="topbar-right">
+        <button class="btn btn-ghost btn-sm" onclick="pauseAllSchedules()" style="color:var(--red);border-color:#f0d0d0">Pause All Schedules</button>
+        <a class="btn btn-primary" href="/dashboard/agents/new">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Import Agent
+        </a>
+      </div>
+    </header>
+
+    <div class="page-content">
+      <div class="page-hd">
+        <div class="page-hd-text">
+          <h1>Your AI Agents</h1>
+          <p>Build agents in OpenAI's Agent Builder, then import them here to run on your real client data.</p>
+        </div>
+      </div>
+
+      <!-- Agent list (populated by JS) -->
+      <div id="agents-container">
+        <div style="text-align:center;padding:40px;color:var(--text-muted);font-size:13px">Loading agents…</div>
+      </div>
+
+      <!-- Examples section -->
+      <div class="section-hd">
+        <div>
+          <div class="section-title">Example Agents to Clone</div>
+          <div class="section-sub">Build these in OpenAI Agent Builder, then import them here</div>
+        </div>
+      </div>
+      <div class="examples-grid" id="examples-grid">
+        <!-- populated by JS -->
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Schedule modal -->
+<div class="modal-backdrop hidden" id="sched-modal">
+  <div class="modal sched-modal">
+    <div class="modal-title" id="sched-modal-title">Schedule Agent</div>
+    <div class="modal-sub" id="sched-modal-sub">Set up automatic recurring runs for this agent.</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Cadence</label>
+        <select id="sched-cadence" onchange="updateSchedFields()">
+          <option value="daily">Daily</option>
+          <option value="weekly">Weekly</option>
+          <option value="monthly">Monthly</option>
+        </select>
+      </div>
+      <div class="form-group" id="sched-dow-group" style="display:none">
+        <label>Day of Week</label>
+        <select id="sched-dow">
+          <option value="0">Sunday</option>
+          <option value="1">Monday</option>
+          <option value="2">Tuesday</option>
+          <option value="3">Wednesday</option>
+          <option value="4">Thursday</option>
+          <option value="5">Friday</option>
+          <option value="6">Saturday</option>
+        </select>
+      </div>
+      <div class="form-group" id="sched-dom-group" style="display:none">
+        <label>Day of Month</label>
+        <select id="sched-dom"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option></select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Run Time</label>
+        <input type="time" id="sched-time" value="07:00" onchange="updateNextRunPreview()">
+      </div>
+      <div class="form-group">
+        <label>Timezone</label>
+        <select id="sched-tz" onchange="updateNextRunPreview()">
+          <option value="America/New_York">Eastern (ET)</option>
+          <option value="America/Chicago">Central (CT)</option>
+          <option value="America/Denver">Mountain (MT)</option>
+          <option value="America/Los_Angeles">Pacific (PT)</option>
+          <option value="America/Anchorage">Alaska (AKT)</option>
+          <option value="Pacific/Honolulu">Hawaii (HT)</option>
+          <option value="Europe/London">London (GMT/BST)</option>
+          <option value="Europe/Paris">Central Europe (CET)</option>
+          <option value="Australia/Sydney">Sydney (AEDT)</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Scope</label>
+        <select id="sched-scope">
+          <option value="all">All clients</option>
+          <option value="single">Single client</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Output</label>
+        <select id="sched-output">
+          <option value="activity">Activity tab only</option>
+          <option value="activity_and_dm">Activity + DM client</option>
+        </select>
+      </div>
+    </div>
+    <div class="next-run-preview" id="sched-next-preview">Next run: calculating…</div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeSchedModal()">Cancel</button>
+      <button class="btn btn-danger btn-sm" id="sched-delete-btn" onclick="removeSchedule()" style="display:none">Remove Schedule</button>
+      <button class="btn btn-primary" id="sched-save-btn" onclick="saveSchedule()">Save Schedule</button>
+    </div>
+  </div>
+</div>
+
+<!-- Schedule history modal -->
+<div class="modal-backdrop hidden" id="sched-history-modal">
+  <div class="modal" style="max-width:580px">
+    <div class="modal-title" id="sched-history-title">Run History</div>
+    <div class="modal-sub">Recent scheduled runs for this agent.</div>
+    <div class="run-list" id="sched-history-list"><div style="padding:20px;text-align:center;color:var(--text-muted);font-size:13px">Loading…</div></div>
+    <div class="modal-actions" style="margin-top:16px">
+      <button class="btn btn-ghost" onclick="closeHistoryModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Run modal -->
+<div class="modal-backdrop hidden" id="run-modal">
+  <div class="modal">
+    <div class="modal-title" id="run-modal-title">Run Agent</div>
+    <div class="modal-sub">Optionally add context for this run.</div>
+    <label class="modal-label" for="run-context">Additional context (optional)</label>
+    <textarea class="modal-textarea" id="run-context" placeholder="e.g. Focus on Sarah's plateau this week — her squats have stalled for 3 sessions."></textarea>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeRunModal()">Cancel</button>
+      <button class="btn btn-primary" id="run-confirm-btn" onclick="confirmRun()">Run Now</button>
+    </div>
+  </div>
+</div>
+
+<!-- Run progress overlay -->
+<div class="run-overlay hidden" id="run-overlay">
+  <div class="run-box">
+    <div id="run-spinner" class="run-spinner"></div>
+    <div class="run-title" id="run-overlay-title">Running agent…</div>
+    <div class="run-status-text" id="run-status-text">Calling OpenAI and reading client data…</div>
+    <div class="run-output hidden" id="run-output"></div>
+    <div class="run-usage hidden" id="run-usage"></div>
+    <div class="modal-actions" id="run-overlay-actions" style="display:none;justify-content:center;margin-top:20px">
+      <button class="btn btn-ghost" onclick="closeRunOverlay()">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+
+  // -- Schedule state --
+  let scheduleMap = {};
+  let pendingSchedAgentId = null;
+  let pendingSchedId = null;
+
+  async function loadSchedules() {
+    try {
+      const resp = await fetch('/api/agent-schedules');
+      const data = await resp.json();
+      if (data.ok && Array.isArray(data.schedules)) {
+        scheduleMap = {};
+        for (const s of data.schedules) {
+          if (s.agent_id) scheduleMap[String(s.agent_id)] = s;
+        }
+      }
+    } catch (_) {}
+  }
+
+  function schedBadge(agentId) {
+    const s = scheduleMap[String(agentId)];
+    if (!s) return '';
+    const labels = { active: 'Scheduled', paused: 'Paused', errored: 'Error' };
+    const cLabel = { daily: 'Daily', weekly: 'Weekly', monthly: 'Monthly' }[s.cadence] || s.cadence;
+    return '<span class="schedule-badge ' + s.status + '">' + (labels[s.status] || s.status) + ' &middot; ' + cLabel + '</span>';
+  }
+
+  function openSchedModal(agentId, agentName) {
+    pendingSchedAgentId = agentId;
+    const existing = scheduleMap[String(agentId)] || null;
+    pendingSchedId = existing ? existing.id : null;
+    document.getElementById('sched-modal-title').textContent = existing ? 'Edit Schedule' : 'Schedule Agent';
+    document.getElementById('sched-modal-sub').textContent = existing
+      ? 'Update recurring runs for ' + agentName + '.'
+      : 'Set up automatic recurring runs for ' + agentName + '.';
+    document.getElementById('sched-cadence').value = existing ? existing.cadence : 'daily';
+    document.getElementById('sched-time').value    = existing ? (existing.run_time || '07:00').slice(0,5) : '07:00';
+    document.getElementById('sched-tz').value      = existing ? (existing.timezone || 'America/New_York') : 'America/New_York';
+    document.getElementById('sched-scope').value   = existing ? (existing.scope_type || 'all') : 'all';
+    document.getElementById('sched-output').value  = existing ? (existing.output_destination || 'activity') : 'activity';
+    if (existing && existing.day_of_week  != null) document.getElementById('sched-dow').value = existing.day_of_week;
+    if (existing && existing.day_of_month != null) document.getElementById('sched-dom').value = existing.day_of_month;
+    document.getElementById('sched-delete-btn').style.display = existing ? '' : 'none';
+    updateSchedFields();
+    document.getElementById('sched-modal').classList.remove('hidden');
+    updateNextRunPreview();
+  }
+
+  function closeSchedModal() {
+    pendingSchedAgentId = null; pendingSchedId = null;
+    document.getElementById('sched-modal').classList.add('hidden');
+  }
+
+  function updateSchedFields() {
+    const c = document.getElementById('sched-cadence').value;
+    document.getElementById('sched-dow-group').style.display = c === 'weekly'  ? '' : 'none';
+    document.getElementById('sched-dom-group').style.display = c === 'monthly' ? '' : 'none';
+    updateNextRunPreview();
+  }
+
+  function updateNextRunPreview() {
+    const s = {
+      cadence:      document.getElementById('sched-cadence').value,
+      run_time:     document.getElementById('sched-time').value || '07:00',
+      timezone:     document.getElementById('sched-tz').value,
+      day_of_week:  Number(document.getElementById('sched-dow').value),
+      day_of_month: Number(document.getElementById('sched-dom').value),
+    };
+    try {
+      const next = computeNextRunClient(s);
+      document.getElementById('sched-next-preview').textContent =
+        'Next run: ' + next.toLocaleString('en-US', { timeZone: s.timezone, dateStyle: 'full', timeStyle: 'short' }) + ' (' + s.timezone + ')';
+    } catch (_) {
+      document.getElementById('sched-next-preview').textContent = 'Next run: (set a time above)';
+    }
+  }
+
+  function computeNextRunClient(s) {
+    const parts = (s.run_time || '07:00').split(':');
+    const hh = Number(parts[0]), mm = Number(parts[1]);
+    const tz = s.timezone || 'America/New_York';
+    const now = new Date();
+    function tzParts(d) {
+      const f = new Intl.DateTimeFormat('en-US', { timeZone: tz, year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit', second:'2-digit', hour12: false });
+      const p = {};
+      f.formatToParts(d).forEach(function(x) { p[x.type] = Number(x.value); });
+      return p;
+    }
+    function buildLocal(yr, mo, dy, hr, min) {
+      const naive = new Date(yr + '-' + String(mo).padStart(2,'0') + '-' + String(dy).padStart(2,'0') + 'T' + String(hr).padStart(2,'0') + ':' + String(min).padStart(2,'0') + ':00');
+      const p = tzParts(naive);
+      const offset = naive.getTime() - Date.UTC(p.year, p.month-1, p.day, p.hour, p.minute, p.second);
+      return new Date(Date.UTC(yr, mo-1, dy, hr, min, 0) + offset);
+    }
+    const np = tzParts(now);
+    let candidate;
+    if (s.cadence === 'daily') {
+      candidate = buildLocal(np.year, np.month, np.day, hh, mm);
+      if (candidate <= now) { const nx = new Date(candidate.getTime()+86400000); const np2=tzParts(nx); candidate=buildLocal(np2.year,np2.month,np2.day,hh,mm); }
+    } else if (s.cadence === 'weekly') {
+      const target = s.day_of_week != null ? s.day_of_week : 1;
+      const curDow = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(now.toLocaleDateString('en-US',{timeZone:tz,weekday:'short'}));
+      candidate = buildLocal(np.year, np.month, np.day, hh, mm);
+      let days = (target - curDow + 7) % 7;
+      if (days === 0 && candidate <= now) days = 7;
+      if (days > 0) { const sh = new Date(candidate.getTime()+days*86400000); const sp=tzParts(sh); candidate=buildLocal(sp.year,sp.month,sp.day,hh,mm); }
+    } else {
+      const dom = s.day_of_month != null ? s.day_of_month : 1;
+      candidate = buildLocal(np.year, np.month, dom, hh, mm);
+      if (candidate <= now) { let nm=np.month+1,ny=np.year; if(nm>12){nm=1;ny++;} candidate=buildLocal(ny,nm,dom,hh,mm); }
+    }
+    return candidate;
+  }
+
+  async function saveSchedule() {
+    if (!pendingSchedAgentId) return;
+    const payload = {
+      agent_type: 'imported',
+      agent_id: String(pendingSchedAgentId),
+      agent_name: agentNameMap[pendingSchedAgentId] || 'Agent',
+      cadence:            document.getElementById('sched-cadence').value,
+      day_of_week:        Number(document.getElementById('sched-dow').value),
+      day_of_month:       Number(document.getElementById('sched-dom').value),
+      run_time:           document.getElementById('sched-time').value,
+      timezone:           document.getElementById('sched-tz').value,
+      scope_type:         document.getElementById('sched-scope').value,
+      output_destination: document.getElementById('sched-output').value,
+    };
+    const btn = document.getElementById('sched-save-btn');
+    btn.disabled = true; btn.textContent = 'Saving…';
+    try {
+      const url = pendingSchedId ? '/api/agent-schedules/' + pendingSchedId : '/api/agent-schedules';
+      const method = pendingSchedId ? 'PATCH' : 'POST';
+      const resp = await fetch(url, { method, headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+      const data = await resp.json();
+      if (data.ok) {
+        closeSchedModal();
+        await loadSchedules();
+        await loadAgents();
+      } else {
+        alert('Error saving schedule: ' + (data.error || (data.errors && data.errors.join(', ')) || 'Unknown error'));
+      }
+    } catch (err) { alert('Network error: ' + err.message); }
+    finally { btn.disabled = false; btn.textContent = 'Save Schedule'; }
+  }
+
+  async function removeSchedule() {
+    if (!pendingSchedId) return;
+    if (!confirm('Remove this schedule? The agent will no longer run automatically.')) return;
+    try {
+      const resp = await fetch('/api/agent-schedules/' + pendingSchedId, { method: 'DELETE' });
+      const data = await resp.json();
+      if (data.ok) { closeSchedModal(); await loadSchedules(); await loadAgents(); }
+      else alert('Error: ' + data.error);
+    } catch (err) { alert('Network error: ' + err.message); }
+  }
+
+  async function pauseAllSchedules() {
+    if (!confirm('Pause all active schedules? You can resume them individually.')) return;
+    try {
+      const resp = await fetch('/api/agent-schedules/pause-all', { method: 'POST' });
+      const data = await resp.json();
+      if (data.ok) { await loadSchedules(); await loadAgents(); alert('Paused ' + data.paused + ' schedule(s).'); }
+      else alert('Error: ' + data.error);
+    } catch (err) { alert('Network error: ' + err.message); }
+  }
+
+  async function openSchedHistory(scheduleId, agentName) {
+    document.getElementById('sched-history-title').textContent = 'Schedule History: ' + agentName;
+    const list = document.getElementById('sched-history-list');
+    list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);font-size:13px">Loading…</div>';
+    document.getElementById('sched-history-modal').classList.remove('hidden');
+    try {
+      const resp = await fetch('/api/agent-schedules/' + scheduleId + '/history');
+      const data = await resp.json();
+      if (!data.ok) throw new Error(data.error || 'Failed to load');
+      if (!data.runs || data.runs.length === 0) {
+        list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);font-size:13px">No runs yet.</div>';
+        return;
+      }
+      list.innerHTML = data.runs.map(function(r) {
+        const started = new Date(r.started_at).toLocaleString();
+        const dur = r.finished_at ? Math.round((new Date(r.finished_at) - new Date(r.started_at))/1000) + 's' : 'running';
+        return '<div class="run-row"><span class="run-status-dot ' + r.status + '"></span><span style="flex:1"><strong>' + r.status + '</strong> — ' + started + ' (' + dur + ')' + (r.error_message ? '<br><span style=color:var(--red)>' + esc(r.error_message) + '</span>' : '') + '</span></div>';
+      }).join('');
+    } catch (err) {
+      list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--red);font-size:13px">' + esc(err.message) + '</div>';
+    }
+  }
+
+  function closeHistoryModal() {
+    document.getElementById('sched-history-modal').classList.add('hidden');
+  }
+
+  const EXAMPLES = [
+    {
+      icon: '📊',
+      name: 'Weekly Progress Reporter',
+      desc: 'Reads 7 days of check-in data and workout logs, then writes a plain-English progress summary to the Activity feed.',
+      assistantDesc: 'You are a personal training analytics assistant. Analyze the client\'s weekly check-ins and workouts. Write a concise progress summary covering adherence, trend direction, and one coaching insight.',
+    },
+    {
+      icon: '📉',
+      name: 'Plateau Detector',
+      desc: 'Scans the last 28 days of workout data for stalled lifts and flags them with a recommended deload or variation.',
+      assistantDesc: 'You are a strength coaching assistant. Analyze the client\'s workout history for plateau patterns: same weight for 3+ sessions, RPE creep without load increase. Flag each plateau and recommend a deload week or exercise variation.',
+    },
+    {
+      icon: '💬',
+      name: 'Form Cue Generator',
+      desc: 'After a session, drafts personalized form cues based on the exercises logged and any RPE signals.',
+      assistantDesc: 'You are a movement coaching assistant. Based on the exercises the client completed today and any RPE flags, draft 2-3 personalized form cues to improve technique. Keep cues short and actionable.',
+    },
+  ];
+
+  let pendingRunAgentId = null;
+
+  const agentNameMap = {};
+
+  async function loadAgents() {
+    await loadSchedules();
+    const resp = await fetch('/api/custom-agents/agents');
+    const data = await resp.json();
+    const container = document.getElementById('agents-container');
+
+    if (!data.ok || !data.agents || data.agents.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">🤖</div>
+          <h2>No agents yet</h2>
+          <p>You haven't imported any OpenAI agents yet. Build one in <a href="https://platform.openai.com/assistants" target="_blank" style="color:var(--olive)">OpenAI's Assistants</a>, then import it here to run on your real client data.</p>
+          <a class="btn btn-primary" href="/dashboard/agents/new">Import your first agent</a>
+        </div>`;
+      return;
+    }
+
+    const grid = document.createElement('div');
+    grid.className = 'agents-grid';
+    for (const agent of data.agents) {
+      grid.appendChild(buildAgentCard(agent));
+    }
+    container.innerHTML = '';
+    container.appendChild(grid);
+  }
+
+  function buildAgentCard(agent) {
+    agentNameMap[agent.id] = agent.display_name;
+    const scopes = agent.granted_scopes || [];
+    const scopeHtml = scopes.map(s => {
+      const isWrite = s.startsWith('write:');
+      const label = s.replace('read:', '').replace('write:', '');
+      return `<span class="scope-tag ${isWrite ? 'write' : ''}">${isWrite ? '✏️ ' : '👁 '}${label}</span>`;
+    }).join('');
+
+    const card = document.createElement('div');
+    card.className = 'agent-card';
+    card.innerHTML = `
+      <div class="agent-card-header">
+        <div class="agent-icon">${agent.icon || '🤖'}</div>
+        <div class="agent-meta">
+          <div class="agent-name">${esc(agent.display_name)}</div>
+          <div class="agent-desc">${esc(agent.description || '')}</div>
+        </div>
+      </div>
+      ${scopes.length ? `<div class="agent-scopes">${scopeHtml}</div>` : ''}
+      ${schedBadge(agent.id)}
+      <div class="agent-card-footer">
+        <span class="agent-id">${esc(agent.assistant_id)}</span>
+        <div class="agent-actions">
+          <a class="btn btn-ghost btn-sm" href="/dashboard/agents/${agent.id}/history">History</a>
+          <button class="btn btn-ghost btn-sm" onclick="openSchedModal(${agent.id}, '${esc(agent.display_name)}')">\nSchedule</button>
+          <button class="btn btn-primary btn-sm" onclick="openRunModal(${agent.id}, '${esc(agent.display_name)}')">Run</button>
+        </div>
+      </div>`;
+    return card;
+  }
+
+  function buildExamples() {
+    const grid = document.getElementById('examples-grid');
+    for (const ex of EXAMPLES) {
+      const card = document.createElement('div');
+      card.className = 'example-card';
+      card.onclick = () => openExampleWizard(ex);
+      card.innerHTML = `
+        <div class="example-card-icon">${ex.icon}</div>
+        <div class="example-card-name">${esc(ex.name)}</div>
+        <div class="example-card-desc">${esc(ex.desc)}</div>
+        <div class="example-card-cta">Use this template →</div>`;
+      grid.appendChild(card);
+    }
+  }
+
+  function openExampleWizard(ex) {
+    // Pre-fill the import wizard with example data
+    const params = new URLSearchParams({ exampleName: ex.name, exampleDesc: ex.desc, exampleAssistantDesc: ex.assistantDesc });
+    window.location.href = `/dashboard/agents/new?${params}`;
+  }
+
+  function openRunModal(agentId, agentName) {
+    pendingRunAgentId = agentId;
+    document.getElementById('run-modal-title').textContent = `Run: ${agentName}`;
+    document.getElementById('run-context').value = '';
+    document.getElementById('run-modal').classList.remove('hidden');
+  }
+
+  function closeRunModal() {
+    pendingRunAgentId = null;
+    document.getElementById('run-modal').classList.add('hidden');
+  }
+
+  async function confirmRun() {
+    if (!pendingRunAgentId) return;
+    const contextNote = document.getElementById('run-context').value.trim();
+    closeRunModal();
+    showRunOverlay();
+
+    try {
+      const resp = await fetch(`/api/custom-agents/agents/${pendingRunAgentId}/run`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contextNote }),
+      });
+      const data = await resp.json();
+      finishRunOverlay(data);
+    } catch (err) {
+      finishRunOverlay({ ok: false, error: err.message });
+    }
+  }
+
+  function showRunOverlay() {
+    const overlay = document.getElementById('run-overlay');
+    overlay.classList.remove('hidden');
+    document.getElementById('run-spinner').style.display = '';
+    document.getElementById('run-overlay-title').textContent = 'Running agent…';
+    document.getElementById('run-status-text').textContent = 'Reading client data and calling OpenAI…';
+    document.getElementById('run-output').classList.add('hidden');
+    document.getElementById('run-usage').classList.add('hidden');
+    document.getElementById('run-overlay-actions').style.display = 'none';
+  }
+
+  function finishRunOverlay(data) {
+    document.getElementById('run-spinner').style.display = 'none';
+    if (data.ok) {
+      document.getElementById('run-overlay-title').textContent = '✅ Done';
+      document.getElementById('run-status-text').textContent = 'Agent run completed successfully.';
+      if (data.outputText) {
+        const out = document.getElementById('run-output');
+        out.textContent = data.outputText;
+        out.classList.remove('hidden');
+      }
+      if (data.usage && data.usage.total_tokens) {
+        const u = document.getElementById('run-usage');
+        const cost = estimateCost(data.usage);
+        u.textContent = `Tokens used: ${data.usage.total_tokens.toLocaleString()} · Estimated cost: ${cost}`;
+        u.classList.remove('hidden');
+      }
+    } else {
+      document.getElementById('run-overlay-title').textContent = '❌ Run failed';
+      document.getElementById('run-status-text').textContent = data.error || 'Unknown error';
+    }
+    document.getElementById('run-overlay-actions').style.display = 'flex';
+  }
+
+  function closeRunOverlay() {
+    document.getElementById('run-overlay').classList.add('hidden');
+    loadAgents(); // refresh list
+  }
+
+  function estimateCost(usage) {
+    // gpt-4o pricing: $2.50/1M input, $10/1M output (approx)
+    const input  = (usage.prompt_tokens    || 0) / 1_000_000 * 2.50;
+    const output = (usage.completion_tokens || 0) / 1_000_000 * 10.00;
+    return `$${(input + output).toFixed(4)}`;
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // Init
+  const live = window.__COACH_LIVE__ || {};
+  if (live.coachName) {
+    document.getElementById('coach-name').textContent = live.coachName;
+    document.getElementById('coach-avatar').textContent = live.coachName[0].toUpperCase();
+  }
+
+  loadAgents();
+  buildExamples();
+</script>
+</body>
+</html>
