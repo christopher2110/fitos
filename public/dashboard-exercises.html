@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitOS — Exercise Library</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:        #F4EFE6;
+      --cream-light:  #FDFAF5;
+      --cream-mid:    #EDE6D8;
+      --olive:        #5C6B2A;
+      --olive-dark:   #3D4A1A;
+      --olive-muted:  #8A9650;
+      --olive-pale:   #E8EDD6;
+      --text:         #2C2A24;
+      --text-muted:   #7A7570;
+      --border:       #DDD8CA;
+      --sidebar-w:    220px;
+      --topbar-h:     60px;
+      --red:          #C84B4B;
+      --red-pale:     #FEF0F0;
+      --amber:        #B07D2C;
+      --amber-pale:   #FEF5E6;
+      --green:        #2A7A3B;
+      --green-pale:   #EDF8EE;
+    }
+
+    html, body { height: 100%; background: var(--cream); color: var(--text); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+    .layout { display: flex; min-height: 100vh; }
+
+    /* ── SIDEBAR ── */
+    .sidebar { width: var(--sidebar-w); background: var(--cream-light); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 50; }
+    .sidebar-brand { padding: 22px 20px 20px; border-bottom: 1px solid var(--border); }
+    .brand-wordmark { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; color: var(--olive); letter-spacing: -0.02em; }
+    .brand-tagline { font-size: 10px; font-weight: 500; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 6px; }
+    .sidebar-nav { flex: 1; padding: 12px 10px; display: flex; flex-direction: column; gap: 2px; overflow-y: auto; }
+    .nav-section-label { font-size: 10px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; padding: 10px 10px 4px; }
+    .nav-link { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 10px; text-decoration: none; font-size: 13.5px; font-weight: 500; color: var(--text-muted); transition: background 0.12s, color 0.12s; cursor: pointer; }
+    .nav-link:hover { background: var(--cream-mid); color: var(--text); }
+    .nav-link.active { background: var(--olive-pale); color: var(--olive-dark); font-weight: 600; }
+    .nav-icon { width: 17px; height: 17px; flex-shrink: 0; opacity: 0.7; }
+    .nav-link.active .nav-icon { opacity: 1; }
+    .sidebar-footer { padding: 14px; border-top: 1px solid var(--border); }
+    .coach-chip { display: flex; align-items: center; gap: 9px; }
+    .coach-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--olive); color: var(--cream-light); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: 'Fraunces', serif; }
+    .coach-name-small { font-size: 13px; font-weight: 600; color: var(--text); }
+    .coach-role { font-size: 11px; color: var(--text-muted); }
+
+    /* ── MAIN ── */
+    .main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+    .topbar { height: var(--topbar-h); background: var(--cream-light); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 28px; position: sticky; top: 0; z-index: 40; }
+    .topbar-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; color: var(--text); letter-spacing: -0.01em; }
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
+    .page-content { padding: 28px; flex: 1; }
+
+    /* ── BUTTONS ── */
+    .btn { display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.12s; text-decoration: none; border: none; font-family: inherit; }
+    .btn-primary { background: var(--olive); color: var(--cream-light); }
+    .btn-primary:hover { background: var(--olive-dark); }
+    .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
+    .btn-ghost:hover { background: var(--cream-mid); color: var(--text); }
+    .btn-danger { background: var(--red-pale); color: var(--red); border: 1px solid transparent; }
+    .btn-danger:hover { background: var(--red); color: #fff; }
+    .btn-sm { padding: 6px 12px; font-size: 12px; }
+    .btn-xs { padding: 4px 9px; font-size: 11px; border-radius: 8px; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ── BULK FILL BUTTON ── */
+    #btn-bulk-fill { background: var(--olive-pale); border: 1.5px solid var(--olive-muted); color: var(--olive-dark); }
+    #btn-bulk-fill:hover:not(:disabled) { background: var(--olive); color: #fff; border-color: var(--olive); }
+    #btn-bulk-fill.running { background: var(--olive); color: #fff; border-color: var(--olive); }
+
+    /* ── BULK FILL PROGRESS BAR ── */
+    #bulk-fill-banner { background: var(--olive-pale); border: 1px solid var(--olive-muted); border-radius: 14px; padding: 16px 20px; margin-bottom: 20px; }
+    #bulk-fill-banner.hidden { display: none; }
+    .bfb-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .bfb-title { font-size: 13px; font-weight: 600; color: var(--olive-dark); }
+    .bfb-counters { display: flex; gap: 14px; font-size: 12px; }
+    .bfb-counter { display: flex; gap: 4px; align-items: center; }
+    .bfb-counter-val { font-weight: 700; }
+    .bfb-counter.filled { color: var(--green); }
+    .bfb-counter.skipped { color: var(--amber); }
+    .bfb-counter.failed { color: var(--red); }
+    .progress-track { height: 6px; background: var(--cream-mid); border-radius: 3px; overflow: hidden; }
+    .progress-fill  { height: 100%; background: var(--olive); border-radius: 3px; transition: width 0.3s; }
+    .bfb-status { font-size: 12px; color: var(--text-muted); margin-top: 8px; }
+    .bfb-quota-msg { font-size: 12px; color: var(--amber); font-weight: 600; margin-top: 8px; background: var(--amber-pale); border-radius: 8px; padding: 8px 12px; }
+    .bfb-quota-msg.hidden { display: none; }
+
+    /* ── TOOLBAR ── */
+    .toolbar { display: flex; gap: 10px; align-items: center; margin-bottom: 20px; flex-wrap: wrap; }
+    .search-wrap { position: relative; flex: 1; min-width: 200px; max-width: 360px; }
+    .search-wrap svg { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-muted); width: 15px; height: 15px; pointer-events: none; }
+    .search-input { width: 100%; padding: 9px 12px 9px 34px; border: 1px solid var(--border); border-radius: 10px; font-size: 13px; background: var(--cream-light); color: var(--text); font-family: inherit; outline: none; }
+    .search-input:focus { border-color: var(--olive-muted); }
+    .filter-select { padding: 9px 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 13px; background: var(--cream-light); color: var(--text); font-family: inherit; outline: none; cursor: pointer; }
+    .filter-select:focus { border-color: var(--olive-muted); }
+
+    /* ── STATS BAR ── */
+    .stats-bar { display: flex; gap: 14px; margin-bottom: 20px; flex-wrap: wrap; }
+    .stat-chip { background: var(--cream-light); border: 1px solid var(--border); border-radius: 12px; padding: 10px 16px; display: flex; align-items: center; gap: 8px; }
+    .stat-chip-val { font-size: 18px; font-weight: 700; font-family: 'Fraunces', serif; color: var(--text); }
+    .stat-chip-label { font-size: 12px; color: var(--text-muted); }
+    .stat-chip-icon { font-size: 18px; }
+
+    /* ── TABLE ── */
+    .table-wrap { background: var(--cream-light); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+    .ex-table { width: 100%; border-collapse: collapse; min-width: 700px; }
+    .ex-table th { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); background: var(--cream); cursor: pointer; user-select: none; white-space: nowrap; }
+    .ex-table th:hover { color: var(--text); }
+    .sort-icon { display: inline-block; margin-left: 4px; opacity: 0.4; font-style: normal; }
+    .sort-icon.asc::after  { content: '↑'; }
+    .sort-icon.desc::after { content: '↓'; }
+    .sort-icon.none::after { content: '↕'; }
+    .ex-table td { padding: 11px 16px; font-size: 13px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .ex-table tr:last-child td { border-bottom: none; }
+    .ex-table tbody tr { transition: background 0.1s; }
+    .ex-table tbody tr:hover { background: var(--cream); }
+
+    /* Row highlight for just-filled */
+    .ex-table tbody tr.just-filled { animation: rowFlash 1.8s ease-out forwards; }
+    @keyframes rowFlash {
+      0%   { background: #D4EDDA; }
+      60%  { background: #D4EDDA; }
+      100% { background: transparent; }
+    }
+
+    .cat-badge { display: inline-block; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: capitalize; }
+    .cat-push     { background: #E8F4FD; color: #1A6EA8; }
+    .cat-pull     { background: #EDF8EE; color: #1A7A2E; }
+    .cat-legs     { background: #FDF3E8; color: #A85C1A; }
+    .cat-core     { background: var(--olive-pale); color: var(--olive-dark); }
+    .cat-cardio   { background: #FDEEF0; color: #A81A2E; }
+    .cat-mobility { background: #F3EEFF; color: #5E1AA8; }
+    .cat-other    { background: var(--cream-mid); color: var(--text-muted); }
+
+    /* ── THUMBNAIL cell ── */
+    .thumb-cell { display: flex; align-items: center; gap: 8px; }
+    .thumb-wrap { position: relative; flex-shrink: 0; width: 96px; height: 54px; border-radius: 6px; overflow: hidden; cursor: pointer; background: #111; }
+    .thumb-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .thumb-play { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.28); }
+    .thumb-play svg { filter: drop-shadow(0 1px 3px rgba(0,0,0,0.5)); }
+    .thumb-wrap:hover .thumb-play { background: rgba(0,0,0,0.46); }
+    .thumb-ch { font-size: 11px; color: var(--text-muted); line-height: 1.3; max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* ── inline URL edit ── */
+    .url-edit-wrap { display: flex; align-items: center; gap: 6px; }
+    .url-input { flex: 1; border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; font-size: 12px; font-family: inherit; background: var(--cream); color: var(--text); outline: none; min-width: 0; }
+    .url-input:focus { border-color: var(--olive-muted); }
+    .url-link { font-size: 12px; color: var(--olive); text-decoration: none; font-weight: 500; }
+    .url-link:hover { text-decoration: underline; }
+
+    .row-actions { display: flex; gap: 4px; opacity: 0; transition: opacity 0.1s; }
+    .ex-table tbody tr:hover .row-actions { opacity: 1; }
+    .act-btn { width: 28px; height: 28px; border-radius: 7px; border: none; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-muted); transition: all 0.1s; }
+    .act-btn:hover { background: var(--cream-mid); color: var(--text); }
+    .act-btn.delete:hover { background: var(--red-pale); color: var(--red); }
+
+    /* ── EMPTY STATE ── */
+    .empty-state { padding: 64px 32px; text-align: center; }
+    .empty-icon { font-size: 44px; margin-bottom: 16px; }
+    .empty-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; margin-bottom: 10px; }
+    .empty-desc { font-size: 14px; color: var(--text-muted); max-width: 440px; margin: 0 auto 24px; line-height: 1.6; }
+
+    /* ── MODALS ── */
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 200; padding: 20px; }
+    .modal-backdrop.hidden { display: none; }
+    .modal { background: var(--cream-light); border-radius: 20px; padding: 28px; max-width: 520px; width: 100%; box-shadow: 0 24px 48px rgba(0,0,0,0.15); max-height: 90vh; overflow-y: auto; }
+    .modal-title { font-family: 'Fraunces', serif; font-size: 19px; font-weight: 600; margin-bottom: 6px; }
+    .modal-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 22px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-grid .full { grid-column: 1 / -1; }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-label { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    .form-input, .form-select { padding: 9px 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 13px; background: var(--cream); color: var(--text); font-family: inherit; outline: none; }
+    .form-input:focus, .form-select:focus { border-color: var(--olive-muted); }
+    .modal-actions { display: flex; gap: 10px; margin-top: 22px; justify-content: flex-end; }
+
+    /* ── IMPORT MODAL ── */
+    .csv-textarea { width: 100%; height: 180px; border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; font-family: 'Courier New', monospace; font-size: 12px; resize: vertical; background: var(--cream); color: var(--text); outline: none; }
+    .csv-textarea:focus { border-color: var(--olive-muted); }
+    .csv-help { font-size: 11px; color: var(--text-muted); margin-top: 8px; line-height: 1.5; }
+    .csv-preview { margin-top: 12px; font-size: 12px; color: var(--olive); font-weight: 500; }
+
+    /* ── SWAP PICKER PANEL ── */
+    .swap-panel-backdrop { position: fixed; inset: 0; z-index: 300; display: flex; justify-content: flex-end; }
+    .swap-panel-backdrop.hidden { display: none; }
+    .swap-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.3); }
+    .swap-panel { position: relative; width: 360px; max-width: 95vw; background: var(--cream-light); height: 100%; overflow-y: auto; box-shadow: -8px 0 32px rgba(0,0,0,0.18); display: flex; flex-direction: column; }
+    .swap-panel-header { padding: 20px 20px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; }
+    .swap-panel-title { font-family: 'Fraunces', serif; font-size: 17px; font-weight: 600; }
+    .swap-panel-name { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+    .swap-close { background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 4px; border-radius: 6px; }
+    .swap-close:hover { color: var(--text); background: var(--cream-mid); }
+    .swap-panel-body { flex: 1; padding: 16px 20px; }
+    .swap-loading { color: var(--text-muted); font-size: 13px; text-align: center; padding: 30px 0; }
+    .swap-candidate { border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-bottom: 10px; cursor: pointer; transition: all 0.12s; display: flex; gap: 12px; align-items: flex-start; }
+    .swap-candidate:hover { border-color: var(--olive-muted); background: var(--olive-pale); }
+    .swap-candidate.current { border-color: var(--olive); background: var(--olive-pale); }
+    .swap-thumb { width: 96px; height: 54px; border-radius: 6px; overflow: hidden; flex-shrink: 0; background: #111; position: relative; }
+    .swap-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .swap-thumb-play { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3); }
+    .swap-meta { flex: 1; min-width: 0; }
+    .swap-channel { font-size: 12px; font-weight: 600; color: var(--text); }
+    .swap-title { font-size: 11px; color: var(--text-muted); margin-top: 2px; line-height: 1.3; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+    .swap-apply-btn { font-size: 11px; font-weight: 600; color: var(--olive); margin-top: 6px; display: inline-block; }
+    .swap-divider { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+    .swap-custom { display: flex; flex-direction: column; gap: 8px; }
+    .swap-custom-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .swap-custom-input { width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 13px; background: var(--cream); color: var(--text); font-family: inherit; outline: none; }
+    .swap-custom-input:focus { border-color: var(--olive-muted); }
+    .swap-no-channels { background: var(--amber-pale); border: 1px solid var(--amber); border-radius: 10px; padding: 12px 14px; font-size: 12px; color: var(--amber); }
+    .swap-no-channels a { color: var(--amber); font-weight: 600; }
+    .swap-no-results { font-size: 13px; color: var(--text-muted); text-align: center; padding: 20px 0; }
+
+    /* ── VIDEO PLAYER MODAL ── */
+    #modal-video .modal { max-width: 680px; padding: 20px; }
+    .video-modal-name { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 600; margin-bottom: 12px; }
+    .video-embed-wrap { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 10px; overflow: hidden; background: #000; }
+    .video-embed-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+
+    /* ── SETUP BANNER ── */
+    .setup-banner { background: var(--olive-pale); border: 1px solid var(--olive-muted); border-radius: 14px; padding: 20px 24px; margin-bottom: 24px; display: flex; align-items: center; gap: 16px; }
+    .setup-banner-icon { font-size: 26px; flex-shrink: 0; }
+    .setup-banner-text { flex: 1; }
+    .setup-banner-title { font-size: 14px; font-weight: 600; color: var(--olive-dark); margin-bottom: 3px; }
+    .setup-banner-desc { font-size: 13px; color: var(--text-muted); }
+
+    /* ── TOAST ── */
+    #toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--text); color: #fff; padding: 10px 20px; border-radius: 20px; font-size: 13px; font-weight: 500; z-index: 999; opacity: 0; transition: opacity 0.2s; pointer-events: none; }
+    #toast.show { opacity: 1; }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 760px) {
+      :root { --sidebar-w: 0px; }
+      .sidebar { display: none; }
+      .form-grid { grid-template-columns: 1fr; }
+      .swap-panel { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-wordmark">FitOS</div>
+      <div class="brand-tagline">Coaching Platform</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Workspace</div>
+      <a class="nav-link" href="/dashboard">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a class="nav-link" href="/dashboard/messages">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Messages
+      </a>
+      <a class="nav-link" href="/dashboard/clients">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Clients
+      </a>
+      <a class="nav-link active" href="/dashboard/exercises">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2z"/><path d="M8 10h8M8 14h5"/></svg>
+        Exercise Library
+      </a>
+      <a class="nav-link" href="/dashboard/agents">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/><path d="M12 12v9"/></svg>
+        My Agents
+      </a>
+      <div class="nav-section-label" style="margin-top:6px">AI Tools</div>
+      <a class="nav-link" href="/dashboard/agents/builder">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        Program Builder
+        <span style="font-size:9px;font-weight:700;background:var(--olive);color:#fff;padding:2px 6px;border-radius:10px;margin-left:auto">AI</span>
+      </a>
+      <a class="nav-link" href="/settings/agents">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        Claude Skills
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="coach-chip">
+        <div class="coach-avatar" id="coach-avatar">C</div>
+        <div>
+          <div class="coach-name-small" id="coach-name">Coach</div>
+          <div class="coach-role">FitOS</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-title">Exercise Library</div>
+      <div class="topbar-right">
+        <a class="btn btn-ghost btn-sm" href="/dashboard/exercises/sources">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 001.46 6.42 29 29 0 001 11.75a29 29 0 00.46 5.33A2.78 2.78 0 003.41 19.1C5.12 19.56 12 19.56 12 19.56s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.95 29 29 0 00.46-5.33 29 29 0 00-.46-5.34z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
+          YouTube Sources
+        </a>
+        <!-- Bulk auto-fill: count shown after page load -->
+        <button class="btn btn-sm" id="btn-bulk-fill" title="Auto-fill YouTube links for exercises missing a video" style="display:none">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          <span id="btn-bulk-fill-label">Auto-fill missing videos</span>
+        </button>
+        <!-- Legacy single-run find videos (kept for compatibility) -->
+        <button class="btn btn-ghost btn-sm hidden" id="btn-find-videos" title="Auto-fill YouTube links for exercises missing a video">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Find Videos
+        </button>
+        <button class="btn btn-ghost btn-sm" id="btn-import">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Import CSV
+        </button>
+        <button class="btn btn-primary btn-sm" id="btn-add">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Exercise
+        </button>
+      </div>
+    </header>
+
+    <div class="page-content">
+
+      <!-- Bulk fill progress banner -->
+      <div id="bulk-fill-banner" class="hidden">
+        <div class="bfb-header">
+          <div class="bfb-title" id="bfb-title">Auto-filling missing videos…</div>
+          <div class="bfb-counters">
+            <span class="bfb-counter filled"><span class="bfb-counter-val" id="bfb-filled">0</span> filled</span>
+            <span class="bfb-counter skipped"><span class="bfb-counter-val" id="bfb-skipped">0</span> skipped</span>
+            <span class="bfb-counter failed"><span class="bfb-counter-val" id="bfb-failed">0</span> failed</span>
+          </div>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="bfb-progress" style="width:0%"></div>
+        </div>
+        <div class="bfb-status" id="bfb-status">Starting…</div>
+        <div class="bfb-quota-msg hidden" id="bfb-quota">
+          YouTube quota exhausted — progress saved. The remainder will be available to fill tomorrow.
+        </div>
+      </div>
+
+      <!-- Setup banner: shown when sheet not connected -->
+      <div class="setup-banner hidden" id="setup-banner">
+        <div class="setup-banner-icon">📋</div>
+        <div class="setup-banner-text">
+          <div class="setup-banner-title">Connect your Google Sheet first</div>
+          <div class="setup-banner-desc">The exercise library lives in your Google Sheet. <a href="/setup" style="color:var(--olive);font-weight:600">Set up your sheet →</a></div>
+        </div>
+      </div>
+
+      <!-- Stats bar -->
+      <div class="stats-bar" id="stats-bar" style="display:none">
+        <div class="stat-chip">
+          <div class="stat-chip-icon">💪</div>
+          <div>
+            <div class="stat-chip-val" id="stat-total">0</div>
+            <div class="stat-chip-label">Total exercises</div>
+          </div>
+        </div>
+        <div class="stat-chip">
+          <div class="stat-chip-icon">✅</div>
+          <div>
+            <div class="stat-chip-val" id="stat-with-video">0</div>
+            <div class="stat-chip-label">Have video</div>
+          </div>
+        </div>
+        <div class="stat-chip">
+          <div class="stat-chip-icon">⚠️</div>
+          <div>
+            <div class="stat-chip-val" id="stat-missing-video">0</div>
+            <div class="stat-chip-label">Missing video</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="toolbar" id="toolbar" style="display:none">
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input class="search-input" id="search-input" type="text" placeholder="Search exercises…">
+        </div>
+        <select class="filter-select" id="filter-category">
+          <option value="">All categories</option>
+          <option value="push">Push</option>
+          <option value="pull">Pull</option>
+          <option value="legs">Legs</option>
+          <option value="core">Core</option>
+          <option value="cardio">Cardio</option>
+          <option value="mobility">Mobility</option>
+        </select>
+        <select class="filter-select" id="filter-equipment">
+          <option value="">All equipment</option>
+        </select>
+        <select class="filter-select" id="filter-video">
+          <option value="">All exercises</option>
+          <option value="has">Has video</option>
+          <option value="missing">Missing video</option>
+        </select>
+      </div>
+
+      <!-- Table -->
+      <div class="table-wrap" id="table-wrap" style="display:none">
+        <div style="overflow-x:auto">
+          <table class="ex-table" id="ex-table">
+            <thead>
+              <tr>
+                <th data-col="name">Exercise <i class="sort-icon none" id="sort-name"></i></th>
+                <th data-col="category">Category <i class="sort-icon none" id="sort-category"></i></th>
+                <th data-col="primary_muscle">Muscle</th>
+                <th data-col="equipment">Equipment</th>
+                <th>Video</th>
+                <th>Notes</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div class="empty-state hidden" id="empty-state">
+        <div class="empty-icon">🏋️</div>
+        <div class="empty-title">Your exercise library is empty</div>
+        <div class="empty-desc">Add your first exercise, or program a workout and the AI will auto-fill exercises for you.</div>
+        <div style="display:flex;gap:10px;justify-content:center">
+          <button class="btn btn-primary" id="btn-add-empty">Add Exercise</button>
+          <button class="btn btn-ghost" id="btn-import-empty">Import from CSV</button>
+        </div>
+      </div>
+
+      <!-- Loading -->
+      <div id="loading-state" style="text-align:center;padding:60px;color:var(--text-muted);font-size:13px">Loading exercise library…</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── ADD EXERCISE MODAL ── -->
+<div class="modal-backdrop hidden" id="modal-add">
+  <div class="modal">
+    <div class="modal-title">Add Exercise</div>
+    <div class="modal-sub">Add an exercise to your coaching library.</div>
+    <div class="form-grid">
+      <div class="form-group full">
+        <label class="form-label">Exercise Name *</label>
+        <input class="form-input" id="add-name" type="text" placeholder="e.g. Barbell Back Squat" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <select class="form-select" id="add-category">
+          <option value="">Select…</option>
+          <option value="push">Push</option>
+          <option value="pull">Pull</option>
+          <option value="legs">Legs</option>
+          <option value="core">Core</option>
+          <option value="cardio">Cardio</option>
+          <option value="mobility">Mobility</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Primary Muscle</label>
+        <input class="form-input" id="add-muscle" type="text" placeholder="e.g. Quadriceps">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Equipment</label>
+        <input class="form-input" id="add-equipment" type="text" placeholder="e.g. Barbell, Dumbbell, Bodyweight">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Video URL (YouTube)</label>
+        <input class="form-input" id="add-video" type="url" placeholder="https://youtube.com/…">
+      </div>
+      <div class="form-group full">
+        <label class="form-label">Coach Notes</label>
+        <input class="form-input" id="add-notes" type="text" placeholder="Cues, variations, contraindications…">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="btn-add-cancel">Cancel</button>
+      <button class="btn btn-primary" id="btn-add-save">Add Exercise</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── IMPORT CSV MODAL ── -->
+<div class="modal-backdrop hidden" id="modal-import">
+  <div class="modal">
+    <div class="modal-title">Bulk Import from CSV</div>
+    <div class="modal-sub">Paste CSV data below. One exercise per row.</div>
+    <p class="csv-help"><strong>Format (header row optional):</strong><br>
+    name, category, primary_muscle, equipment, video_url, coach_notes<br><br>
+    Example:<br>
+    Barbell Squat, legs, Quadriceps, Barbell, https://youtube.com/…, Keep chest up<br>
+    Push-up, push, Chest, Bodyweight, ,</p>
+    <textarea class="csv-textarea" id="csv-input" placeholder="Paste CSV here…" spellcheck="false"></textarea>
+    <div class="csv-preview" id="csv-preview"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="btn-import-cancel">Cancel</button>
+      <button class="btn btn-primary" id="btn-import-save">Import</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── VIDEO PLAYER MODAL ── -->
+<div class="modal-backdrop hidden" id="modal-video">
+  <div class="modal">
+    <div class="video-modal-name" id="video-modal-name"></div>
+    <div class="video-embed-wrap">
+      <iframe id="video-iframe" src="" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="btn-video-close">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── SWAP VIDEO SIDE PANEL ── -->
+<div class="swap-panel-backdrop hidden" id="swap-panel-backdrop">
+  <div class="swap-overlay" id="swap-overlay"></div>
+  <div class="swap-panel">
+    <div class="swap-panel-header">
+      <div>
+        <div class="swap-panel-title">Swap Video</div>
+        <div class="swap-panel-name" id="swap-exercise-name"></div>
+      </div>
+      <button class="swap-close" id="swap-close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="swap-panel-body">
+      <div class="swap-loading hidden" id="swap-loading">Searching trusted channels…</div>
+      <div id="swap-candidates-list"></div>
+      <hr class="swap-divider">
+      <div class="swap-custom">
+        <div class="swap-custom-label">Or paste a custom URL</div>
+        <input class="swap-custom-input" id="swap-custom-url" type="url" placeholder="https://youtube.com/watch?v=…">
+        <button class="btn btn-primary btn-sm" id="btn-swap-custom">Apply Custom URL</button>
+      </div>
+      <!-- Re-search row -->
+      <hr class="swap-divider">
+      <button class="btn btn-ghost btn-sm" id="btn-swap-research" style="width:100%">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+        Re-search this exercise
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOAST ── -->
+<div id="toast"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  const live = window.__COACH_LIVE__ || {};
+  const sheetsEnabled = live.sheetsEnabled;
+  const coachName = live.coachName || 'Coach';
+
+  // ── Coach chip ──────────────────────────────────────────────────────────────
+  const initials = coachName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'C';
+  document.getElementById('coach-avatar').textContent = initials;
+  document.getElementById('coach-name').textContent = coachName;
+
+  // ── State ───────────────────────────────────────────────────────────────────
+  let allExercises  = [];
+  let sortCol       = 'name';
+  let sortDir       = 'asc';
+  let bulkRunning   = false;
+  let swapExerciseId   = null;
+  let swapExerciseName = null;
+
+  // ── Toast ───────────────────────────────────────────────────────────────────
+  let toastTimer;
+  function toast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
+  }
+
+  // ── YouTube helpers ─────────────────────────────────────────────────────────
+  function ytVideoId(url) {
+    if (!url) return null;
+    // youtube.com/watch?v=ID  or  youtu.be/ID  or  youtube.com/shorts/ID
+    const m = url.match(/(?:v=|youtu\.be\/|\/shorts\/)([A-Za-z0-9_\-]{11})/);
+    return m ? m[1] : null;
+  }
+
+  function ytThumbUrl(url) {
+    const id = ytVideoId(url);
+    return id ? `https://img.youtube.com/vi/${id}/mqdefault.jpg` : null;
+  }
+
+  function ytEmbedUrl(url) {
+    const id = ytVideoId(url);
+    return id ? `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0` : null;
+  }
+
+  // ── Bulk-fill count ─────────────────────────────────────────────────────────
+  async function loadBulkCount() {
+    try {
+      const r = await fetch('/api/exercises/bulk-fill/count');
+      const d = await r.json();
+      if (d.ok && d.missing > 0) {
+        document.getElementById('btn-bulk-fill-label').textContent =
+          `Auto-fill ${d.missing} missing video${d.missing !== 1 ? 's' : ''}`;
+        document.getElementById('btn-bulk-fill').style.display = 'inline-flex';
+      }
+    } catch (_) { /* non-fatal */ }
+  }
+
+  // ── Load exercises ──────────────────────────────────────────────────────────
+  async function load() {
+    document.getElementById('loading-state').style.display = 'block';
+    document.getElementById('empty-state').classList.add('hidden');
+    document.getElementById('table-wrap').style.display = 'none';
+    document.getElementById('toolbar').style.display = 'none';
+    document.getElementById('stats-bar').style.display = 'none';
+
+    try {
+      const res = await fetch('/api/exercises/exercises');
+      const data = await res.json();
+
+      if (data.needsSetup) {
+        document.getElementById('setup-banner').classList.remove('hidden');
+        document.getElementById('loading-state').style.display = 'none';
+        document.getElementById('empty-state').classList.remove('hidden');
+        return;
+      }
+
+      allExercises = data.exercises || [];
+      buildEquipmentFilter();
+      render();
+      loadBulkCount();
+    } catch (e) {
+      document.getElementById('loading-state').textContent = 'Failed to load exercises.';
+    }
+  }
+
+  function buildEquipmentFilter() {
+    const eqSet = new Set(allExercises.map(e => e.equipment).filter(Boolean));
+    const sel = document.getElementById('filter-equipment');
+    while (sel.options.length > 1) sel.remove(1);
+    [...eqSet].sort().forEach(eq => {
+      const opt = document.createElement('option');
+      opt.value = eq;
+      opt.textContent = eq;
+      sel.appendChild(opt);
+    });
+  }
+
+  function getFiltered() {
+    const q   = document.getElementById('search-input').value.trim().toLowerCase();
+    const cat = document.getElementById('filter-category').value;
+    const eq  = document.getElementById('filter-equipment').value;
+    const vid = document.getElementById('filter-video').value;
+
+    return allExercises.filter(e => {
+      if (q   && !e.name.toLowerCase().includes(q) && !e.primary_muscle.toLowerCase().includes(q)) return false;
+      if (cat && e.category !== cat)  return false;
+      if (eq  && e.equipment !== eq)  return false;
+      if (vid === 'has'     && !e.video_url) return false;
+      if (vid === 'missing' &&  e.video_url) return false;
+      return true;
+    });
+  }
+
+  function getSorted(list) {
+    return [...list].sort((a, b) => {
+      const av = (a[sortCol] || '').toLowerCase();
+      const bv = (b[sortCol] || '').toLowerCase();
+      return sortDir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
+    });
+  }
+
+  function catClass(cat) {
+    const map = { push: 'cat-push', pull: 'cat-pull', legs: 'cat-legs', core: 'cat-core', cardio: 'cat-cardio', mobility: 'cat-mobility' };
+    return map[cat] || 'cat-other';
+  }
+
+  function esc(s) {
+    if (!s) return '';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+
+  // ── Render video cell ───────────────────────────────────────────────────────
+  function renderVideoCell(e) {
+    const thumbUrl = ytThumbUrl(e.video_url);
+
+    if (thumbUrl) {
+      // Thumbnail preview + swap icon
+      return `<div class="thumb-cell">
+        <div class="thumb-wrap" title="Click to watch" onclick="openVideoModal('${esc(e.id)}')">
+          <img src="${esc(thumbUrl)}" alt="thumbnail" loading="lazy" onerror="this.parentElement.style.background='#333'">
+          <div class="thumb-play">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </div>
+        </div>
+        <div>
+          <button class="btn btn-ghost btn-xs" onclick="openSwapPanel('${esc(e.id)}','${esc(e.name)}')" title="Swap video">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+            Swap
+          </button>
+          <button class="act-btn" title="Edit URL" onclick="editUrl('${esc(e.id)}', this)" style="display:inline-flex;width:auto;padding:3px 6px;border-radius:6px;font-size:10px;color:var(--text-muted)">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Edit
+          </button>
+        </div>
+      </div>`;
+    } else {
+      // No video URL — show add button
+      return `<button class="btn btn-ghost btn-sm" style="white-space:nowrap" onclick="editUrl('${esc(e.id)}', this)">+ Add URL</button>`;
+    }
+  }
+
+  // ── Main render ─────────────────────────────────────────────────────────────
+  function render() {
+    document.getElementById('loading-state').style.display = 'none';
+
+    const total = allExercises.length;
+    const withVid = allExercises.filter(e => e.video_url).length;
+    document.getElementById('stat-total').textContent = total;
+    document.getElementById('stat-with-video').textContent = withVid;
+    document.getElementById('stat-missing-video').textContent = total - withVid;
+
+    const filtered = getSorted(getFiltered());
+
+    if (total === 0) {
+      document.getElementById('empty-state').classList.remove('hidden');
+      document.getElementById('table-wrap').style.display = 'none';
+      document.getElementById('toolbar').style.display = 'none';
+      document.getElementById('stats-bar').style.display = 'none';
+      return;
+    }
+
+    document.getElementById('stats-bar').style.display = 'flex';
+    document.getElementById('toolbar').style.display = 'flex';
+    document.getElementById('empty-state').classList.add('hidden');
+    document.getElementById('table-wrap').style.display = 'block';
+
+    const tbody = document.getElementById('table-body');
+    tbody.innerHTML = filtered.map(e => {
+      return `<tr data-id="${esc(e.id)}">
+        <td style="font-weight:600">${esc(e.name)}</td>
+        <td>${e.category ? `<span class="cat-badge ${catClass(e.category)}">${esc(e.category)}</span>` : '<span style="color:var(--text-muted);font-size:12px">—</span>'}</td>
+        <td style="color:var(--text-muted)">${esc(e.primary_muscle) || '—'}</td>
+        <td style="color:var(--text-muted)">${esc(e.equipment) || '—'}</td>
+        <td>${renderVideoCell(e)}</td>
+        <td style="color:var(--text-muted);font-size:12px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(e.coach_notes) || ''}</td>
+        <td>
+          <div class="row-actions">
+            <button class="act-btn" title="Edit" onclick="openEdit('${esc(e.id)}')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button class="act-btn delete" title="Delete" onclick="deleteEx('${esc(e.id)}', '${esc(e.name)}')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+            </button>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+
+    ['name', 'category'].forEach(col => {
+      const icon = document.getElementById(`sort-${col}`);
+      if (!icon) return;
+      icon.className = 'sort-icon ' + (sortCol === col ? sortDir : 'none');
+    });
+  }
+
+  // ── Sort ────────────────────────────────────────────────────────────────────
+  document.querySelectorAll('.ex-table th[data-col]').forEach(th => {
+    th.addEventListener('click', () => {
+      const col = th.dataset.col;
+      if (sortCol === col) { sortDir = sortDir === 'asc' ? 'desc' : 'asc'; }
+      else { sortCol = col; sortDir = 'asc'; }
+      render();
+    });
+  });
+
+  // ── Filter / search ─────────────────────────────────────────────────────────
+  ['search-input','filter-category','filter-equipment','filter-video'].forEach(id => {
+    document.getElementById(id).addEventListener('input', render);
+    document.getElementById(id).addEventListener('change', render);
+  });
+
+  // ── Inline URL edit ─────────────────────────────────────────────────────────
+  window.editUrl = function (id, _triggerBtn) {
+    const row = document.querySelector(`tr[data-id="${id}"]`);
+    const ex  = allExercises.find(e => e.id === id);
+    if (!row || !ex) return;
+
+    const cell = row.cells[4];
+    cell.innerHTML = `<div class="url-edit-wrap">
+      <input class="url-input" id="url-inp-${id}" type="url" value="${esc(ex.video_url)}" placeholder="https://youtube.com/…" autofocus>
+      <button class="btn btn-primary btn-sm" onclick="saveUrl('${esc(id)}')">Save</button>
+      <button class="btn btn-ghost btn-sm" onclick="render()">Cancel</button>
+    </div>`;
+    const inp = document.getElementById(`url-inp-${id}`);
+    if (inp) { inp.focus(); inp.setSelectionRange(inp.value.length, inp.value.length); }
+  };
+
+  window.saveUrl = async function (id) {
+    const inp = document.getElementById(`url-inp-${id}`);
+    if (!inp) return;
+    const url = inp.value.trim();
+    try {
+      const r = await fetch(`/api/exercises/exercises/${encodeURIComponent(id)}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ video_url: url }),
+      });
+      const d = await r.json();
+      if (!d.ok) throw new Error(d.error);
+      const ex = allExercises.find(e => e.id === id);
+      if (ex) ex.video_url = url;
+      toast(url ? 'Video URL saved' : 'URL removed');
+      render();
+    } catch (e) {
+      toast('Error: ' + e.message);
+    }
+  };
+
+  // ── Delete ──────────────────────────────────────────────────────────────────
+  window.deleteEx = async function (id, name) {
+    if (!confirm(`Delete "${name}"?`)) return;
+    try {
+      const r = await fetch(`/api/exercises/exercises/${encodeURIComponent(id)}`, { method: 'DELETE' });
+      const d = await r.json();
+      if (!d.ok) throw new Error(d.error);
+      allExercises = allExercises.filter(e => e.id !== id);
+      toast('Exercise deleted');
+      render();
+    } catch (e) {
+      toast('Error: ' + e.message);
+    }
+  };
+
+  // ── Edit modal ──────────────────────────────────────────────────────────────
+  window.openEdit = function (id) {
+    const ex = allExercises.find(e => e.id === id);
+    if (!ex) return;
+    document.getElementById('add-name').value      = ex.name || '';
+    document.getElementById('add-category').value  = ex.category || '';
+    document.getElementById('add-muscle').value    = ex.primary_muscle || '';
+    document.getElementById('add-equipment').value = ex.equipment || '';
+    document.getElementById('add-video').value     = ex.video_url || '';
+    document.getElementById('add-notes').value     = ex.coach_notes || '';
+    document.getElementById('btn-add-save').dataset.editId = id;
+    document.getElementById('btn-add-save').textContent = 'Save Changes';
+    document.getElementById('modal-add').classList.remove('hidden');
+    document.getElementById('add-name').focus();
+  };
+
+  // ── Add modal ───────────────────────────────────────────────────────────────
+  function openAddModal() {
+    ['add-name','add-category','add-muscle','add-equipment','add-video','add-notes'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el.tagName === 'SELECT') el.selectedIndex = 0;
+      else el.value = '';
+    });
+    delete document.getElementById('btn-add-save').dataset.editId;
+    document.getElementById('btn-add-save').textContent = 'Add Exercise';
+    document.getElementById('modal-add').classList.remove('hidden');
+    document.getElementById('add-name').focus();
+  }
+
+  document.getElementById('btn-add').addEventListener('click', openAddModal);
+  const btnAddEmpty = document.getElementById('btn-add-empty');
+  if (btnAddEmpty) btnAddEmpty.addEventListener('click', openAddModal);
+  document.getElementById('btn-add-cancel').addEventListener('click', () => document.getElementById('modal-add').classList.add('hidden'));
+
+  document.getElementById('btn-add-save').addEventListener('click', async () => {
+    const name = document.getElementById('add-name').value.trim();
+    if (!name) { toast('Exercise name is required'); return; }
+
+    const editId = document.getElementById('btn-add-save').dataset.editId;
+    const payload = {
+      name,
+      category:       document.getElementById('add-category').value,
+      primary_muscle: document.getElementById('add-muscle').value.trim(),
+      equipment:      document.getElementById('add-equipment').value.trim(),
+      video_url:      document.getElementById('add-video').value.trim(),
+      coach_notes:    document.getElementById('add-notes').value.trim(),
+    };
+
+    try {
+      if (editId) {
+        const r = await fetch(`/api/exercises/exercises/${encodeURIComponent(editId)}`, {
+          method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
+        });
+        const d = await r.json();
+        if (!d.ok) throw new Error(d.error);
+        const idx = allExercises.findIndex(e => e.id === editId);
+        if (idx !== -1) allExercises[idx] = { ...allExercises[idx], ...payload };
+        toast('Exercise updated');
+      } else {
+        const r = await fetch('/api/exercises/exercises', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ exercises: [payload] }),
+        });
+        const d = await r.json();
+        if (!d.ok) throw new Error(d.error);
+        await load();
+        toast('Exercise added');
+      }
+      document.getElementById('modal-add').classList.add('hidden');
+      if (!editId) return;
+      render();
+    } catch (e) {
+      toast('Error: ' + e.message);
+    }
+  });
+
+  // ── Import modal ─────────────────────────────────────────────────────────────
+  function openImport() {
+    document.getElementById('csv-input').value = '';
+    document.getElementById('csv-preview').textContent = '';
+    document.getElementById('modal-import').classList.remove('hidden');
+    document.getElementById('csv-input').focus();
+  }
+
+  document.getElementById('btn-import').addEventListener('click', openImport);
+  const btnImportEmpty = document.getElementById('btn-import-empty');
+  if (btnImportEmpty) btnImportEmpty.addEventListener('click', openImport);
+  document.getElementById('btn-import-cancel').addEventListener('click', () => document.getElementById('modal-import').classList.add('hidden'));
+
+  document.getElementById('csv-input').addEventListener('input', () => {
+    const rows = parseCSV(document.getElementById('csv-input').value.trim());
+    document.getElementById('csv-preview').textContent = rows.length ? `${rows.length} exercise${rows.length===1?'':'s'} ready to import` : '';
+  });
+
+  function parseCSV(raw) {
+    if (!raw) return [];
+    const lines = raw.split('\n').filter(l => l.trim());
+    const CATS = ['push','pull','legs','core','cardio','mobility'];
+    const results = [];
+    for (const line of lines) {
+      const cols = line.split(',').map(c => c.trim());
+      if (!cols[0] || CATS.includes(cols[0].toLowerCase())) continue;
+      const name = cols[0];
+      if (!name) continue;
+      results.push({
+        name,
+        category:       (cols[1] || '').toLowerCase(),
+        primary_muscle: cols[2] || '',
+        equipment:      cols[3] || '',
+        video_url:      cols[4] || '',
+        coach_notes:    cols[5] || '',
+      });
+    }
+    return results;
+  }
+
+  document.getElementById('btn-import-save').addEventListener('click', async () => {
+    const rows = parseCSV(document.getElementById('csv-input').value.trim());
+    if (!rows.length) { toast('No valid rows found'); return; }
+
+    try {
+      const r = await fetch('/api/exercises/exercises', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ exercises: rows }),
+      });
+      const d = await r.json();
+      if (!d.ok) throw new Error(d.error);
+      document.getElementById('modal-import').classList.add('hidden');
+      await load();
+      toast(`Imported ${d.count} exercise${d.count===1?'':'s'}`);
+    } catch (e) {
+      toast('Import failed: ' + e.message);
+    }
+  });
+
+  // ── Video player modal ────────────────────────────────────────────────────────
+  window.openVideoModal = function(id) {
+    const ex = allExercises.find(e => e.id === id);
+    if (!ex || !ex.video_url) return;
+    const embedUrl = ytEmbedUrl(ex.video_url);
+    if (!embedUrl) {
+      window.open(ex.video_url, '_blank', 'noopener');
+      return;
+    }
+    document.getElementById('video-modal-name').textContent = ex.name;
+    document.getElementById('video-iframe').src = embedUrl;
+    document.getElementById('modal-video').classList.remove('hidden');
+  };
+
+  document.getElementById('btn-video-close').addEventListener('click', () => {
+    document.getElementById('modal-video').classList.add('hidden');
+    document.getElementById('video-iframe').src = '';
+  });
+
+  // ── Bulk Auto-fill (SSE streaming) ───────────────────────────────────────────
+  document.getElementById('btn-bulk-fill').addEventListener('click', async () => {
+    if (bulkRunning) return;
+    const btn = document.getElementById('btn-bulk-fill');
+
+    const missingCount = parseInt(document.getElementById('stat-missing-video').textContent || '0', 10);
+    if (missingCount === 0) {
+      toast('All exercises already have video links');
+      btn.style.display = 'none';
+      return;
+    }
+
+    bulkRunning = true;
+    btn.disabled = true;
+    btn.classList.add('running');
+    document.getElementById('btn-bulk-fill-label').textContent = 'Running…';
+
+    // Show progress banner
+    const banner = document.getElementById('bulk-fill-banner');
+    banner.classList.remove('hidden');
+    document.getElementById('bfb-title').textContent = 'Auto-filling missing videos…';
+    document.getElementById('bfb-filled').textContent  = '0';
+    document.getElementById('bfb-skipped').textContent = '0';
+    document.getElementById('bfb-failed').textContent  = '0';
+    document.getElementById('bfb-progress').style.width = '0%';
+    document.getElementById('bfb-status').textContent = 'Starting…';
+    document.getElementById('bfb-quota').classList.add('hidden');
+
+    let total = missingCount;
+
+    try {
+      const evtSource = new EventSource('/api/exercises/bulk-fill/stream');
+
+      evtSource.onmessage = function(e) {
+        let evt;
+        try { evt = JSON.parse(e.data); } catch (_) { return; }
+
+        if (evt.type === 'start') {
+          total = evt.total || total;
+          document.getElementById('bfb-status').textContent = `Searching ${total} exercise${total !== 1 ? 's' : ''}…`;
+        }
+
+        if (evt.type === 'progress') {
+          document.getElementById('bfb-filled').textContent  = evt.filled;
+          document.getElementById('bfb-skipped').textContent = evt.skipped;
+          document.getElementById('bfb-failed').textContent  = evt.failed;
+          const done = (evt.filled || 0) + (evt.skipped || 0) + (evt.failed || 0);
+          const pct  = total > 0 ? Math.round(done / total * 100) : 0;
+          document.getElementById('bfb-progress').style.width = pct + '%';
+
+          if (evt.result === 'filled') {
+            // Update exercise in-memory and flash the row green
+            const ex = allExercises.find(ex => ex.id === evt.exerciseId);
+            if (ex) { ex.video_url = evt.url; }
+            document.getElementById('bfb-status').textContent = `Filled: ${evt.exerciseName}`;
+
+            // Flash row if visible
+            const row = document.querySelector(`tr[data-id="${evt.exerciseId}"]`);
+            if (row) {
+              row.cells[4].innerHTML = renderVideoCell({ id: evt.exerciseId, name: evt.exerciseName, video_url: evt.url });
+              row.classList.remove('just-filled');
+              void row.offsetWidth; // force reflow
+              row.classList.add('just-filled');
+            }
+            // Update stats
+            const withVid = allExercises.filter(ex => ex.video_url).length;
+            document.getElementById('stat-with-video').textContent = withVid;
+            document.getElementById('stat-missing-video').textContent = allExercises.length - withVid;
+          } else if (evt.result === 'no_match') {
+            document.getElementById('bfb-status').textContent = `No match: ${evt.exerciseName}`;
+          } else if (evt.result === 'error' || evt.result === 'write_error') {
+            document.getElementById('bfb-status').textContent = `Error on: ${evt.exerciseName}`;
+          }
+        }
+
+        if (evt.type === 'quota_exhausted') {
+          document.getElementById('bfb-quota').classList.remove('hidden');
+          document.getElementById('bfb-progress').style.width = '100%';
+        }
+
+        if (evt.type === 'no_channels') {
+          document.getElementById('bfb-status').textContent = 'No trusted YouTube channels configured.';
+          document.getElementById('bfb-title').textContent = 'Setup required';
+        }
+
+        if (evt.type === 'error') {
+          document.getElementById('bfb-status').textContent = 'Error: ' + (evt.error || 'Unknown error');
+        }
+
+        if (evt.type === 'done') {
+          document.getElementById('bfb-filled').textContent  = evt.filled;
+          document.getElementById('bfb-skipped').textContent = evt.skipped;
+          document.getElementById('bfb-failed').textContent  = evt.failed;
+          document.getElementById('bfb-progress').style.width = '100%';
+          document.getElementById('bfb-title').textContent = 'Auto-fill complete';
+          document.getElementById('bfb-status').textContent = evt.summary || 'Done';
+          evtSource.close();
+          finishBulk(evt.filled);
+        }
+      };
+
+      evtSource.onerror = function() {
+        evtSource.close();
+        document.getElementById('bfb-status').textContent = 'Connection error — some exercises may still have been filled.';
+        finishBulk(0);
+      };
+    } catch(err) {
+      document.getElementById('bfb-status').textContent = 'Error: ' + err.message;
+      finishBulk(0);
+    }
+  });
+
+  function finishBulk(filled) {
+    bulkRunning = false;
+    const btn = document.getElementById('btn-bulk-fill');
+    btn.disabled = false;
+    btn.classList.remove('running');
+
+    // Update button count
+    const missing = allExercises.filter(e => !e.video_url).length;
+    if (missing > 0) {
+      document.getElementById('btn-bulk-fill-label').textContent =
+        `Auto-fill ${missing} missing video${missing !== 1 ? 's' : ''}`;
+    } else {
+      btn.style.display = 'none';
+    }
+
+    if (filled > 0) {
+      render();
+    }
+  }
+
+  // ── Swap video panel ──────────────────────────────────────────────────────────
+  window.openSwapPanel = async function(exerciseId, exerciseName) {
+    swapExerciseId   = exerciseId;
+    swapExerciseName = exerciseName;
+
+    document.getElementById('swap-exercise-name').textContent = exerciseName;
+    document.getElementById('swap-custom-url').value = '';
+    document.getElementById('swap-panel-backdrop').classList.remove('hidden');
+    document.getElementById('swap-loading').classList.remove('hidden');
+    document.getElementById('swap-candidates-list').innerHTML = '';
+
+    await loadSwapCandidates(exerciseId, exerciseName, false);
+  };
+
+  async function loadSwapCandidates(exerciseId, exerciseName, forceRefresh) {
+    document.getElementById('swap-loading').classList.remove('hidden');
+    document.getElementById('swap-candidates-list').innerHTML = '';
+
+    const url = `/api/exercises/swap-candidates/${encodeURIComponent(exerciseId)}?name=${encodeURIComponent(exerciseName)}${forceRefresh ? '&refresh=1' : ''}`;
+    try {
+      const r = await fetch(url);
+      const d = await r.json();
+      document.getElementById('swap-loading').classList.add('hidden');
+
+      if (!d.ok) {
+        if (d.error && d.error.toLowerCase().includes('channel')) {
+          document.getElementById('swap-candidates-list').innerHTML =
+            `<div class="swap-no-channels">No trusted YouTube channels configured. <a href="/dashboard/exercises/sources">Add channels →</a></div>`;
+        } else {
+          document.getElementById('swap-candidates-list').innerHTML =
+            `<div class="swap-no-results">Error: ${esc(d.error || 'unknown')}</div>`;
+        }
+        return;
+      }
+
+      const candidates = d.candidates || [];
+      if (candidates.length === 0) {
+        document.getElementById('swap-candidates-list').innerHTML =
+          `<div class="swap-no-results">No matching videos found in trusted channels for "${esc(exerciseName)}".</div>`;
+        return;
+      }
+
+      const currentEx = allExercises.find(e => e.id === exerciseId);
+      const currentUrl = currentEx ? currentEx.video_url : '';
+
+      document.getElementById('swap-candidates-list').innerHTML = candidates.map((c, i) => {
+        const thumbUrl = ytThumbUrl(c.video_url);
+        const isCurrent = c.video_url === currentUrl;
+        return `<div class="swap-candidate${isCurrent ? ' current' : ''}" data-url="${esc(c.video_url)}" data-channel="${esc(c.channel_name)}" onclick="applySwap(${i})">
+          <div class="swap-thumb">
+            ${thumbUrl ? `<img src="${esc(thumbUrl)}" alt="" loading="lazy">` : '<div style="background:#333;width:100%;height:100%"></div>'}
+            <div class="swap-thumb-play">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            </div>
+          </div>
+          <div class="swap-meta">
+            <div class="swap-channel">${esc(c.channel_name)}</div>
+            <div class="swap-title">${esc(c.title || c.video_url)}</div>
+            <span class="swap-apply-btn">${isCurrent ? 'Current video' : 'Apply this video →'}</span>
+          </div>
+        </div>`;
+      }).join('');
+    } catch (err) {
+      document.getElementById('swap-loading').classList.add('hidden');
+      document.getElementById('swap-candidates-list').innerHTML =
+        `<div class="swap-no-results">Error loading candidates: ${esc(err.message)}</div>`;
+    }
+  }
+
+  window.applySwap = async function(candidateIndex) {
+    if (!swapExerciseId) return;
+    const items = document.querySelectorAll('#swap-candidates-list .swap-candidate');
+    const item  = items[candidateIndex];
+    if (!item) return;
+
+    const videoUrl   = item.dataset.url;
+    const channelName = item.dataset.channel;
+    await doSwapVideo(swapExerciseId, videoUrl, channelName);
+  };
+
+  document.getElementById('btn-swap-custom').addEventListener('click', async () => {
+    if (!swapExerciseId) return;
+    const url = document.getElementById('swap-custom-url').value.trim();
+    if (!url) { toast('Paste a YouTube URL first'); return; }
+    await doSwapVideo(swapExerciseId, url, '');
+  });
+
+  document.getElementById('btn-swap-research').addEventListener('click', async () => {
+    if (!swapExerciseId) return;
+    await loadSwapCandidates(swapExerciseId, swapExerciseName, true);
+  });
+
+  async function doSwapVideo(exerciseId, videoUrl, channelName) {
+    try {
+      const r = await fetch(`/api/exercises/swap-video/${encodeURIComponent(exerciseId)}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ video_url: videoUrl, channel_name: channelName }),
+      });
+      const d = await r.json();
+      if (!d.ok) throw new Error(d.error);
+
+      // Update in-memory
+      const ex = allExercises.find(e => e.id === exerciseId);
+      if (ex) ex.video_url = videoUrl;
+
+      // Flash row
+      const row = document.querySelector(`tr[data-id="${exerciseId}"]`);
+      if (row) {
+        row.cells[4].innerHTML = renderVideoCell(ex);
+        row.classList.remove('just-filled');
+        void row.offsetWidth;
+        row.classList.add('just-filled');
+      }
+
+      toast('Video updated');
+      closeSwapPanel();
+      // Refresh stats
+      const withVid = allExercises.filter(e => e.video_url).length;
+      document.getElementById('stat-with-video').textContent = withVid;
+      document.getElementById('stat-missing-video').textContent = allExercises.length - withVid;
+      // Update bulk count button
+      const missing = allExercises.filter(e => !e.video_url).length;
+      if (missing > 0) {
+        document.getElementById('btn-bulk-fill-label').textContent = `Auto-fill ${missing} missing video${missing !== 1 ? 's' : ''}`;
+        document.getElementById('btn-bulk-fill').style.display = 'inline-flex';
+      } else {
+        document.getElementById('btn-bulk-fill').style.display = 'none';
+      }
+    } catch (e) {
+      toast('Error: ' + e.message);
+    }
+  }
+
+  function closeSwapPanel() {
+    document.getElementById('swap-panel-backdrop').classList.add('hidden');
+    swapExerciseId = null;
+    swapExerciseName = null;
+  }
+
+  document.getElementById('swap-close').addEventListener('click', closeSwapPanel);
+  document.getElementById('swap-overlay').addEventListener('click', closeSwapPanel);
+
+  // ── Click outside modal to close ─────────────────────────────────────────────
+  ['modal-add','modal-import','modal-video'].forEach(id => {
+    document.getElementById(id).addEventListener('click', e => {
+      if (e.target.id === id) {
+        document.getElementById(id).classList.add('hidden');
+        if (id === 'modal-video') document.getElementById('video-iframe').src = '';
+      }
+    });
+  });
+
+  // ── Keyboard shortcut ─────────────────────────────────────────────────────────
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-backdrop:not(.hidden)').forEach(m => m.classList.add('hidden'));
+      document.getElementById('video-iframe').src = '';
+      closeSwapPanel();
+    }
+  });
+
+  // ── Init ─────────────────────────────────────────────────────────────────────
+  load();
+
+})();
+</script>
+</body>
+</html>
