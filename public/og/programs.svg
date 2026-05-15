@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F5F1E8"/>
+      <stop offset="100%" stop-color="#EDE6D8"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="0" y="0" width="8" height="630" fill="#5C6E3F"/>
+
+  <!-- Badge -->
+  <rect x="80" y="72" width="240" height="36" rx="18" fill="#5C6E3F"/>
+  <text x="200" y="96" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#fff" text-anchor="middle" letter-spacing="1">PROGRAM TEMPLATE</text>
+
+  <!-- FitOS wordmark -->
+  <text x="80" y="200" font-family="Georgia, serif" font-size="32" font-weight="700" fill="#7A7570" letter-spacing="-1">FitOS Program Library</text>
+
+  <!-- Main headline -->
+  <text x="80" y="300" font-family="Georgia, serif" font-size="64" font-weight="700" fill="#2C2A24" letter-spacing="-2">Free coaching programs</text>
+  <text x="80" y="372" font-family="Georgia, serif" font-size="44" font-weight="600" fill="#5C6E3F" font-style="italic">ready to import.</text>
+
+  <!-- Program cards row -->
+  <rect x="80" y="420" width="200" height="80" rx="12" fill="rgba(92,110,63,0.12)" stroke="#C8D8A0" stroke-width="1.5"/>
+  <text x="180" y="455" font-family="Arial, sans-serif" font-size="13" fill="#5C6E3F" font-weight="600" text-anchor="middle">5/3/1 BBB</text>
+  <text x="180" y="477" font-family="Arial, sans-serif" font-size="12" fill="#7A7570" text-anchor="middle">Strength</text>
+
+  <rect x="298" y="420" width="200" height="80" rx="12" fill="rgba(92,110,63,0.12)" stroke="#C8D8A0" stroke-width="1.5"/>
+  <text x="398" y="455" font-family="Arial, sans-serif" font-size="13" fill="#5C6E3F" font-weight="600" text-anchor="middle">Push / Pull / Legs</text>
+  <text x="398" y="477" font-family="Arial, sans-serif" font-size="12" fill="#7A7570" text-anchor="middle">Hypertrophy</text>
+
+  <rect x="516" y="420" width="200" height="80" rx="12" fill="rgba(92,110,63,0.12)" stroke="#C8D8A0" stroke-width="1.5"/>
+  <text x="616" y="455" font-family="Arial, sans-serif" font-size="13" fill="#5C6E3F" font-weight="600" text-anchor="middle">Starting Strength</text>
+  <text x="616" y="477" font-family="Arial, sans-serif" font-size="12" fill="#7A7570" text-anchor="middle">Beginner</text>
+
+  <rect x="734" y="420" width="200" height="80" rx="12" fill="rgba(92,110,63,0.12)" stroke="#C8D8A0" stroke-width="1.5"/>
+  <text x="834" y="455" font-family="Arial, sans-serif" font-size="13" fill="#5C6E3F" font-weight="600" text-anchor="middle">+ 7 more</text>
+  <text x="834" y="477" font-family="Arial, sans-serif" font-size="12" fill="#7A7570" text-anchor="middle">All free</text>
+
+  <!-- Domain -->
+  <text x="80" y="580" font-family="Arial, sans-serif" font-size="18" fill="#7A7570">fitos-zc11.polsia.app/programs</text>
+</svg>
