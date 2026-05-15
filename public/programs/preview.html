@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>__TITLE__ | FitOS Program Library</title>
+  <meta name="description" content="__META_DESC__">
+  <meta property="og:title" content="__TITLE__ | FitOS" />
+  <meta property="og:description" content="__META_DESC__" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://fitos-zc11.polsia.app/programs/__SLUG__" />
+  <meta property="og:image" content="https://fitos-zc11.polsia.app/og/programs.svg" />
+  <meta property="og:site_name" content="FitOS" />
+  <link rel="canonical" href="https://fitos-zc11.polsia.app/programs/__SLUG__" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="__TITLE__ | FitOS" />
+  <meta name="twitter:description" content="__META_DESC__" />
+  <meta name="twitter:image" content="https://fitos-zc11.polsia.app/og/programs.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script type="application/ld+json">__SCHEMA__</script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cream: #F4EFE6; --cream-light: #FDFAF5; --cream-mid: #EDE6D8;
+      --olive: #5C6B2A; --olive-dark: #3D4A1A; --olive-muted: #8A9650; --olive-pale: #E8EDD6;
+      --text: #2C2A24; --text-muted: #7A7570; --border: #DDD8CA;
+    }
+    html, body { background: var(--cream); color: var(--text); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+
+    .site-nav { background: var(--cream-light); border-bottom: 1px solid var(--border); padding: 0 24px; height: 56px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-brand { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700; color: var(--olive); text-decoration: none; }
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-links a { font-size: 13.5px; color: var(--text-muted); text-decoration: none; font-weight: 500; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta { background: var(--olive); color: #fff !important; padding: 8px 16px; border-radius: 8px; font-weight: 600 !important; }
+    .nav-cta:hover { background: var(--olive-dark) !important; }
+
+    .page { max-width: 800px; margin: 0 auto; padding: 40px 24px 80px; }
+
+    .breadcrumb { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; display: flex; gap: 6px; align-items: center; }
+    .breadcrumb a { color: var(--olive); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+
+    .hero { margin-bottom: 32px; }
+    .hero-badges { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+    .goal-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; letter-spacing: .03em; }
+    .goal-strength     { background: #E8EDD6; color: #3D4A1A; }
+    .goal-hypertrophy  { background: #E0EEFF; color: #3060A0; }
+    .goal-powerbuilding{ background: #FEF3CD; color: #8A6220; }
+    .goal-general      { background: #F0EEF8; color: #5048A0; }
+    .diff-badge { font-size: 12px; color: var(--text-muted); }
+    .hero h1 { font-family: 'Fraunces', serif; font-size: 36px; font-weight: 700; color: var(--text); line-height: 1.15; margin-bottom: 8px; }
+    .hero .author { font-size: 14px; color: var(--text-muted); margin-bottom: 16px; }
+    .hero .desc { font-size: 15px; color: var(--text-muted); line-height: 1.7; max-width: 680px; }
+
+    .meta-row { display: flex; gap: 24px; flex-wrap: wrap; margin: 24px 0; padding: 20px 24px; background: var(--cream-light); border: 1px solid var(--border); border-radius: 14px; }
+    .meta-item strong { display: block; font-size: 24px; font-weight: 700; color: var(--text); font-family: 'Fraunces', serif; }
+    .meta-item span { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; }
+
+    .section { margin-bottom: 32px; }
+    .section-title { font-size: 13px; font-weight: 700; color: var(--text-muted); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+
+    .week-nav { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .week-btn { padding: 6px 14px; border-radius: 8px; font-size: 12.5px; font-weight: 500; border: 1.5px solid var(--border); background: var(--cream-light); color: var(--text-muted); cursor: pointer; font-family: inherit; }
+    .week-btn.active { background: var(--olive-pale); border-color: var(--olive-muted); color: var(--olive-dark); font-weight: 600; }
+    .week-phase { font-size: 13px; color: var(--olive); font-weight: 500; margin-bottom: 14px; }
+
+    .day-card { background: var(--cream-light); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 12px; overflow: hidden; }
+    .day-card-header { padding: 11px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--cream); }
+    .day-card-name { font-size: 14px; font-weight: 600; color: var(--text); }
+    .day-card-focus { font-size: 13px; color: var(--olive); font-weight: 500; }
+    .ex-row { display: flex; gap: 10px; align-items: baseline; padding: 9px 16px; border-bottom: 1px solid var(--border); }
+    .ex-row:last-child { border-bottom: none; }
+    .ex-n { width: 20px; flex-shrink: 0; font-size: 11px; color: var(--text-muted); font-weight: 600; }
+    .ex-name { flex: 1; font-size: 13.5px; font-weight: 500; color: var(--text); }
+    .ex-scheme { font-size: 13px; color: var(--text-muted); white-space: nowrap; }
+    .ex-load { font-size: 12px; color: var(--olive-muted); white-space: nowrap; }
+    .ex-note { font-size: 11.5px; color: var(--text-muted); font-style: italic; padding: 0 16px 8px 46px; }
+
+    .info-box { background: var(--cream-light); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; font-size: 13.5px; color: var(--text-muted); line-height: 1.7; }
+    .info-box strong { color: var(--text); }
+
+    /* ── SIGNUP CTA ──────────────────────────────────────── */
+    .cta-block { background: var(--olive-pale); border: 1.5px solid var(--olive-muted); border-radius: 18px; padding: 32px 36px; text-align: center; margin-top: 40px; }
+    .cta-block h2 { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 700; color: var(--olive-dark); margin-bottom: 10px; }
+    .cta-block p { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 20px; max-width: 520px; margin-left: auto; margin-right: auto; }
+    .cta-btn { display: inline-block; background: var(--olive); color: #fff; padding: 13px 28px; border-radius: 10px; font-size: 15px; font-weight: 700; text-decoration: none; }
+    .cta-btn:hover { background: var(--olive-dark); }
+    .cta-sub { margin-top: 12px; font-size: 12px; color: var(--text-muted); }
+
+    .tags-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 14px; }
+    .tag { background: var(--cream); border: 1px solid var(--border); color: var(--text-muted); font-size: 11.5px; padding: 3px 9px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a class="nav-brand" href="/">FitOS</a>
+  <div class="nav-links">
+    <a href="/programs">All Programs</a>
+    <a href="/pricing">Pricing</a>
+    <a href="/trial/signup" class="nav-cta">Get started free</a>
+  </div>
+</nav>
+
+<main class="page">
+  <div class="breadcrumb">
+    <a href="/">Home</a>
+    <span>›</span>
+    <a href="/programs">Programs</a>
+    <span>›</span>
+    <span id="bc-name"></span>
+  </div>
+
+  <article class="hero" id="hero"></article>
+
+  <div class="section" id="weeks-section">
+    <div class="section-title">Program structure</div>
+    <div class="week-nav" id="week-nav"></div>
+    <div class="week-phase" id="week-phase"></div>
+    <div id="week-days"></div>
+  </div>
+
+  <div class="section" id="progression-section" style="display:none">
+    <div class="section-title">Progression rules</div>
+    <div class="info-box" id="progression-box"></div>
+  </div>
+
+  <div class="section" id="notes-section" style="display:none">
+    <div class="section-title">Coach notes</div>
+    <div class="info-box" id="notes-box"></div>
+  </div>
+
+  <!-- SIGNUP CTA -->
+  <div class="cta-block">
+    <h2>Import this program for your clients</h2>
+    <p>FitOS is a free, open-source coaching platform. Sign up to import this program, track client progress, and manage your entire roster from one place.</p>
+    <a class="cta-btn" href="/trial/signup">Start free — no credit card</a>
+    <div class="cta-sub">14-day trial. Cancel anytime.</div>
+  </div>
+</main>
+
+<script>
+  // The template data is embedded as a global by the server
+  const TEMPLATE = window.__TEMPLATE_DATA__;
+
+  if (TEMPLATE) {
+    document.getElementById('bc-name').textContent = TEMPLATE.name;
+
+    // Hero
+    document.getElementById('hero').innerHTML = `
+      <div class="hero-badges">
+        <span class="goal-badge goal-${TEMPLATE.goal}">${_goalLabel(TEMPLATE.goal)}</span>
+        <span class="diff-badge">${_diffLabel(TEMPLATE.difficulty)}</span>
+      </div>
+      <h1>${TEMPLATE.name}</h1>
+      <p class="author">By ${TEMPLATE.author}</p>
+      <p class="desc">${TEMPLATE.description}</p>
+      <div class="meta-row">
+        <div class="meta-item"><strong>${TEMPLATE.durationWeeks}</strong><span>Weeks</span></div>
+        <div class="meta-item"><strong>${TEMPLATE.daysPerWeek}</strong><span>Days/wk</span></div>
+        <div class="meta-item"><strong>${TEMPLATE.weeks[0] ? TEMPLATE.weeks[0].days.reduce((n,d)=>n+(d.exercises||[]).length,0) : '?'}</strong><span>Ex/session</span></div>
+        <div class="meta-item"><strong style="font-size:16px">${(TEMPLATE.equipment||[]).join(', ')}</strong><span>Equipment</span></div>
+      </div>
+      <div class="tags-row">${(TEMPLATE.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+    `;
+
+    // Week nav
+    let _activeWeek = 0;
+    const nav = document.getElementById('week-nav');
+    TEMPLATE.weeks.forEach((w, i) => {
+      const btn = document.createElement('button');
+      btn.className = `week-btn ${i === 0 ? 'active' : ''}`;
+      btn.textContent = w.label ? w.label.replace(/^Week /, 'Wk ').split('—')[0].trim() : `Wk ${w.week}`;
+      btn.onclick = () => {
+        _activeWeek = i;
+        document.querySelectorAll('.week-btn').forEach((b, j) => b.classList.toggle('active', j === i));
+        renderWeek(i);
+      };
+      nav.appendChild(btn);
+    });
+    renderWeek(0);
+
+    // Progression
+    if (TEMPLATE.progression) {
+      document.getElementById('progression-section').style.display = '';
+      document.getElementById('progression-box').textContent = TEMPLATE.progression;
+    }
+    if (TEMPLATE.notes) {
+      document.getElementById('notes-section').style.display = '';
+      document.getElementById('notes-box').textContent = TEMPLATE.notes;
+    }
+  }
+
+  function renderWeek(idx) {
+    const w = TEMPLATE.weeks[idx];
+    document.getElementById('week-phase').textContent = `${w.label || ''} — ${w.phase || ''}`;
+    const html = (w.days || []).map(day => {
+      const exRows = (day.exercises || []).map((ex, i) => `
+        <div class="ex-row">
+          <span class="ex-n">${i+1}</span>
+          <span class="ex-name">${ex.name}</span>
+          <span class="ex-scheme">${ex.sets}×${ex.reps}</span>
+          <span class="ex-load">${ex.load || ''}</span>
+        </div>
+        ${ex.notes ? `<div class="ex-note">${ex.notes}</div>` : ''}
+      `).join('');
+      return `<div class="day-card"><div class="day-card-header"><span class="day-card-name">${day.day}</span><span class="day-card-focus">${day.focus}</span></div>${exRows}</div>`;
+    }).join('');
+    document.getElementById('week-days').innerHTML = html;
+  }
+
+  function _goalLabel(g) { return {strength:'Strength',hypertrophy:'Hypertrophy',powerbuilding:'Powerbuilding',general:'General Fitness'}[g]||g; }
+  function _diffLabel(d) { return {beginner:'Beginner',intermediate:'Intermediate',advanced:'Advanced'}[d]||d; }
+</script>
+</body>
+</html>
