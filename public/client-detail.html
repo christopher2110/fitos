@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitOS — Client Detail</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:        #F4EFE6;
+      --cream-light:  #FDFAF5;
+      --cream-mid:    #EDE6D8;
+      --olive:        #5C6B2A;
+      --olive-dark:   #3D4A1A;
+      --olive-muted:  #8A9650;
+      --olive-pale:   #E8EDD6;
+      --text:         #2C2A24;
+      --text-muted:   #7A7570;
+      --border:       #DDD8CA;
+      --sidebar-w:    220px;
+      --topbar-h:     60px;
+      --status-active-bg:      #EAF2EA;
+      --status-active-fg:      #3A7040;
+      --status-flag-bg:        #FEF3CD;
+      --status-flag-fg:        #8A6220;
+      --status-missed-bg:      #FCE8E8;
+      --status-missed-fg:      #A83030;
+    }
+
+    html, body { height: 100%; background: var(--cream); color: var(--text); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+    .layout { display: flex; min-height: 100vh; }
+
+    /* SIDEBAR */
+    .sidebar { width: var(--sidebar-w); background: var(--cream-light); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 50; }
+    .sidebar-brand { padding: 22px 20px 20px; border-bottom: 1px solid var(--border); }
+    .brand-wordmark { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; color: var(--olive); letter-spacing: -0.02em; }
+    .brand-tagline { font-size: 10px; font-weight: 500; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 6px; }
+    .sidebar-nav { flex: 1; padding: 12px 10px; display: flex; flex-direction: column; gap: 2px; }
+    .nav-section-label { font-size: 10px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; padding: 10px 10px 4px; }
+    .nav-link { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 10px; text-decoration: none; font-size: 13.5px; font-weight: 500; color: var(--text-muted); transition: background 0.12s, color 0.12s; cursor: pointer; }
+    .nav-link:hover { background: var(--cream-mid); color: var(--text); }
+    .nav-link.active { background: var(--olive-pale); color: var(--olive-dark); font-weight: 600; }
+    .nav-icon { width: 17px; height: 17px; flex-shrink: 0; opacity: 0.7; }
+    .nav-link.active .nav-icon { opacity: 1; }
+    .sidebar-footer { padding: 14px; border-top: 1px solid var(--border); }
+    .coach-chip { display: flex; align-items: center; gap: 9px; }
+    .coach-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--olive); color: var(--cream-light); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; }
+    .coach-name-small { font-size: 13px; font-weight: 600; color: var(--text); }
+    .coach-role { font-size: 11px; color: var(--text-muted); }
+
+    /* MAIN */
+    .main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+    .topbar { height: var(--topbar-h); background: var(--cream-light); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 28px; position: sticky; top: 0; z-index: 40; gap: 12px; }
+    .topbar-back { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border); background: transparent; font-size: 12px; font-weight: 600; color: var(--text-muted); cursor: pointer; text-decoration: none; transition: background 0.12s; }
+    .topbar-back:hover { background: var(--cream-mid); color: var(--text); }
+    .topbar-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; color: var(--text); }
+    .page-content { padding: 28px; flex: 1; }
+
+    /* PROFILE HEADER */
+    .profile-header { display: flex; align-items: center; gap: 20px; margin-bottom: 28px; padding: 24px; background: var(--cream-light); border: 1px solid var(--border); border-radius: 16px; }
+    .profile-avatar { width: 56px; height: 56px; border-radius: 50%; background: var(--olive); color: var(--cream-light); font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .profile-info h2 { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; color: var(--text); margin: 0 0 4px; }
+    .profile-meta { display: flex; gap: 16px; flex-wrap: wrap; }
+    .meta-item { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
+    .meta-item strong { font-weight: 600; color: var(--text); }
+    .badge { display: inline-block; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+    .badge-Active { background: var(--status-active-bg); color: var(--status-active-fg); }
+    .badge-Flag { background: var(--status-flag-bg); color: var(--status-flag-fg); }
+    .badge-Missed { background: var(--status-missed-bg); color: var(--status-missed-fg); }
+    .profile-actions { margin-left: auto; display: flex; gap: 8px; }
+    .profile-actions .action-btn { padding: 8px 14px; border-radius: 10px; border: 1px solid var(--border); background: var(--cream-light); font-size: 12px; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.12s; text-decoration: none; }
+    .profile-actions .action-btn:hover { background: var(--olive-pale); color: var(--olive-dark); }
+    .profile-actions .action-btn.primary { background: var(--olive); color: var(--cream-light); border-color: var(--olive); }
+    .profile-actions .action-btn.primary:hover { background: var(--olive-dark); }
+
+    /* TABS */
+    .tab-bar { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
+    .tab-btn { padding: 12px 20px; font-size: 13px; font-weight: 600; color: var(--text-muted); background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; transition: all 0.12s; }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--olive-dark); border-bottom-color: var(--olive); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* SECTION CARD */
+    .section-card { background: var(--cream-light); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; margin-bottom: 20px; }
+    .section-card-header { padding: 16px 18px 12px; border-bottom: 1px solid var(--border); }
+    .section-card-header h3 { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 600; color: var(--text); }
+
+    /* DATA TABLE */
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead th { padding: 8px 14px; text-align: left; font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; background: var(--cream); border-bottom: 1px solid var(--border); }
+    tbody tr { border-bottom: 1px solid var(--border); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody td { padding: 10px 14px; vertical-align: middle; }
+
+    /* STATUS BADGES */
+    .status-completed { color: var(--status-active-fg); font-weight: 600; }
+    .status-pr { color: #2980B9; font-weight: 600; }
+    .status-skipped { color: var(--status-missed-fg); font-weight: 600; }
+
+    /* MESSAGES */
+    .message-list { padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; max-height: 400px; overflow-y: auto; }
+    .msg-bubble { max-width: 80%; padding: 10px 14px; border-radius: 14px; font-size: 13px; line-height: 1.4; }
+    .msg-coach { background: var(--cream); color: var(--text); align-self: flex-start; border-bottom-left-radius: 4px; }
+    .msg-client { background: var(--olive); color: var(--cream-light); align-self: flex-end; border-bottom-right-radius: 4px; }
+    .msg-meta { font-size: 10px; color: var(--text-muted); margin-top: 4px; }
+    .msg-client .msg-meta { color: rgba(244,239,230,0.6); }
+
+    /* EMPTY */
+    .empty-section { text-align: center; padding: 36px 24px; color: var(--text-muted); font-size: 13px; }
+
+    /* PROGRAM DISPLAY */
+    .program-week { margin-bottom: 20px; }
+    .program-week-header { padding: 12px 18px; background: var(--cream); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+    .program-week-header h4 { font-family: 'Fraunces', serif; font-size: 14px; font-weight: 600; color: var(--text); margin: 0; }
+    .program-week-header .phase-badge { padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: 600; background: var(--olive-pale); color: var(--olive-dark); }
+    .program-day { border-bottom: 1px solid var(--border); }
+    .program-day:last-child { border-bottom: none; }
+    .program-day-header { padding: 10px 18px; background: var(--cream-light); font-size: 12px; font-weight: 600; color: var(--olive-dark); display: flex; align-items: center; gap: 8px; cursor: pointer; }
+    .program-day-header:hover { background: var(--cream-mid); }
+    .program-day-header .day-focus { color: var(--text-muted); font-weight: 500; }
+    .program-exercises { padding: 0 18px 12px; }
+    .program-exercise-row { display: grid; grid-template-columns: 2fr 0.5fr 0.7fr 0.7fr 0.5fr; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 12px; align-items: center; }
+    .program-exercise-row:last-child { border-bottom: none; }
+    .program-exercise-row .ex-name { font-weight: 500; color: var(--text); }
+    .program-exercise-row .ex-detail { color: var(--text-muted); }
+    .program-exercise-header { display: grid; grid-template-columns: 2fr 0.5fr 0.7fr 0.7fr 0.5fr; gap: 8px; padding: 6px 0; font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
+    /* EXERCISE ROW IN FORM */
+    .exercise-entry { background: var(--cream); border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin-bottom: 10px; }
+    .exercise-entry .ex-top { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-bottom: 8px; }
+    .exercise-entry .ex-fields { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; }
+    .exercise-entry input, .exercise-entry select { padding: 7px 9px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; background: var(--cream-light); width: 100%; }
+    .exercise-entry .ex-label { font-size: 10px; font-weight: 600; color: var(--text-muted); margin-bottom: 3px; display: block; }
+    .exercise-entry .btn-remove-ex { background: none; border: none; color: var(--status-missed-fg); font-size: 16px; cursor: pointer; padding: 2px 6px; }
+
+    /* SKELETON */
+    .skeleton { background: linear-gradient(90deg, var(--cream-mid) 25%, var(--border) 50%, var(--cream-mid) 75%); background-size: 200% 100%; animation: shimmer 1.4s ease-in-out infinite; border-radius: 6px; }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+    /* RESPONSIVE */
+    @media (max-width: 720px) {
+      :root { --sidebar-w: 0px; }
+      .sidebar { display: none; }
+      .main { margin-left: 0; }
+      .page-content { padding: 16px; }
+      .profile-header { flex-direction: column; text-align: center; }
+      .profile-actions { margin: 12px 0 0; }
+      .profile-meta { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-wordmark">FitOS</div>
+      <div class="brand-tagline">Coaching Platform</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Workspace</div>
+      <a class="nav-link" href="/dashboard">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a class="nav-link" href="/dashboard/messages">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Messages
+      </a>
+      <a class="nav-link active" href="/dashboard/clients">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Clients
+      </a>
+      <a class="nav-link" href="/settings/agents">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        Agents
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="coach-chip">
+        <div class="coach-avatar" id="coach-avatar-init">C</div>
+        <div>
+          <div class="coach-name-small" id="coach-name-display">Coach</div>
+          <div class="coach-role">FitOS Demo</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <header class="topbar">
+      <a class="topbar-back" href="/dashboard/clients">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        Clients
+      </a>
+      <div class="topbar-title" id="topbar-client-name">Client Detail</div>
+    </header>
+
+    <div class="page-content">
+      <!-- PROFILE HEADER -->
+      <div class="profile-header" id="profile-header">
+        <div class="profile-avatar" id="profile-avatar">
+          <div class="skeleton" style="width:56px;height:56px;border-radius:50%"></div>
+        </div>
+        <div class="profile-info">
+          <h2 id="profile-name"><span class="skeleton" style="display:inline-block;width:180px;height:24px"></span></h2>
+          <div class="profile-meta" id="profile-meta">
+            <span class="skeleton" style="display:inline-block;width:120px;height:14px"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TABS -->
+      <div class="tab-bar" id="tab-bar">
+        <button class="tab-btn active" data-tab="overview">Overview</button>
+        <button class="tab-btn" data-tab="workouts">Workouts</button>
+        <a class="tab-btn" id="tab-calendar-link" href="">Calendar</a>
+        <button class="tab-btn" data-tab="checkins">Check-ins</button>
+        <button class="tab-btn" data-tab="messages">Messages</button>
+        <a class="tab-btn" id="tab-results-link" href="" style="color:var(--olive-dark);font-weight:600">📊 Results</a>
+      </div>
+
+      <!-- OVERVIEW TAB -->
+      <div class="tab-panel active" id="panel-overview">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div class="section-card">
+            <div class="section-card-header"><h3>Recent Workouts</h3></div>
+            <div id="overview-workouts" class="empty-section">Loading…</div>
+          </div>
+          <div class="section-card">
+            <div class="section-card-header"><h3>Recent Check-ins</h3></div>
+            <div id="overview-checkins" class="empty-section">Loading…</div>
+          </div>
+        </div>
+        <div class="section-card" style="margin-top:20px">
+          <div class="section-card-header"><h3>Recent Messages</h3></div>
+          <div class="message-list" id="overview-messages">
+            <div class="empty-section">Loading…</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WORKOUTS TAB -->
+      <div class="tab-panel" id="panel-workouts">
+        <!-- Program Section -->
+        <div class="section-card" id="program-section">
+          <div class="section-card-header" style="display:flex;align-items:center;justify-content:space-between">
+            <h3>Training Program</h3>
+            <button class="action-btn primary" id="btn-create-workout" style="padding:6px 14px;border-radius:8px;border:none;background:var(--olive);color:var(--cream-light);font-size:12px;font-weight:600;cursor:pointer">+ Add Workout</button>
+          </div>
+          <div id="program-content" class="empty-section">Loading program…</div>
+        </div>
+
+        <!-- Workout Log (Completions) -->
+        <div class="section-card" style="margin-top:20px">
+          <div class="section-card-header"><h3>Workout Log</h3></div>
+          <div style="overflow-x:auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th><th>Exercise</th><th>Sets</th><th>Reps</th><th>Weight</th><th>RPE</th><th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="workouts-tbody">
+                <tr><td colspan="7" class="empty-section">Loading…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- CREATE WORKOUT MODAL -->
+      <div id="workout-modal" style="display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,0.4);align-items:center;justify-content:center">
+        <div style="background:var(--cream-light);border-radius:16px;width:90%;max-width:560px;max-height:90vh;overflow-y:auto;padding:28px;box-shadow:0 20px 60px rgba(0,0,0,0.2)">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+            <h3 style="font-family:'Fraunces',serif;font-size:18px;font-weight:600">Add Workout Day</h3>
+            <button id="modal-close" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--text-muted);padding:4px 8px">&times;</button>
+          </div>
+
+          <form id="workout-form">
+            <!-- Day Setup -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+              <div>
+                <label style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;display:block;margin-bottom:4px">Week</label>
+                <input type="number" id="wf-week" min="1" max="52" value="1" required style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--cream)">
+              </div>
+              <div>
+                <label style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;display:block;margin-bottom:4px">Day</label>
+                <select id="wf-day" required style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--cream)">
+                  <option value="Monday">Monday</option>
+                  <option value="Tuesday">Tuesday</option>
+                  <option value="Wednesday">Wednesday</option>
+                  <option value="Thursday">Thursday</option>
+                  <option value="Friday">Friday</option>
+                  <option value="Saturday">Saturday</option>
+                  <option value="Sunday">Sunday</option>
+                </select>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
+              <div>
+                <label style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;display:block;margin-bottom:4px">Phase</label>
+                <select id="wf-phase" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--cream)">
+                  <option value="Intro">Intro</option>
+                  <option value="Accumulation" selected>Accumulation</option>
+                  <option value="Intensification">Intensification</option>
+                  <option value="Deload">Deload</option>
+                  <option value="Peak">Peak</option>
+                  <option value="Maintenance">Maintenance</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;display:block;margin-bottom:4px">Focus / Session Name</label>
+                <input type="text" id="wf-focus" placeholder="e.g. Lower Body Strength" required style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--cream)">
+              </div>
+            </div>
+
+            <!-- Exercises List -->
+            <div style="margin-bottom:16px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+                <label style="font-size:12px;font-weight:600;color:var(--text)">Exercises</label>
+                <button type="button" id="btn-add-exercise" style="padding:4px 10px;border-radius:6px;border:1px solid var(--olive);background:transparent;font-size:11px;font-weight:600;color:var(--olive);cursor:pointer">+ Exercise</button>
+              </div>
+              <div id="exercises-list"></div>
+            </div>
+
+            <button type="submit" id="btn-save-workout" style="width:100%;padding:12px;border-radius:10px;border:none;background:var(--olive);color:var(--cream-light);font-size:14px;font-weight:600;cursor:pointer;transition:background 0.12s">Save to Program</button>
+          </form>
+
+          <div id="workout-form-status" style="margin-top:12px;font-size:13px;text-align:center;display:none"></div>
+        </div>
+      </div>
+
+      <!-- CHECKINS TAB -->
+      <div class="tab-panel" id="panel-checkins">
+        <div class="section-card">
+          <div class="section-card-header"><h3>Check-in History</h3></div>
+          <div style="overflow-x:auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th><th>Bodyweight</th><th>Mood</th><th>Sleep</th><th>Energy</th><th>Notes</th>
+                </tr>
+              </thead>
+              <tbody id="checkins-tbody">
+                <tr><td colspan="6" class="empty-section">Loading…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- MESSAGES TAB -->
+      <div class="tab-panel" id="panel-messages">
+        <div class="section-card">
+          <div class="section-card-header"><h3>Message Thread</h3></div>
+          <div class="message-list" id="messages-full">
+            <div class="empty-section">Loading…</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const LIVE_CFG = window.__COACH_LIVE__ || {};
+  const clientId = window.__CLIENT_ID__ || 1;
+  const coachName = LIVE_CFG.coachName || 'Coach';
+  const coachInitial = coachName.split(' ').filter(Boolean).map(w => w[0]).join('').toUpperCase().slice(0, 2) || 'C';
+
+  // Coach identity
+  const avatarEl = document.getElementById('coach-avatar-init');
+  const nameEl = document.getElementById('coach-name-display');
+  if (avatarEl) avatarEl.textContent = coachInitial;
+  if (nameEl) nameEl.textContent = coachName;
+
+  // Calendar tab link — points to the dedicated calendar page
+  const calLink = document.getElementById('tab-calendar-link');
+  if (calLink) calLink.href = `/dashboard/clients/${clientId}/calendar`;
+
+  // Results tab link — points to the dedicated results page
+  const resultsLink = document.getElementById('tab-results-link');
+  if (resultsLink) resultsLink.href = `/dashboard/clients/${clientId}/results`;
+
+  // Tabs (button-based panels only; anchor tabs navigate)
+  document.querySelectorAll('.tab-btn[data-tab]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn[data-tab]').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // Status class helper
+  function statusClass(s) {
+    const lower = (s || '').toLowerCase();
+    if (lower === 'completed') return 'status-completed';
+    if (lower === 'pr') return 'status-pr';
+    if (lower === 'skipped') return 'status-skipped';
+    return '';
+  }
+
+  // ── Program display ─────────────────────────────────────────────────────────
+  function renderProgram(weeks) {
+    const el = document.getElementById('program-content');
+    if (!weeks || weeks.length === 0) {
+      el.innerHTML = `
+        <div style="text-align:center;padding:36px 24px">
+          <div style="font-size:32px;margin-bottom:12px">📋</div>
+          <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px">No program assigned yet</div>
+          <div style="font-size:13px;color:var(--text-muted);margin-bottom:16px">Create a workout program to get started.</div>
+        </div>`;
+      return;
+    }
+
+    let html = '';
+    for (const week of weeks) {
+      html += `<div class="program-week">`;
+      html += `<div class="program-week-header"><h4>Week ${week.week}</h4>${week.phase ? `<span class="phase-badge">${week.phase}</span>` : ''}</div>`;
+      for (const day of week.days) {
+        html += `<div class="program-day">`;
+        html += `<div class="program-day-header"><span>${day.day}</span><span class="day-focus">— ${day.focus}</span></div>`;
+        html += `<div class="program-exercises">`;
+        html += `<div class="program-exercise-header"><span>Exercise</span><span>Sets</span><span>Reps</span><span>Load</span><span>Rest</span></div>`;
+        for (const ex of day.exercises) {
+          html += `<div class="program-exercise-row">
+            <span class="ex-name">${ex.name}</span>
+            <span class="ex-detail">${ex.sets}</span>
+            <span class="ex-detail">${ex.reps}</span>
+            <span class="ex-detail">${ex.load}</span>
+            <span class="ex-detail">${ex.rest ? ex.rest + 's' : '—'}</span>
+          </div>`;
+        }
+        html += `</div></div>`;
+      }
+      html += `</div>`;
+    }
+    el.innerHTML = html;
+  }
+
+  async function loadProgram() {
+    try {
+      const res = await fetch('/api/programs');
+      const data = await res.json();
+      if (data.ok) renderProgram(data.program);
+    } catch (err) {
+      console.error('[program] load error:', err);
+      document.getElementById('program-content').innerHTML = '<div class="empty-section">Failed to load program.</div>';
+    }
+  }
+
+  // ── Create Workout Modal ────────────────────────────────────────────────────
+  const modal = document.getElementById('workout-modal');
+  const form = document.getElementById('workout-form');
+  const exercisesList = document.getElementById('exercises-list');
+  let exerciseCount = 0;
+
+  function addExerciseRow() {
+    exerciseCount++;
+    const idx = exerciseCount;
+    const div = document.createElement('div');
+    div.className = 'exercise-entry';
+    div.id = `ex-entry-${idx}`;
+    div.innerHTML = `
+      <div class="ex-top">
+        <div>
+          <span class="ex-label">Exercise Name</span>
+          <input type="text" name="ex-name-${idx}" placeholder="e.g. Back Squat" required>
+        </div>
+        <button type="button" class="btn-remove-ex" onclick="this.closest('.exercise-entry').remove()">&times;</button>
+      </div>
+      <div class="ex-fields">
+        <div><span class="ex-label">Sets</span><input type="text" name="ex-sets-${idx}" placeholder="4" value="3"></div>
+        <div><span class="ex-label">Reps</span><input type="text" name="ex-reps-${idx}" placeholder="8-10"></div>
+        <div><span class="ex-label">Load</span><input type="text" name="ex-load-${idx}" placeholder="RPE 7"></div>
+        <div><span class="ex-label">Rest (s)</span><input type="text" name="ex-rest-${idx}" placeholder="120"></div>
+      </div>
+      <div style="margin-top:8px"><span class="ex-label">Notes / Cues</span><input type="text" name="ex-notes-${idx}" placeholder="Optional coaching cues"></div>
+    `;
+    exercisesList.appendChild(div);
+  }
+
+  document.getElementById('btn-create-workout').addEventListener('click', () => {
+    modal.style.display = 'flex';
+    if (exerciseCount === 0) { addExerciseRow(); addExerciseRow(); addExerciseRow(); }
+  });
+
+  document.getElementById('modal-close').addEventListener('click', () => {
+    modal.style.display = 'none';
+  });
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) modal.style.display = 'none';
+  });
+
+  document.getElementById('btn-add-exercise').addEventListener('click', addExerciseRow);
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const statusEl = document.getElementById('workout-form-status');
+    const btn = document.getElementById('btn-save-workout');
+
+    const week = document.getElementById('wf-week').value;
+    const day = document.getElementById('wf-day').value;
+    const phase = document.getElementById('wf-phase').value;
+    const focus = document.getElementById('wf-focus').value;
+
+    // Gather exercises from DOM
+    const entries = exercisesList.querySelectorAll('.exercise-entry');
+    const exercises = [];
+    for (const entry of entries) {
+      const idx = entry.id.replace('ex-entry-', '');
+      const name = (entry.querySelector(`[name="ex-name-${idx}"]`) || {}).value || '';
+      if (!name.trim()) continue;
+      exercises.push({
+        week: parseInt(week) || 1,
+        phase,
+        day,
+        focus,
+        name: name.trim(),
+        sets: (entry.querySelector(`[name="ex-sets-${idx}"]`) || {}).value || '3',
+        reps: (entry.querySelector(`[name="ex-reps-${idx}"]`) || {}).value || '',
+        load: (entry.querySelector(`[name="ex-load-${idx}"]`) || {}).value || '',
+        rest: (entry.querySelector(`[name="ex-rest-${idx}"]`) || {}).value || '',
+        tempo: '',
+        notes: (entry.querySelector(`[name="ex-notes-${idx}"]`) || {}).value || '',
+      });
+    }
+
+    if (exercises.length === 0) {
+      statusEl.style.display = 'block';
+      statusEl.style.color = 'var(--status-missed-fg)';
+      statusEl.textContent = 'Add at least one exercise.';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+    statusEl.style.display = 'none';
+
+    try {
+      const res = await fetch('/api/programs/exercises', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ exercises }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        statusEl.style.display = 'block';
+        statusEl.style.color = 'var(--status-active-fg)';
+        statusEl.textContent = `✓ ${data.added} exercise(s) saved to program!`;
+        // Reload program display after short delay
+        setTimeout(() => {
+          modal.style.display = 'none';
+          loadProgram();
+          statusEl.style.display = 'none';
+        }, 1200);
+      } else {
+        statusEl.style.display = 'block';
+        statusEl.style.color = 'var(--status-missed-fg)';
+        statusEl.textContent = data.error || 'Failed to save.';
+      }
+    } catch (err) {
+      statusEl.style.display = 'block';
+      statusEl.style.color = 'var(--status-missed-fg)';
+      statusEl.textContent = 'Network error — please try again.';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Save to Program';
+    }
+  });
+
+  // ── Render functions ────────────────────────────────────────────────────────
+  function renderProfile(client) {
+    document.getElementById('topbar-client-name').textContent = client.name;
+    document.title = `FitOS — ${client.name}`;
+    const initial = client.initial || client.name.split(' ').filter(Boolean).map(w => w[0]).join('').toUpperCase().slice(0, 2);
+    document.getElementById('profile-avatar').innerHTML = `<div class="profile-avatar" style="width:56px;height:56px;font-size:20px">${initial}</div>`;
+    document.getElementById('profile-name').textContent = client.name;
+    document.getElementById('profile-meta').innerHTML = `
+      <span class="badge badge-${client.status || 'Active'}">${client.status || 'Active'}</span>
+      ${client.email ? `<span class="meta-item">✉ ${client.email}</span>` : ''}
+      ${client.program ? `<span class="meta-item"><strong>Program:</strong> ${client.program}</span>` : ''}
+      ${client.startDate ? `<span class="meta-item"><strong>Started:</strong> ${client.startDate}</span>` : ''}
+      ${client.lastCheckin ? `<span class="meta-item"><strong>Last check-in:</strong> ${client.lastCheckin}</span>` : ''}
+    `;
+  }
+
+  function renderWorkouts(workouts, targetId) {
+    const el = document.getElementById(targetId);
+    if (!workouts || workouts.length === 0) {
+      el.innerHTML = '<div class="empty-section">No workouts recorded yet.</div>';
+      return;
+    }
+    if (targetId === 'overview-workouts') {
+      el.innerHTML = '<div style="padding:12px 18px">' + workouts.slice(0, 5).map(w => `
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px">
+          <div>
+            <strong>${w.exercise}</strong>
+            <span style="color:var(--text-muted);font-size:11px;margin-left:6px">${w.date}</span>
+          </div>
+          <div style="color:var(--text-muted);font-size:12px">${w.weight}kg × ${w.reps} <span class="${statusClass(w.status)}">${w.status}</span></div>
+        </div>
+      `).join('') + '</div>';
+    } else {
+      el.innerHTML = workouts.map(w => `
+        <tr>
+          <td style="white-space:nowrap;color:var(--text-muted);font-size:12px">${w.date}</td>
+          <td style="font-weight:500">${w.exercise}</td>
+          <td>${w.sets}</td>
+          <td>${w.reps}</td>
+          <td>${w.weight}kg</td>
+          <td>${w.rpe}</td>
+          <td><span class="${statusClass(w.status)}">${w.status}</span></td>
+        </tr>
+      `).join('');
+    }
+  }
+
+  function renderCheckins(checkins, targetId) {
+    const el = document.getElementById(targetId);
+    if (!checkins || checkins.length === 0) {
+      el.innerHTML = '<div class="empty-section">No check-ins recorded yet.</div>';
+      return;
+    }
+    if (targetId === 'overview-checkins') {
+      el.innerHTML = '<div style="padding:12px 18px">' + checkins.slice(0, 5).map(c => `
+        <div style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+            <strong>${c.date}</strong>
+            <span style="font-weight:600">${c.bodyweight}kg</span>
+          </div>
+          <div style="display:flex;gap:12px;font-size:11px;color:var(--text-muted)">
+            <span>Mood: ${c.mood}/10</span>
+            <span>Sleep: ${c.sleep}/10</span>
+            <span>Energy: ${c.energy}/10</span>
+          </div>
+          ${c.notes ? `<div style="font-size:12px;color:var(--text-muted);margin-top:4px">${c.notes}</div>` : ''}
+        </div>
+      `).join('') + '</div>';
+    } else {
+      el.innerHTML = checkins.map(c => `
+        <tr>
+          <td style="white-space:nowrap;color:var(--text-muted);font-size:12px">${c.date}</td>
+          <td style="font-weight:500">${c.bodyweight}kg</td>
+          <td>${c.mood}/10</td>
+          <td>${c.sleep}/10</td>
+          <td>${c.energy}/10</td>
+          <td style="font-size:12px;color:var(--text-muted)">${c.notes || '—'}</td>
+        </tr>
+      `).join('');
+    }
+  }
+
+  function renderMessages(messages, targetId) {
+    const el = document.getElementById(targetId);
+    if (!messages || messages.length === 0) {
+      el.innerHTML = '<div class="empty-section">No messages yet.</div>';
+      return;
+    }
+    el.innerHTML = messages.map(m => {
+      const isCoach = (m.sender || '').toLowerCase() === 'coach';
+      return `
+        <div class="msg-bubble ${isCoach ? 'msg-coach' : 'msg-client'}">
+          <div>${m.message}</div>
+          <div class="msg-meta">${m.sender} · ${m.timestamp}</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // ── Fetch and render ────────────────────────────────────────────────────────
+  async function loadDetail() {
+    try {
+      const res = await fetch(`/dashboard/clients/${clientId}/api/detail`);
+      const data = await res.json();
+      if (!data.ok) {
+        document.getElementById('profile-name').textContent = 'Error loading client';
+        return;
+      }
+
+      renderProfile(data.client);
+      renderWorkouts(data.recentWorkouts, 'overview-workouts');
+      renderWorkouts(data.recentWorkouts, 'workouts-tbody');
+      renderCheckins(data.recentCheckins, 'overview-checkins');
+      renderCheckins(data.recentCheckins, 'checkins-tbody');
+      renderMessages(data.recentMessages, 'overview-messages');
+      renderMessages(data.recentMessages, 'messages-full');
+    } catch (err) {
+      console.error('[client-detail] load error:', err);
+      document.getElementById('profile-name').textContent = 'Error loading client';
+    }
+  }
+
+  // Load both client detail and program data
+  loadDetail();
+  loadProgram();
+})();
+</script>
+</body>
+</html>
