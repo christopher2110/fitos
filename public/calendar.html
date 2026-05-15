@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitOS — Client Calendar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:        #F4EFE6;
+      --cream-light:  #FDFAF5;
+      --cream-mid:    #EDE6D8;
+      --olive:        #5C6B2A;
+      --olive-dark:   #3D4A1A;
+      --olive-muted:  #8A9650;
+      --olive-pale:   #E8EDD6;
+      --text:         #2C2A24;
+      --text-muted:   #7A7570;
+      --border:       #DDD8CA;
+      --sidebar-w:    220px;
+      --topbar-h:     60px;
+      --cal-scheduled-bg:  #EDE6D8;
+      --cal-scheduled-fg:  #5C6B2A;
+      --cal-completed-bg:  #D4E8C2;
+      --cal-completed-fg:  #3A7040;
+      --cal-missed-bg:     #FCE8E8;
+      --cal-missed-fg:     #A83030;
+    }
+
+    html, body { height: 100%; background: var(--cream); color: var(--text); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+    .layout { display: flex; min-height: 100vh; }
+
+    /* SIDEBAR */
+    .sidebar { width: var(--sidebar-w); background: var(--cream-light); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 50; }
+    .sidebar-brand { padding: 22px 20px 20px; border-bottom: 1px solid var(--border); }
+    .brand-wordmark { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; color: var(--olive); letter-spacing: -0.02em; }
+    .brand-tagline { font-size: 10px; font-weight: 500; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 6px; }
+    .sidebar-nav { flex: 1; padding: 12px 10px; display: flex; flex-direction: column; gap: 2px; }
+    .nav-section-label { font-size: 10px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; padding: 10px 10px 4px; }
+    .nav-link { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 10px; text-decoration: none; font-size: 13.5px; font-weight: 500; color: var(--text-muted); transition: background 0.12s, color 0.12s; cursor: pointer; }
+    .nav-link:hover { background: var(--cream-mid); color: var(--text); }
+    .nav-link.active { background: var(--olive-pale); color: var(--olive-dark); font-weight: 600; }
+    .nav-icon { width: 17px; height: 17px; flex-shrink: 0; opacity: 0.7; }
+    .nav-link.active .nav-icon { opacity: 1; }
+    .sidebar-footer { padding: 14px; border-top: 1px solid var(--border); }
+    .coach-chip { display: flex; align-items: center; gap: 9px; }
+    .coach-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--olive); color: var(--cream-light); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; }
+    .coach-name-small { font-size: 13px; font-weight: 600; color: var(--text); }
+    .coach-role { font-size: 11px; color: var(--text-muted); }
+
+    /* MAIN */
+    .main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+    .topbar { height: var(--topbar-h); background: var(--cream-light); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 28px; position: sticky; top: 0; z-index: 40; gap: 12px; }
+    .topbar-back { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border); background: transparent; font-size: 12px; font-weight: 600; color: var(--text-muted); cursor: pointer; text-decoration: none; transition: background 0.12s; }
+    .topbar-back:hover { background: var(--cream-mid); color: var(--text); }
+    .topbar-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; color: var(--text); }
+    .topbar-spacer { flex: 1; }
+    .page-content { padding: 28px; flex: 1; }
+
+    /* CLIENT DETAIL TABS — replicate style from client-detail.html */
+    .tab-bar { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
+    .tab-btn { padding: 12px 20px; font-size: 13px; font-weight: 600; color: var(--text-muted); background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; transition: all 0.12s; text-decoration: none; display: inline-block; }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--olive-dark); border-bottom-color: var(--olive); }
+
+    /* CALENDAR HEADER */
+    .cal-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+    .cal-month-title { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; color: var(--text); flex: 1; }
+    .cal-nav-btn { padding: 7px 14px; border-radius: 9px; border: 1px solid var(--border); background: var(--cream-light); font-size: 13px; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.12s; }
+    .cal-nav-btn:hover { background: var(--cream-mid); color: var(--text); }
+    .cal-today-btn { padding: 7px 14px; border-radius: 9px; border: 1px solid var(--olive); background: transparent; font-size: 12px; font-weight: 600; color: var(--olive); cursor: pointer; transition: all 0.12s; }
+    .cal-today-btn:hover { background: var(--olive-pale); }
+
+    /* CALENDAR GRID */
+    .cal-grid-wrap { background: var(--cream-light); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+    .cal-dow-row { display: grid; grid-template-columns: repeat(7, 1fr); border-bottom: 1px solid var(--border); }
+    .cal-dow { padding: 10px 6px; text-align: center; font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .cal-weeks { display: flex; flex-direction: column; }
+    .cal-week-row { display: grid; grid-template-columns: repeat(7, 1fr); border-bottom: 1px solid var(--border); min-height: 90px; }
+    .cal-week-row:last-child { border-bottom: none; }
+    .cal-cell { border-right: 1px solid var(--border); padding: 8px; display: flex; flex-direction: column; gap: 4px; cursor: default; min-height: 90px; }
+    .cal-cell:last-child { border-right: none; }
+    .cal-cell.other-month { background: var(--cream); opacity: 0.5; }
+    .cal-cell.today { background: var(--olive-pale); }
+    .cal-cell-date { font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 2px; }
+    .cal-cell.today .cal-cell-date { color: var(--olive-dark); }
+    .cal-workout-chip { border-radius: 6px; padding: 3px 7px; font-size: 11px; font-weight: 600; cursor: pointer; transition: opacity 0.12s; line-height: 1.3; }
+    .cal-workout-chip:hover { opacity: 0.8; }
+    .chip-scheduled { background: var(--cal-scheduled-bg); color: var(--cal-scheduled-fg); }
+    .chip-completed { background: var(--cal-completed-bg); color: var(--cal-completed-fg); }
+    .chip-missed    { background: var(--cal-missed-bg);    color: var(--cal-missed-fg); }
+
+    /* START DATE PICKER */
+    .start-date-banner { background: var(--olive-pale); border: 1px solid var(--olive-muted); border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 16px; }
+    .start-date-banner p { font-size: 13px; color: var(--olive-dark); flex: 1; }
+    .start-date-banner input[type="date"] { padding: 8px 12px; border: 1px solid var(--olive-muted); border-radius: 8px; font-size: 13px; background: var(--cream-light); color: var(--text); }
+    .start-date-banner button { padding: 8px 16px; border-radius: 8px; border: none; background: var(--olive); color: var(--cream-light); font-size: 12px; font-weight: 600; cursor: pointer; }
+    .start-date-banner button:hover { background: var(--olive-dark); }
+
+    /* EMPTY STATE */
+    .empty-state { text-align: center; padding: 60px 24px; }
+    .empty-state-icon { font-size: 40px; margin-bottom: 14px; }
+    .empty-state h3 { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+    .empty-state p { font-size: 13px; color: var(--text-muted); margin-bottom: 18px; }
+    .empty-state a { display: inline-block; padding: 10px 20px; border-radius: 10px; background: var(--olive); color: var(--cream-light); font-size: 13px; font-weight: 600; text-decoration: none; }
+    .empty-state a:hover { background: var(--olive-dark); }
+
+    /* SKELETON */
+    .skeleton { background: linear-gradient(90deg, var(--cream-mid) 25%, var(--border) 50%, var(--cream-mid) 75%); background-size: 200% 100%; animation: shimmer 1.4s ease-in-out infinite; border-radius: 6px; }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+    /* DRAWER OVERLAY */
+    .drawer-overlay { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.35); }
+    .drawer-overlay.open { display: block; }
+    .drawer { position: fixed; right: 0; top: 0; bottom: 0; width: 380px; max-width: 100vw; background: var(--cream-light); border-left: 1px solid var(--border); z-index: 201; display: flex; flex-direction: column; transform: translateX(100%); transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: -8px 0 32px rgba(0,0,0,0.12); }
+    .drawer.open { transform: translateX(0); }
+    .drawer-header { padding: 20px 20px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: 12px; }
+    .drawer-header-info { flex: 1; }
+    .drawer-header-info h3 { font-family: 'Fraunces', serif; font-size: 17px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .drawer-header-info .drawer-meta { font-size: 12px; color: var(--text-muted); }
+    .drawer-close { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text-muted); padding: 2px 6px; line-height: 1; }
+    .drawer-close:hover { color: var(--text); }
+    .drawer-body { flex: 1; overflow-y: auto; padding: 16px 20px; }
+    .drawer-exercise { padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .drawer-exercise:last-child { border-bottom: none; }
+    .drawer-ex-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .drawer-ex-details { display: flex; gap: 12px; flex-wrap: wrap; }
+    .drawer-ex-detail { font-size: 11px; color: var(--text-muted); }
+    .drawer-ex-detail strong { color: var(--text); font-weight: 600; }
+    .drawer-ex-notes { margin-top: 5px; font-size: 11px; color: var(--text-muted); font-style: italic; }
+    .drawer-footer { padding: 16px 20px; border-top: 1px solid var(--border); display: flex; gap: 10px; }
+    .drawer-footer button { flex: 1; padding: 10px; border-radius: 9px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--border); }
+    .btn-mark-complete { background: var(--olive); color: var(--cream-light); border-color: var(--olive); }
+    .btn-mark-complete:hover { background: var(--olive-dark); }
+    .btn-reschedule { background: transparent; color: var(--text-muted); }
+    .btn-reschedule:hover { background: var(--cream-mid); color: var(--text); }
+
+    /* RESPONSIVE */
+    @media (max-width: 720px) {
+      :root { --sidebar-w: 0px; }
+      .sidebar { display: none; }
+      .main { margin-left: 0; }
+      .page-content { padding: 16px; }
+      .drawer { width: 100vw; }
+      .cal-cell { min-height: 64px; padding: 5px; }
+      .cal-workout-chip { font-size: 10px; padding: 2px 5px; }
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-wordmark">FitOS</div>
+      <div class="brand-tagline">Coaching Platform</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Workspace</div>
+      <a class="nav-link" href="/dashboard">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a class="nav-link" href="/dashboard/messages">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Messages
+      </a>
+      <a class="nav-link active" href="/dashboard/clients">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Clients
+      </a>
+      <a class="nav-link" href="/settings/agents">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        Agents
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="coach-chip">
+        <div class="coach-avatar" id="coach-avatar-init">C</div>
+        <div>
+          <div class="coach-name-small" id="coach-name-display">Coach</div>
+          <div class="coach-role">FitOS Demo</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <header class="topbar">
+      <a class="topbar-back" id="back-link" href="/dashboard/clients">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        Clients
+      </a>
+      <div class="topbar-title" id="topbar-client-name">Calendar</div>
+      <div class="topbar-spacer"></div>
+    </header>
+
+    <div class="page-content">
+
+      <!-- CLIENT TABS (mirrors client-detail.html layout) -->
+      <div class="tab-bar">
+        <a class="tab-btn" id="tab-overview" href="">Overview</a>
+        <a class="tab-btn" id="tab-workouts" href="">Workouts</a>
+        <a class="tab-btn active" id="tab-calendar">Calendar</a>
+        <a class="tab-btn" id="tab-checkins" href="">Check-ins</a>
+        <a class="tab-btn" id="tab-messages" href="">Messages</a>
+      </div>
+
+      <!-- START DATE BANNER (shown when no program start date) -->
+      <div class="start-date-banner" id="start-date-banner" style="display:none">
+        <p><strong>Set program start date</strong> — Week 1 Day 1 anchors to this date so workouts plot on the right days.</p>
+        <input type="date" id="start-date-input">
+        <button id="start-date-save">Set Date</button>
+      </div>
+
+      <!-- CALENDAR HEADER -->
+      <div class="cal-header">
+        <button class="cal-nav-btn" id="prev-month">&#8592;</button>
+        <div class="cal-month-title" id="month-title">Loading…</div>
+        <button class="cal-nav-btn" id="next-month">&#8594;</button>
+        <button class="cal-today-btn" id="today-btn">Today</button>
+      </div>
+
+      <!-- CALENDAR GRID -->
+      <div class="cal-grid-wrap" id="cal-grid-wrap">
+        <div class="cal-dow-row">
+          <div class="cal-dow">Sun</div>
+          <div class="cal-dow">Mon</div>
+          <div class="cal-dow">Tue</div>
+          <div class="cal-dow">Wed</div>
+          <div class="cal-dow">Thu</div>
+          <div class="cal-dow">Fri</div>
+          <div class="cal-dow">Sat</div>
+        </div>
+        <div class="cal-weeks" id="cal-weeks">
+          <!-- Skeleton -->
+          <div class="cal-week-row">
+            <div class="cal-cell" style="grid-column:span 7"><div class="skeleton" style="width:100%;height:80px"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EMPTY STATE (no program) -->
+      <div class="empty-state" id="empty-state" style="display:none">
+        <div class="empty-state-icon">📋</div>
+        <h3>No program assigned yet</h3>
+        <p>Use the AI Program Builder to create and assign a training program.</p>
+        <a id="builder-link" href="/dashboard/agents/builder">Open Program Builder</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- WORKOUT DRAWER -->
+<div class="drawer-overlay" id="drawer-overlay"></div>
+<div class="drawer" id="workout-drawer">
+  <div class="drawer-header">
+    <div class="drawer-header-info">
+      <h3 id="drawer-focus">Workout</h3>
+      <div class="drawer-meta" id="drawer-meta">—</div>
+    </div>
+    <button class="drawer-close" id="drawer-close">&times;</button>
+  </div>
+  <div class="drawer-body" id="drawer-exercises"></div>
+  <div class="drawer-footer">
+    <button class="btn-mark-complete" id="btn-mark-complete">Mark Complete</button>
+    <button class="btn-reschedule" id="btn-reschedule">Reschedule</button>
+  </div>
+</div>
+
+<script>
+(function() {
+  const LIVE_CFG = window.__COACH_LIVE__ || {};
+  const clientId = window.__CLIENT_ID__ || 1;
+  const coachName = LIVE_CFG.coachName || 'Coach';
+  const coachInitial = coachName.split(' ').filter(Boolean).map(w => w[0]).join('').toUpperCase().slice(0, 2) || 'C';
+
+  // Coach identity
+  document.getElementById('coach-avatar-init').textContent = coachInitial;
+  document.getElementById('coach-name-display').textContent = coachName;
+
+  // Wire up tab links to the client detail page
+  document.getElementById('tab-overview').href  = `/dashboard/clients/${clientId}`;
+  document.getElementById('tab-workouts').href  = `/dashboard/clients/${clientId}`;
+  document.getElementById('tab-checkins').href  = `/dashboard/clients/${clientId}`;
+  document.getElementById('tab-messages').href  = `/dashboard/clients/${clientId}`;
+  document.getElementById('back-link').href     = `/dashboard/clients`;
+  document.getElementById('builder-link').href  = `/dashboard/agents/builder?client=${clientId}`;
+
+  // ── State ────────────────────────────────────────────────────────────────────
+  let programDays = [];     // [{date, week, phase, day, focus, exerciseCount, exercises}]
+  let clientData = null;
+  let currentYear, currentMonth; // 0-indexed month
+  let openDrawerDay = null;       // the day object currently shown in drawer
+
+  // ── Load calendar data ───────────────────────────────────────────────────────
+  async function loadData() {
+    try {
+      const res = await fetch(`/dashboard/clients/${clientId}/api/calendar`);
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.error || 'load failed');
+
+      clientData = data.client;
+      programDays = data.programDays || [];
+
+      document.getElementById('topbar-client-name').textContent = clientData.name + ' — Calendar';
+      document.title = `FitOS — ${clientData.name} Calendar`;
+
+      // Show start-date banner if no anchor
+      if (!clientData.programStartDate && programDays.length > 0) {
+        document.getElementById('start-date-banner').style.display = 'flex';
+      }
+
+      // If no program days at all, show empty state
+      if (programDays.length === 0) {
+        document.getElementById('empty-state').style.display = 'block';
+        document.getElementById('cal-grid-wrap').style.display = 'none';
+        document.getElementById('cal-header').style.display = 'none';
+      }
+
+      renderMonth();
+    } catch (err) {
+      console.error('[calendar] load error:', err);
+      document.getElementById('cal-weeks').innerHTML =
+        '<div style="padding:40px;text-align:center;color:var(--text-muted);font-size:13px">Failed to load calendar data.</div>';
+    }
+  }
+
+  // ── Month navigation ─────────────────────────────────────────────────────────
+  function initCurrentMonth() {
+    // Try to anchor to the first program day's month, otherwise today
+    const firstWithDate = programDays.find(d => d.date);
+    if (firstWithDate) {
+      const d = new Date(firstWithDate.date + 'T00:00:00');
+      currentYear  = d.getFullYear();
+      currentMonth = d.getMonth();
+    } else {
+      const now = new Date();
+      currentYear  = now.getFullYear();
+      currentMonth = now.getMonth();
+    }
+  }
+
+  document.getElementById('prev-month').addEventListener('click', () => {
+    currentMonth--;
+    if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+    renderMonth();
+  });
+  document.getElementById('next-month').addEventListener('click', () => {
+    currentMonth++;
+    if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+    renderMonth();
+  });
+  document.getElementById('today-btn').addEventListener('click', () => {
+    const now = new Date();
+    currentYear  = now.getFullYear();
+    currentMonth = now.getMonth();
+    renderMonth();
+  });
+
+  // ── Render calendar month ────────────────────────────────────────────────────
+  const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+  function renderMonth() {
+    document.getElementById('month-title').textContent = `${MONTH_NAMES[currentMonth]} ${currentYear}`;
+
+    const today = new Date();
+    today.setHours(0,0,0,0);
+
+    // Build a lookup: ISO date → [day objects]
+    const daysByDate = {};
+    for (const d of programDays) {
+      if (d.date) {
+        if (!daysByDate[d.date]) daysByDate[d.date] = [];
+        daysByDate[d.date].push(d);
+      }
+    }
+
+    // First day of month (Sun=0)
+    const firstOfMonth = new Date(currentYear, currentMonth, 1);
+    const startDow = firstOfMonth.getDay(); // 0=Sun
+
+    // Number of days in month
+    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+    // Build grid cells: from Sunday before month start → Saturday after month end
+    const cells = [];
+    // Leading days from previous month
+    const prevMonthDays = new Date(currentYear, currentMonth, 0).getDate();
+    for (let i = startDow - 1; i >= 0; i--) {
+      cells.push({ day: prevMonthDays - i, inMonth: false, date: null });
+    }
+    // Days in this month
+    for (let d = 1; d <= daysInMonth; d++) {
+      const iso = `${currentYear}-${String(currentMonth + 1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      cells.push({ day: d, inMonth: true, date: iso });
+    }
+    // Trailing days from next month (complete the last row)
+    let trail = 1;
+    while (cells.length % 7 !== 0) {
+      cells.push({ day: trail++, inMonth: false, date: null });
+    }
+
+    // Render weeks
+    const weeksEl = document.getElementById('cal-weeks');
+    let html = '';
+    for (let w = 0; w < cells.length / 7; w++) {
+      html += '<div class="cal-week-row">';
+      for (let d = 0; d < 7; d++) {
+        const cell = cells[w * 7 + d];
+        const isToday = cell.date && (new Date(cell.date + 'T00:00:00').getTime() === today.getTime());
+        const classes = ['cal-cell'];
+        if (!cell.inMonth) classes.push('other-month');
+        if (isToday) classes.push('today');
+
+        html += `<div class="${classes.join(' ')}">`;
+        html += `<div class="cal-cell-date">${cell.day}</div>`;
+
+        // Workout chips for this date
+        if (cell.date && daysByDate[cell.date]) {
+          for (const wd of daysByDate[cell.date]) {
+            // Determine completion status — no completion data yet so all are 'scheduled'
+            const chipClass = 'chip-scheduled';
+            const label = wd.focus.length > 18 ? wd.focus.slice(0, 16) + '…' : wd.focus;
+            html += `<div class="cal-workout-chip ${chipClass}" data-date="${cell.date}" data-week="${wd.week}" data-day="${wd.day}">${label}<br><span style="font-weight:400;font-size:10px">${wd.exerciseCount} exercise${wd.exerciseCount !== 1 ? 's' : ''}</span></div>`;
+          }
+        }
+
+        html += '</div>';
+      }
+      html += '</div>';
+    }
+    weeksEl.innerHTML = html;
+
+    // Attach chip click handlers
+    weeksEl.querySelectorAll('.cal-workout-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const date  = chip.dataset.date;
+        const week  = parseInt(chip.dataset.week, 10);
+        const day   = chip.dataset.day;
+        openDrawer(date, week, day);
+      });
+    });
+  }
+
+  // ── Drawer ───────────────────────────────────────────────────────────────────
+  const drawerOverlay = document.getElementById('drawer-overlay');
+  const drawer        = document.getElementById('workout-drawer');
+  const drawerClose   = document.getElementById('drawer-close');
+
+  function openDrawer(date, week, dayName) {
+    // Find the matching program day
+    const wd = programDays.find(d => d.date === date && d.week === week && d.day === dayName)
+            || programDays.find(d => d.week === week && d.day === dayName);
+    if (!wd) return;
+    openDrawerDay = wd;
+
+    // Header
+    document.getElementById('drawer-focus').textContent = wd.focus;
+    const formattedDate = date ? new Date(date + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }) : `Week ${week} – ${dayName}`;
+    document.getElementById('drawer-meta').textContent = `${formattedDate} · Week ${week}${wd.phase ? ' · ' + wd.phase : ''}`;
+
+    // Exercises
+    const exEl = document.getElementById('drawer-exercises');
+    if (!wd.exercises || wd.exercises.length === 0) {
+      exEl.innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:12px 0">No exercises listed.</div>';
+    } else {
+      exEl.innerHTML = wd.exercises.map(ex => `
+        <div class="drawer-exercise">
+          <div class="drawer-ex-name">${ex.name}</div>
+          <div class="drawer-ex-details">
+            ${ex.sets ? `<span class="drawer-ex-detail"><strong>Sets</strong> ${ex.sets}</span>` : ''}
+            ${ex.reps ? `<span class="drawer-ex-detail"><strong>Reps</strong> ${ex.reps}</span>` : ''}
+            ${ex.load ? `<span class="drawer-ex-detail"><strong>Load</strong> ${ex.load}</span>` : ''}
+            ${ex.rest ? `<span class="drawer-ex-detail"><strong>Rest</strong> ${ex.rest}s</span>` : ''}
+            ${ex.tempo ? `<span class="drawer-ex-detail"><strong>Tempo</strong> ${ex.tempo}</span>` : ''}
+          </div>
+          ${ex.notes ? `<div class="drawer-ex-notes">${ex.notes}</div>` : ''}
+        </div>
+      `).join('');
+    }
+
+    drawerOverlay.classList.add('open');
+    drawer.classList.add('open');
+  }
+
+  function closeDrawer() {
+    drawerOverlay.classList.remove('open');
+    drawer.classList.remove('open');
+    openDrawerDay = null;
+  }
+
+  drawerClose.addEventListener('click', closeDrawer);
+  drawerOverlay.addEventListener('click', closeDrawer);
+
+  // Mark Complete — logs to Workouts tab via completions endpoint
+  document.getElementById('btn-mark-complete').addEventListener('click', async () => {
+    if (!openDrawerDay) return;
+    const btn = document.getElementById('btn-mark-complete');
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+
+    const date = openDrawerDay.date || new Date().toISOString().split('T')[0];
+    const exercises = (openDrawerDay.exercises || []).map(ex => ({
+      date,
+      exercise: ex.name,
+      sets: ex.sets || '',
+      reps: ex.reps || '',
+      weight: '',
+      rpe: '',
+      notes: `Week ${openDrawerDay.week} – ${openDrawerDay.day}`,
+      status: 'Completed',
+    }));
+
+    try {
+      const res = await fetch('/api/completions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ completions: exercises }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        btn.textContent = '✓ Marked Complete';
+        btn.style.background = 'var(--cal-completed-fg)';
+        // Update chip color on calendar
+        const chips = document.querySelectorAll(`.cal-workout-chip[data-date="${openDrawerDay.date}"][data-week="${openDrawerDay.week}"][data-day="${openDrawerDay.day}"]`);
+        chips.forEach(chip => { chip.className = 'cal-workout-chip chip-completed'; });
+        setTimeout(closeDrawer, 1400);
+      } else {
+        alert(data.error || 'Failed to mark complete.');
+        btn.disabled = false;
+        btn.textContent = 'Mark Complete';
+      }
+    } catch (err) {
+      alert('Network error — please try again.');
+      btn.disabled = false;
+      btn.textContent = 'Mark Complete';
+    }
+  });
+
+  // Reschedule — simple date prompt, writes an override entry to Workouts log
+  document.getElementById('btn-reschedule').addEventListener('click', () => {
+    if (!openDrawerDay) return;
+    const newDate = prompt('Reschedule to date (YYYY-MM-DD):', openDrawerDay.date || '');
+    if (!newDate || !/^\d{4}-\d{2}-\d{2}$/.test(newDate)) return;
+
+    // Update local data and re-render
+    openDrawerDay.date = newDate;
+    // Find in programDays and update
+    const idx = programDays.findIndex(d => d.week === openDrawerDay.week && d.day === openDrawerDay.day);
+    if (idx !== -1) programDays[idx].date = newDate;
+
+    closeDrawer();
+    renderMonth();
+  });
+
+  // ── Start date banner ────────────────────────────────────────────────────────
+  document.getElementById('start-date-save').addEventListener('click', async () => {
+    const val = document.getElementById('start-date-input').value;
+    if (!val) return;
+
+    try {
+      const res = await fetch(`/dashboard/clients/${clientId}/api/calendar/set-start`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ startDate: val }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        document.getElementById('start-date-banner').style.display = 'none';
+        // Reload calendar with new anchor
+        await loadData();
+      }
+    } catch (_) {}
+  });
+
+  // ── Init ─────────────────────────────────────────────────────────────────────
+  // Set current month before load so nav works even during loading
+  const now = new Date();
+  currentYear  = now.getFullYear();
+  currentMonth = now.getMonth();
+
+  loadData().then(() => {
+    initCurrentMonth();
+    renderMonth();
+  });
+
+})();
+</script>
+</body>
+</html>
