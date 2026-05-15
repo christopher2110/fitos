@@ -1,0 +1,15 @@
+{
+  "id": "weekly-checkin-summary",
+  "name": "Weekly Check-in Summary",
+  "description": "Reads the last 7 days of check-in data and writes a coaching summary to the Activity feed. Shows up on your dashboard automatically.",
+  "version": "1.0.0",
+  "model": "claude-haiku-4-5",
+  "inputs": [
+    { "tab": "CheckIns", "range": "CheckIns!A1:J200" },
+    { "tab": "Profile",  "range": "Profile!A2:D50" }
+  ],
+  "outputs": [
+    { "tab": "Activity", "action": "append" }
+  ],
+  "requires_tools": []
+}
