@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Everfit vs FitOS — Own Your Coaching Platform | FitOS</title>
+  <meta name="description" content="Everfit charges coaches $4,620–$14,940 over 5 years with zero code ownership. FitOS is $897 total — and you own it. Compare pricing, features, and lock-in risk." />
+  <meta property="og:title" content="Everfit vs FitOS: Stop Renting. Start Owning." />
+  <meta property="og:description" content="Side-by-side comparison: pricing, data ownership, AI access, API, vendor lock-in. See why scaling coaches are switching from Everfit to FitOS." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://fitos-zc11.polsia.app/vs/everfit" />
+  <meta property="og:image" content="https://fitos-zc11.polsia.app/og/vs-everfit.svg" />
+  <meta property="og:site_name" content="FitOS" />
+  <link rel="canonical" href="https://fitos-zc11.polsia.app/vs/everfit" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Everfit vs FitOS: Stop Renting. Start Owning." />
+  <meta name="twitter:description" content="Everfit costs $4,620–$14,940 over 5 years. FitOS is $497 once — and you own the code." />
+  <meta name="twitter:image" content="https://fitos-zc11.polsia.app/og/vs-everfit.svg" />
+
+  <!-- Schema.org WebPage + Product comparison -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Everfit vs FitOS Comparison",
+    "url": "https://fitos-zc11.polsia.app/vs/everfit",
+    "description": "Detailed comparison of Everfit and FitOS personal training software across 12 dimensions including pricing, data ownership, API access, and vendor lock-in.",
+    "mainEntity": {
+      "@type": "ItemList",
+      "name": "Everfit vs FitOS Feature Comparison",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "item": {
+            "@type": "Product",
+            "name": "FitOS",
+            "description": "Lifetime-license fitness coaching platform. Buy once, own forever. Full source code access, self-hostable, MIT licensed.",
+            "url": "https://fitos-zc11.polsia.app",
+            "offers": {
+              "@type": "Offer",
+              "price": "497.00",
+              "priceCurrency": "USD",
+              "priceValidUntil": "2027-01-01",
+              "availability": "https://schema.org/InStock"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "item": {
+            "@type": "Product",
+            "name": "Everfit",
+            "description": "Subscription-based personal training software. Vietnam-based, VC-backed, closed source.",
+            "url": "https://everfit.io",
+            "offers": {
+              "@type": "Offer",
+              "price": "16.00",
+              "priceCurrency": "USD",
+              "description": "Starting price per month. Scales to $242/mo at 300 clients."
+            }
+          }
+        }
+      ]
+    }
+  }
+  </script>
+
+  <style>
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --brand-navy: #0F1B2D;
+      --brand-coral: #FF5A36;
+      --brand-coral-dark: #E04020;
+      --brand-green: #22C55E;
+      --brand-red: #EF4444;
+      --brand-yellow: #F59E0B;
+      --text-primary: #0F1B2D;
+      --text-muted: #6B7280;
+      --bg-light: #F9FAFB;
+      --bg-white: #FFFFFF;
+      --border: #E5E7EB;
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
+      --shadow-lg: 0 12px 40px rgba(0,0,0,0.12);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--text-primary);
+      background: var(--bg-white);
+      line-height: 1.6;
+    }
+
+    a { color: var(--brand-coral); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ============================================================
+       NAV
+    ============================================================ */
+    .nav {
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-white);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-logo {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--brand-navy);
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-logo span { color: var(--brand-coral); }
+
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--brand-coral);
+      color: white;
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .nav-cta:hover { background: var(--brand-coral-dark); text-decoration: none; }
+
+    /* ============================================================
+       HERO
+    ============================================================ */
+    .hero {
+      background: var(--brand-navy);
+      color: white;
+      padding: 80px 24px 72px;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,90,54,0.15);
+      color: var(--brand-coral);
+      border: 1px solid rgba(255,90,54,0.3);
+      padding: 6px 14px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-size: clamp(28px, 5vw, 52px);
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: -1.5px;
+      max-width: 860px;
+      margin: 0 auto 24px;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--brand-coral);
+    }
+
+    .hero-sub {
+      font-size: clamp(16px, 2vw, 20px);
+      color: rgba(255,255,255,0.72);
+      max-width: 600px;
+      margin: 0 auto 40px;
+      line-height: 1.55;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--brand-coral);
+      color: white;
+      padding: 14px 28px;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 16px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn-primary:hover { background: var(--brand-coral-dark); text-decoration: none; transform: translateY(-1px); }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: white;
+      border: 2px solid rgba(255,255,255,0.3);
+      padding: 12px 24px;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 16px;
+      text-decoration: none;
+      transition: border-color 0.2s;
+    }
+
+    .btn-secondary:hover { border-color: rgba(255,255,255,0.7); text-decoration: none; }
+
+    .hero-stat-strip {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      margin-top: 56px;
+      flex-wrap: wrap;
+    }
+
+    .hero-stat { text-align: center; }
+
+    .hero-stat .value {
+      font-size: 36px;
+      font-weight: 900;
+      color: var(--brand-coral);
+      letter-spacing: -1px;
+      display: block;
+    }
+
+    .hero-stat .label {
+      font-size: 13px;
+      color: rgba(255,255,255,0.55);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+    }
+
+    /* ============================================================
+       SECTION WRAPPERS
+    ============================================================ */
+    .section { padding: 72px 24px; }
+    .section-alt { background: var(--bg-light); }
+    .container { max-width: 960px; margin: 0 auto; }
+    .section-title {
+      font-size: clamp(24px, 3.5vw, 36px);
+      font-weight: 800;
+      letter-spacing: -0.8px;
+      margin-bottom: 8px;
+    }
+    .section-sub {
+      color: var(--text-muted);
+      margin-bottom: 40px;
+      font-size: 17px;
+    }
+
+    /* ============================================================
+       COMPARISON TABLE
+    ============================================================ */
+    .comparison-table-wrap {
+      overflow-x: auto;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border);
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--bg-white);
+    }
+
+    .comparison-table thead th {
+      padding: 20px 24px;
+      text-align: left;
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .comparison-table thead th:first-child {
+      color: var(--text-muted);
+      background: var(--bg-light);
+      width: 30%;
+    }
+
+    .comparison-table thead .col-fitos {
+      background: rgba(255,90,54,0.06);
+      color: var(--brand-coral);
+      border-left: 2px solid var(--brand-coral);
+    }
+
+    .comparison-table thead .col-everfit {
+      background: var(--bg-white);
+      color: var(--text-muted);
+    }
+
+    .comparison-table tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+
+    .comparison-table tbody tr:last-child { border-bottom: none; }
+    .comparison-table tbody tr:hover { background: rgba(255,90,54,0.02); }
+
+    .comparison-table td {
+      padding: 16px 24px;
+      font-size: 15px;
+      vertical-align: middle;
+    }
+
+    .comparison-table td:first-child {
+      font-weight: 600;
+      color: var(--text-muted);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      background: var(--bg-light);
+    }
+
+    .comparison-table td.fitos-col {
+      background: rgba(255,90,54,0.03);
+      border-left: 2px solid var(--brand-coral);
+      font-weight: 500;
+    }
+
+    .win { color: var(--brand-green); font-weight: 700; }
+    .neutral { color: var(--text-muted); }
+    .lose { color: var(--brand-red); }
+
+    .pill {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .pill-green { background: rgba(34,197,94,0.12); color: #15803d; }
+    .pill-red { background: rgba(239,68,68,0.1); color: #b91c1c; }
+    .pill-yellow { background: rgba(245,158,11,0.12); color: #92400e; }
+
+    /* ============================================================
+       CALCULATOR
+    ============================================================ */
+    .calculator-card {
+      background: var(--bg-white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      padding: 48px;
+      border: 1px solid var(--border);
+    }
+
+    .calc-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .calc-header h2 {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+
+    .calc-header p { color: var(--text-muted); font-size: 16px; }
+
+    .slider-wrap {
+      margin-bottom: 40px;
+    }
+
+    .slider-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 12px;
+    }
+
+    .slider-label span:first-child {
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .slider-value {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--brand-coral);
+      letter-spacing: -0.5px;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--brand-coral);
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(255,90,54,0.35);
+      transition: transform 0.1s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+    input[type="range"]::-moz-range-thumb {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--brand-coral); cursor: pointer; border: none;
+    }
+
+    .calc-results {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    @media (max-width: 560px) { .calc-results { grid-template-columns: 1fr; } }
+
+    .result-card {
+      border-radius: var(--radius-md);
+      padding: 28px 24px;
+      text-align: center;
+    }
+
+    .result-card.everfit-card {
+      background: rgba(239,68,68,0.05);
+      border: 1.5px solid rgba(239,68,68,0.2);
+    }
+
+    .result-card.fitos-card {
+      background: rgba(255,90,54,0.06);
+      border: 2px solid var(--brand-coral);
+    }
+
+    .result-card .platform-name {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 8px;
+    }
+
+    .everfit-card .platform-name { color: var(--text-muted); }
+    .fitos-card .platform-name { color: var(--brand-coral); }
+
+    .result-card .amount {
+      font-size: 42px;
+      font-weight: 900;
+      letter-spacing: -1.5px;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .everfit-card .amount { color: var(--brand-red); }
+    .fitos-card .amount { color: var(--brand-coral); }
+
+    .result-card .desc {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .savings-banner {
+      background: var(--brand-navy);
+      color: white;
+      border-radius: var(--radius-md);
+      padding: 20px 28px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .savings-banner .savings-amount {
+      font-size: 32px;
+      font-weight: 900;
+      color: var(--brand-coral);
+    }
+
+    /* ============================================================
+       FAQ
+    ============================================================ */
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+      padding: 24px 0;
+    }
+
+    .faq-item:last-child { border-bottom: none; }
+
+    .faq-q {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      letter-spacing: -0.2px;
+    }
+
+    .faq-a {
+      color: var(--text-muted);
+      line-height: 1.7;
+      font-size: 16px;
+    }
+
+    /* ============================================================
+       SEE ALSO
+    ============================================================ */
+    .see-also {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 48px;
+    }
+
+    .see-also-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .see-also-link:hover { border-color: var(--brand-coral); color: var(--brand-coral); text-decoration: none; }
+
+    /* ============================================================
+       FINAL CTA
+    ============================================================ */
+    .final-cta {
+      background: var(--brand-navy);
+      color: white;
+      padding: 80px 24px;
+      text-align: center;
+    }
+
+    .final-cta h2 {
+      font-size: clamp(26px, 4vw, 42px);
+      font-weight: 900;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+    }
+
+    .final-cta p {
+      color: rgba(255,255,255,0.65);
+      font-size: 18px;
+      max-width: 500px;
+      margin: 0 auto 36px;
+    }
+
+    .final-cta-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    .footer {
+      padding: 32px 24px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .footer a { color: var(--text-muted); }
+    .footer a:hover { color: var(--brand-coral); }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 640px) {
+      .hero { padding: 56px 20px 48px; }
+      .section { padding: 48px 20px; }
+      .calculator-card { padding: 28px 20px; }
+      .hero-stat-strip { gap: 32px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- COMPARISON HUB BANNER -->
+  <div style="background:#162436;border-bottom:1px solid rgba(255,255,255,0.08);padding:10px 24px;text-align:center;">
+    <span style="font-size:13px;color:rgba(255,255,255,0.55);">Comparing multiple platforms? &nbsp;</span>
+    <a href="/vs" style="font-size:13px;font-weight:600;color:#FF5A36;text-decoration:none;border-bottom:1px solid rgba(255,90,54,0.3);">See the full comparison hub — all 3 platforms side-by-side →</a>
+  </div>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <a href="/" class="nav-logo">Fit<span>OS</span></a>
+    <a href="/trial" class="nav-cta">Start Free Trial →</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge">Everfit vs FitOS</div>
+    <h1>Everfit charges you up to <em>$14,940</em> over 5 years to rent software. FitOS costs <em>$897</em> — and you own the code.</h1>
+    <p class="hero-sub">
+      Everfit is a polished platform. It's also a subscription you can never stop paying, backed by a VC firm in Vietnam, with zero path to ownership. FitOS is different.
+    </p>
+    <div class="hero-actions">
+      <a href="/trial" class="btn-primary">Start 14-Day Free Trial</a>
+      <a href="/dashboard/import" class="btn-secondary">Migrate from Everfit in 60 seconds →</a>
+    </div>
+    <div class="hero-stat-strip">
+      <div class="hero-stat">
+        <span class="value">5×</span>
+        <span class="label">cheaper over 5 years</span>
+      </div>
+      <div class="hero-stat">
+        <span class="value">$0</span>
+        <span class="label">monthly fee forever</span>
+      </div>
+      <div class="hero-stat">
+        <span class="value">100%</span>
+        <span class="label">code ownership</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPARISON TABLE -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">12-Dimension Comparison</h2>
+      <p class="section-sub">Every dimension that matters when you're deciding where to run your coaching business.</p>
+      <div class="comparison-table-wrap">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Dimension</th>
+              <th class="col-fitos">FitOS</th>
+              <th class="col-everfit">Everfit</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Pricing Model</td>
+              <td class="fitos-col"><span class="pill pill-green">$497 once</span> + $7/mo hosting</td>
+              <td>$16–$242/mo, billed by active client count. Prices scale fast.</td>
+            </tr>
+            <tr>
+              <td>Lifetime Cost (50 clients, 5 years)</td>
+              <td class="fitos-col"><strong>$917 total</strong></td>
+              <td><strong class="lose">$4,620</strong> — and climbing</td>
+            </tr>
+            <tr>
+              <td>Code Ownership</td>
+              <td class="fitos-col"><span class="pill pill-green">✓ You own the code</span><br><small>MIT licensed, fork it, modify it, keep it</small></td>
+              <td><span class="pill pill-red">✗ Closed source</span><br><small>You own nothing. You rent access.</small></td>
+            </tr>
+            <tr>
+              <td>Data Ownership</td>
+              <td class="fitos-col"><span class="pill pill-green">✓ 100% yours</span><br><small>Your database, your exports, always</small></td>
+              <td><span class="pill pill-yellow">Partial</span><br><small>Client data exportable; programs must be rebuilt</small></td>
+            </tr>
+            <tr>
+              <td>Self-Hosting</td>
+              <td class="fitos-col"><span class="pill pill-green">✓ Yes</span><br><small>Deploy to Vercel, your own server, anywhere</small></td>
+              <td><span class="pill pill-red">✗ No</span><br><small>Cloud-only. Their servers, their rules.</small></td>
+            </tr>
+            <tr>
+              <td>AI Access</td>
+              <td class="fitos-col"><span class="pill pill-green">✓ All tiers</span><br><small>AI program generation included</small></td>
+              <td><span class="pill pill-yellow">Pro+ only</span><br><small>AI Workout Builder requires paid plan</small></td>
+            </tr>
+            <tr>
+              <td>API Access</td>
+              <td class="fitos-col"><span class="pill pill-green">✓ Open</span><br><small>Full API access, no tier gate</small></td>
+              <td><span class="pill pill-yellow">Studio/Enterprise only</span><br><small>API locked behind higher tiers + Zapier is a paid add-on</small></td>
+            </tr>
+            <tr>
+              <td>Custom Agents</td>
+              <td class="fitos-col"><span class="pill pill-green">✓ Build anything</span><br><small>Open codebase — add AI agents, automations, integrations</small></td>
+              <td><span class="pill pill-red">✗ Not possible</span><br><small>You can only use what Everfit ships</small></td>
+            </tr>
+            <tr>
+              <td>Vendor Lock-in Risk</td>
+              <td class="fitos-col"><span class="pill pill-green">None</span><br><small>You have the code. They can't lock you out.</small></td>
+              <td><span class="pill pill-red">High</span><br><small>Vietnam-based, VC-backed. If they raise prices or shut down, you lose everything.</small></td>
+            </tr>
+            <tr>
+              <td>Export Portability</td>
+              <td class="fitos-col"><span class="pill pill-green">✓ Full CSV + DB export</span></td>
+              <td><span class="pill pill-yellow">Limited</span><br><small>Client data exports; program content must be rebuilt manually</small></td>
+            </tr>
+            <tr>
+              <td>White-Label</td>
+              <td class="fitos-col"><span class="pill pill-green">✓ Included</span><br><small>It's your code — brand it however you want</small></td>
+              <td><span class="pill pill-yellow">Pro+ only</span><br><small>Logo + colors available on paid tiers</small></td>
+            </tr>
+            <tr>
+              <td>Source License</td>
+              <td class="fitos-col"><span class="pill pill-green">MIT — free forever</span></td>
+              <td><span class="pill pill-red">Proprietary</span><br><small>No license. No rights. Subscription or nothing.</small></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5-YEAR CALCULATOR -->
+  <section class="section section-alt" id="calculator">
+    <div class="container">
+      <div class="calculator-card">
+        <div class="calc-header">
+          <h2>5-Year Cost Calculator</h2>
+          <p>Drag the slider to see what Everfit costs vs. FitOS at your client count.</p>
+        </div>
+
+        <div class="slider-wrap">
+          <div class="slider-label">
+            <span>Active Clients</span>
+            <span class="slider-value" id="clientCount">50</span>
+          </div>
+          <input
+            type="range"
+            id="clientSlider"
+            min="5"
+            max="300"
+            value="50"
+            step="5"
+            aria-label="Number of active clients"
+          />
+        </div>
+
+        <div class="calc-results">
+          <div class="result-card everfit-card">
+            <div class="platform-name">Everfit</div>
+            <div class="amount" id="everfitTotal">$4,620</div>
+            <div class="desc">over 5 years (60 months)</div>
+            <div style="margin-top:12px; font-size:13px; color:#6B7280;" id="everfitMonthly">$77/mo × 60 months</div>
+          </div>
+          <div class="result-card fitos-card">
+            <div class="platform-name">FitOS</div>
+            <div class="amount">$917</div>
+            <div class="desc">total, forever</div>
+            <div style="margin-top:12px; font-size:13px; color:#6B7280;">$497 once + $7/mo hosting</div>
+          </div>
+        </div>
+
+        <div class="savings-banner">
+          FitOS saves you <span class="savings-amount" id="savingsAmount">$3,703</span> over 5 years
+        </div>
+
+        <p style="text-align:center; margin-top:20px; font-size:13px; color:#9CA3AF;">
+          Everfit pricing based on active client count tiers per <a href="https://everfit.io/pricing" target="_blank" rel="nofollow">everfit.io/pricing</a> (verified May 2026). FitOS: $497 one-time license + $7/mo Vercel hosting.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <p class="section-sub">The questions coaches ask before they switch.</p>
+
+      <div class="faq-item">
+        <div class="faq-q">Can I migrate my clients from Everfit to FitOS?</div>
+        <div class="faq-a">
+          Yes. Everfit lets you export client data. FitOS has a one-click importer that brings in your client roster in about 60 seconds — no manual re-entry. <a href="/dashboard/import">Start your migration →</a>
+          <br><br>
+          The main work is reassigning active programs to the new platform, which most coaches time to coincide with a new training block. Your client history, check-ins, and metrics come with you.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">Is FitOS as polished as Everfit?</div>
+        <div class="faq-a">
+          Everfit has a genuinely strong UI — it's been polished over several years with VC funding. FitOS is built for performance, not flash. Coaches who care about data ownership, open-source flexibility, and lifetime pricing consistently choose FitOS over Everfit once they see what renting software actually costs over five years.
+          <br><br>
+          The 14-day free trial shows you exactly what you're getting. No card required.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">What happens if Everfit raises prices?</div>
+        <div class="faq-a">
+          You pay more or you leave — and leaving means rebuilding. Everfit's data portability is partial: client data exports fine, but programs must be rebuilt manually in the new platform. The switching cost is exactly why SaaS platforms can raise prices with minimal churn.
+          <br><br>
+          With FitOS, the license is lifetime. $497 is your total software cost, forever. The hosting ($7/mo on Vercel) is your only recurring charge, and you can move that anywhere.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">Does Everfit have an API?</div>
+        <div class="faq-a">
+          Yes, but it's gated. API access requires the Studio or Enterprise tier — it's not available on the Pro plan where most individual coaches operate. Zapier integration is also a paid add-on on top of your subscription.
+          <br><br>
+          FitOS is open source. The full API is yours. You can build any custom agent, automation, or third-party integration without hitting a paywall.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">Is Everfit a US company?</div>
+        <div class="faq-a">
+          Everfit Inc. operates as a US-registered entity, but is built and operated from Ho Chi Minh City, Vietnam. It's VC-backed with investors who have standard liquidity expectations. That's not inherently a problem, but it means pricing and feature decisions are made by people accountable to investors, not coaches.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">What if Everfit shuts down?</div>
+        <div class="faq-a">
+          If Everfit shuts down, your software access ends. Every client program, every history log, every customization — gone. VC-backed fitness SaaS companies have shut down before (see: Mindbody acqui-hire consolidations, Whoop platform changes).
+          <br><br>
+          With FitOS, you have the source code. Even if FitOS the company disappeared tomorrow, you can run the software yourself. That's what "ownership" means.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="final-cta">
+    <h2>Ready to stop renting?</h2>
+    <p>14-day free trial. No credit card. If FitOS isn't the right fit, you keep the trial data.</p>
+    <div class="final-cta-actions">
+      <a href="/trial" class="btn-primary">Start 14-Day Trial</a>
+      <a href="/dashboard/import" class="btn-secondary">Migrate from Everfit →</a>
+    </div>
+  </section>
+
+  <!-- SEE ALSO -->
+  <section class="section" style="padding-top: 48px; padding-bottom: 48px;">
+    <div class="container" style="text-align:center;">
+      <p style="color:var(--text-muted); font-size:14px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:16px;">Compare FitOS vs. Other Platforms</p>
+      <div class="see-also">
+        <a href="/vs/trainerize" class="see-also-link">FitOS vs Trainerize →</a>
+        <a href="/vs/truecoach" class="see-also-link">FitOS vs TrueCoach →</a>
+        <a href="/vs" class="see-also-link">All Comparisons →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>© 2026 FitOS. · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a></p>
+    <p style="margin-top:8px;">Pricing data verified from <a href="https://everfit.io/pricing" rel="nofollow">everfit.io/pricing</a>, May 2026. Accuracy not guaranteed after publication date.</p>
+  </footer>
+
+  <!-- CALCULATOR JAVASCRIPT -->
+  <script>
+    (function () {
+      // Everfit pricing tiers: [maxClients, monthlyPrice]
+      const EVERFIT_TIERS = [
+        [5,   16],
+        [10,  29],
+        [25,  47],
+        [50,  77],
+        [100, 117],
+        [200, 182],
+        [300, 242],
+      ];
+
+      const FITOS_TOTAL = 497 + (7 * 60); // $917
+
+      function getEverfitMonthly(clients) {
+        for (const [max, price] of EVERFIT_TIERS) {
+          if (clients <= max) return price;
+        }
+        return 242; // cap at 300+
+      }
+
+      function fmt(n) {
+        return '$' + n.toLocaleString('en-US', { maximumFractionDigits: 0 });
+      }
+
+      const slider    = document.getElementById('clientSlider');
+      const countEl   = document.getElementById('clientCount');
+      const evTotalEl = document.getElementById('everfitTotal');
+      const evMonthEl = document.getElementById('everfitMonthly');
+      const savingsEl = document.getElementById('savingsAmount');
+
+      function update() {
+        const clients  = parseInt(slider.value, 10);
+        const monthly  = getEverfitMonthly(clients);
+        const evTotal  = monthly * 60;
+        const savings  = evTotal - FITOS_TOTAL;
+
+        countEl.textContent   = clients;
+        evTotalEl.textContent = fmt(evTotal);
+        evMonthEl.textContent = fmt(monthly) + '/mo × 60 months';
+        savingsEl.textContent = fmt(Math.max(0, savings));
+      }
+
+      slider.addEventListener('input', update);
+      update(); // init
+    })();
+  </script>
+
+</body>
+</html>
