@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Start Your Free Trial — FitOS</title>
+  <meta name="description" content="Try FitOS free for 14 days. The coaching platform that runs on Google Sheets — no per-client fees, no lock-in. $497 lifetime license after trial." />
+  <link rel="canonical" href="https://fitos-zc11.polsia.app/trial" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Try FitOS Free for 14 Days" />
+  <meta property="og:description" content="The coaching platform that runs on Google Sheets. No per-client fees, no lock-in. $497 lifetime license — try it free first." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://fitos-zc11.polsia.app/trial" />
+  <meta property="og:image" content="https://fitos-zc11.polsia.app/og/trial.svg" />
+  <meta property="og:site_name" content="FitOS" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Try FitOS Free for 14 Days" />
+  <meta name="twitter:description" content="The coaching platform that runs on Google Sheets. No per-client fees, no lock-in. $497 lifetime license after trial." />
+  <meta name="twitter:image" content="https://fitos-zc11.polsia.app/og/trial.svg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,300;1,9..144,500;1,9..144,700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:       #F5F1E8;
+      --cream-light: #FDFAF5;
+      --cream-mid:   #EDE6D8;
+      --olive:       #5C6E3F;
+      --olive-dark:  #3D4A1A;
+      --olive-muted: #8A9650;
+      --olive-pale:  #E8EDD6;
+      --text:        #2C2A24;
+      --text-muted:  #7A7570;
+      --border:      #DDD8CA;
+      --red:         #C0392B;
+    }
+
+    html, body {
+      min-height: 100vh;
+      background: var(--cream);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── LAYOUT ─────────────────────────────────────────── */
+    .page {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    /* Left: brand panel */
+    .brand-panel {
+      background: var(--olive-dark);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 64px 56px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Subtle texture overlay */
+    .brand-panel::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 20% 80%, rgba(138,150,80,0.15) 0%, transparent 60%),
+        radial-gradient(circle at 80% 20%, rgba(92,110,63,0.12) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .brand-logo {
+      font-family: 'Fraunces', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--cream);
+      letter-spacing: -0.02em;
+      margin-bottom: 56px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .brand-logo span {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: var(--olive-muted);
+      border-radius: 50%;
+      margin-left: 6px;
+      vertical-align: middle;
+      position: relative;
+      top: -1px;
+    }
+
+    .brand-headline {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2.2rem, 3vw, 3.2rem);
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      color: var(--cream);
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .brand-headline em {
+      font-style: italic;
+      color: var(--olive-muted);
+    }
+
+    .brand-sub {
+      font-size: 16px;
+      line-height: 1.65;
+      color: rgba(245,241,232,0.7);
+      max-width: 380px;
+      margin-bottom: 48px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Feature list */
+    .feature-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .feature-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(138,150,80,0.25);
+      border: 1px solid rgba(138,150,80,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .feature-icon svg {
+      width: 10px;
+      height: 10px;
+      stroke: var(--olive-muted);
+    }
+
+    .feature-text {
+      font-size: 14px;
+      color: rgba(245,241,232,0.8);
+      line-height: 1.45;
+    }
+
+    .feature-text strong {
+      color: var(--cream);
+      font-weight: 600;
+    }
+
+    /* ── FORM PANEL ─────────────────────────────────────── */
+    .form-panel {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 64px 48px;
+      background: var(--cream-light);
+    }
+
+    .form-wrap {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .form-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--olive);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: var(--olive-pale);
+      border: 1px solid rgba(92,110,63,0.2);
+      padding: 5px 12px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+    }
+
+    .form-kicker .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #5CBF6A;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(92,191,106,0.4); }
+      50% { opacity: 0.7; box-shadow: 0 0 0 3px rgba(92,191,106,0); }
+    }
+
+    .form-title {
+      font-family: 'Fraunces', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .form-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.55;
+      margin-bottom: 32px;
+    }
+
+    /* Form fields */
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: 0.03em;
+      margin-bottom: 6px;
+    }
+
+    .field input {
+      width: 100%;
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 13px 16px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.18s, box-shadow 0.18s;
+      -webkit-appearance: none;
+    }
+
+    .field input::placeholder { color: var(--text-muted); }
+
+    .field input:focus {
+      border-color: var(--olive);
+      box-shadow: 0 0 0 3px rgba(92,110,63,0.12);
+    }
+
+    .field input.error {
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(192,57,43,0.1);
+    }
+
+    /* Error box */
+    .error-box {
+      background: #fdf2f2;
+      border: 1.5px solid rgba(192,57,43,0.25);
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .error-box.visible { display: block; }
+
+    .error-box ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .error-box li {
+      font-size: 13px;
+      color: var(--red);
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .error-box li::before { content: '·'; font-weight: 700; }
+
+    /* Submit button */
+    .btn-submit {
+      width: 100%;
+      background: var(--olive);
+      color: var(--cream-light);
+      border: none;
+      border-radius: 10px;
+      padding: 15px 24px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.18s, transform 0.12s;
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-submit:hover:not(:disabled) {
+      background: var(--olive-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn-submit:active:not(:disabled) { transform: translateY(0); }
+
+    .btn-submit:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .btn-submit .arrow {
+      transition: transform 0.18s;
+    }
+
+    .btn-submit:hover:not(:disabled) .arrow { transform: translateX(3px); }
+
+    /* Loading spinner */
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(245,241,232,0.3);
+      border-top-color: var(--cream-light);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .btn-submit.loading .btn-text { display: none; }
+    .btn-submit.loading .spinner { display: block; }
+    .btn-submit.loading .arrow { display: none; }
+
+    /* Trust signals */
+    .trust-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 14px;
+      margin-top: 20px;
+      justify-content: center;
+    }
+
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .trust-item svg {
+      width: 13px;
+      height: 13px;
+      stroke: var(--olive-muted);
+      flex-shrink: 0;
+    }
+
+    /* Login link */
+    .login-link {
+      margin-top: 28px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .login-link a {
+      color: var(--olive);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .login-link a:hover { text-decoration: underline; }
+
+    /* ── MOBILE ─────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .page {
+        grid-template-columns: 1fr;
+      }
+
+      .brand-panel {
+        padding: 48px 28px 40px;
+        order: 2;
+      }
+
+      .brand-headline {
+        font-size: 2rem;
+      }
+
+      .brand-sub {
+        display: none; /* Keep mobile clean */
+      }
+
+      .feature-list {
+        display: none; /* Show only on desktop */
+      }
+
+      .form-panel {
+        padding: 40px 24px 36px;
+        order: 1;
+        justify-content: flex-start;
+      }
+
+      .form-wrap {
+        max-width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .brand-panel {
+        padding: 36px 20px 32px;
+      }
+
+      .form-panel {
+        padding: 32px 20px 28px;
+      }
+
+      .brand-logo {
+        margin-bottom: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ── LEFT: Brand Panel ───────────────────────────────── -->
+  <div class="brand-panel">
+    <div class="brand-logo">FitOS <span></span></div>
+
+    <h1 class="brand-headline">
+      14 days free.<br>
+      <em>No credit card.</em>
+    </h1>
+
+    <p class="brand-sub">
+      Add your clients, run real workouts, see the AI insights.
+      Your data lives in your Google Sheet — you own it forever.
+    </p>
+
+    <div class="feature-list">
+      <div class="feature-item">
+        <div class="feature-icon">
+          <svg viewBox="0 0 12 12" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="feature-text"><strong>Full access</strong> — workouts, check-ins, history, AI skills</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">
+          <svg viewBox="0 0 12 12" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="feature-text"><strong>Your data stays yours</strong> — lives in Google Sheets, not our servers</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">
+          <svg viewBox="0 0 12 12" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="feature-text"><strong>MIT licensed</strong> — self-host for free, forever, if you ever want to</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">
+          <svg viewBox="0 0 12 12" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="feature-text"><strong>No monthly fees</strong> — one-time $497 if you decide to buy</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">
+          <svg viewBox="0 0 12 12" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="feature-text"><strong>Cancel anytime</strong> — trial ends, data stays</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── RIGHT: Form Panel ───────────────────────────────── -->
+  <div class="form-panel">
+    <div class="form-wrap">
+
+      <div class="form-kicker">
+        <span class="dot"></span>
+        Free trial · No card needed
+      </div>
+
+      <h2 class="form-title">Start coaching<br>today.</h2>
+      <p class="form-desc">14 days, every feature, zero friction.</p>
+
+      <div class="error-box" id="error-box" role="alert">
+        <ul id="error-list"></ul>
+      </div>
+
+      <form id="signup-form" novalidate>
+        <div class="field">
+          <label for="name">Your name</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Coach Alex Rivera"
+            autocomplete="name"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label for="email">Email address</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="8+ characters"
+            autocomplete="new-password"
+            required
+          >
+        </div>
+
+        <button type="submit" class="btn-submit" id="submit-btn">
+          <span class="btn-text">Start Free Trial</span>
+          <span class="arrow">→</span>
+          <div class="spinner"></div>
+        </button>
+      </form>
+
+      <div class="trust-row">
+        <div class="trust-item">
+          <svg viewBox="0 0 16 16" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 1l1.8 3.6L14 5.6l-3 2.9.7 4.1L8 10.4l-3.7 1.9.7-4.1L2 5.6l4.2-.9L8 1z"/>
+          </svg>
+          Open source · MIT
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 16 16" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="12" height="8" rx="2"/>
+            <path d="M5 7V5a3 3 0 016 0v2"/>
+          </svg>
+          Your data in Google Sheets
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 16 16" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 2L9.6 5.6 13.6 6.4 10.8 9.1 11.6 13 8 11 4.4 13 5.2 9.1 2.4 6.4 6.4 5.6z"/>
+          </svg>
+          Cancel anytime
+        </div>
+      </div>
+
+      <div class="login-link">
+        Already have an account? <a href="/dashboard">Sign in →</a>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  const form = document.getElementById('signup-form');
+  const btn = document.getElementById('submit-btn');
+  const errorBox = document.getElementById('error-box');
+  const errorList = document.getElementById('error-list');
+
+  function showErrors(errors) {
+    errorList.innerHTML = errors.map(e => `<li>${e}</li>`).join('');
+    errorBox.classList.add('visible');
+    errorBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function clearErrors() {
+    errorBox.classList.remove('visible');
+    errorList.innerHTML = '';
+    document.querySelectorAll('.field input').forEach(el => el.classList.remove('error'));
+  }
+
+  function setLoading(loading) {
+    btn.disabled = loading;
+    btn.classList.toggle('loading', loading);
+  }
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    clearErrors();
+
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+
+    // Client-side quick checks
+    const clientErrors = [];
+    if (name.length < 2) { clientErrors.push('Name must be at least 2 characters.'); document.getElementById('name').classList.add('error'); }
+    if (!email.includes('@')) { clientErrors.push('Valid email address required.'); document.getElementById('email').classList.add('error'); }
+    if (password.length < 8) { clientErrors.push('Password must be at least 8 characters.'); document.getElementById('password').classList.add('error'); }
+    if (clientErrors.length) return showErrors(clientErrors);
+
+    setLoading(true);
+
+    try {
+      const res = await fetch('/trial/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        showErrors(data.errors || ['Something went wrong. Please try again.']);
+        setLoading(false);
+        return;
+      }
+
+      // Success — server already set the cookie, redirect
+      window.location.href = data.redirect || '/dashboard';
+    } catch (err) {
+      showErrors(['Network error. Check your connection and try again.']);
+      setLoading(false);
+    }
+  });
+})();
+</script>
+
+<!-- FitOS traffic tracker -->
+<script>
+(function() {
+  var PAGE = '/trial/signup';
+  var sid = sessionStorage.getItem('fitos_sid');
+  if (!sid) {
+    sid = Math.random().toString(36).slice(2) + Date.now().toString(36);
+    sessionStorage.setItem('fitos_sid', sid);
+  }
+  var src = (new URLSearchParams(location.search)).get('utm_source') || document.referrer || '';
+  function track(ev, extra) {
+    fetch('/api/track', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(Object.assign({ event: ev, page: PAGE, session_id: sid, source: src }, extra)),
+      keepalive: true
+    }).catch(function(){});
+  }
+  track('page_view');
+})();
+</script>
+
+</body>
+</html>
