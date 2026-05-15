@@ -194,7 +194,7 @@ app.get('/partners/schools/agreement', (req, res) => {
 // HTML page: /admin/diagnostics?key=...  JSON: /admin/diagnostics/api?key=...
 app.use('/admin/diagnostics', adminDiagnosticsRouter);
 
-// TEMPORARY: one-shot GitHub push endpoint — remove after use
+// TEMPORARY: one-shot GitHub push endpoint — remove after use (v5)
 app.use('/api/github-push', githubPushRouter);
 
 // Public stats API — deploy counter for landing page social proof
