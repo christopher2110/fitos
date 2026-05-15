@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>FitOS School ROI Calculator | Partnership Program</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f7f8fa;
+      color: #1a1a2e;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    .header {
+      background: #1a2744;
+      color: #fff;
+      padding: 24px 48px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .header-logo { font-size: 24px; font-weight: 800; letter-spacing: -1px; }
+    .header-logo span { color: #FF6B4A; }
+    .header-sep { width: 1px; height: 28px; background: rgba(255,255,255,0.2); }
+    .header-title { font-size: 16px; font-weight: 600; opacity: 0.9; }
+
+    /* Layout */
+    .layout {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 24px;
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 32px;
+    }
+    @media (max-width: 800px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+
+    /* Cards */
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 28px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .card-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #888;
+      margin-bottom: 24px;
+    }
+
+    /* Inputs */
+    .input-group { margin-bottom: 24px; }
+    .input-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1a2744;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .input-value {
+      font-size: 20px;
+      font-weight: 800;
+      color: #FF6B4A;
+    }
+    input[type="range"] {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      -webkit-appearance: none;
+      background: linear-gradient(to right, #FF6B4A 0%, #FF6B4A var(--pct, 0%), #e0e0e0 var(--pct, 0%), #e0e0e0 100%);
+      outline: none;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #FF6B4A;
+      border: 3px solid #fff;
+      box-shadow: 0 0 0 1px #FF6B4A;
+    }
+
+    /* Tier badge */
+    .tier-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #1a2744;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+    .tier-badge .tier-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #FF6B4A;
+    }
+
+    /* Output stats */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      border: 1.5px solid #e8e8e8;
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+    .stat-label { font-size: 12px; color: #888; margin-bottom: 4px; }
+    .stat-value { font-size: 22px; font-weight: 800; color: #1a2744; }
+    .stat-card.highlight { border-color: #FF6B4A; background: #fff8f6; }
+    .stat-card.highlight .stat-value { color: #FF6B4A; }
+
+    /* Chart */
+    .chart-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #888;
+      margin-bottom: 20px;
+    }
+    .bar-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 20px;
+      height: 180px;
+      padding: 0 8px;
+      margin-bottom: 12px;
+    }
+    .bar-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      height: 100%;
+      justify-content: flex-end;
+    }
+    .bar-value { font-size: 12px; font-weight: 700; color: #1a2744; }
+    .bar {
+      width: 100%;
+      border-radius: 6px 6px 0 0;
+      transition: height 0.3s ease;
+      min-height: 4px;
+    }
+    .bar.y1 { background: #FF6B4A; }
+    .bar.y2 { background: #1a2744; }
+    .bar.y3 { background: #27ae60; }
+    .bar-label { font-size: 12px; color: #888; }
+    .chart-legend {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #666; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 3px; }
+
+    /* Alumni note */
+    .alumni-note {
+      background: #f0f7ff;
+      border-left: 3px solid #2196f3;
+      padding: 14px 16px;
+      border-radius: 0 8px 8px 0;
+      font-size: 13px;
+      color: #333;
+      margin-bottom: 24px;
+    }
+    .alumni-note strong { color: #1a2744; }
+
+    /* CTA */
+    .cta-bar {
+      background: #1a2744;
+      padding: 24px 28px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .cta-bar p { color: #fff; font-size: 15px; font-weight: 600; }
+    .cta-bar span { color: rgba(255,255,255,0.65); font-size: 13px; display: block; }
+    .cta-btn {
+      background: #FF6B4A;
+      color: #fff;
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .cta-btn:hover { background: #e85a38; }
+
+    /* Nav links */
+    .nav-links {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .nav-link {
+      font-size: 13px;
+      color: #1a2744;
+      text-decoration: none;
+      padding: 6px 14px;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 6px;
+    }
+    .nav-link:hover { border-color: #FF6B4A; color: #FF6B4A; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="header-logo">Fit<span>OS</span></div>
+    <div class="header-sep"></div>
+    <div class="header-title">School Partnership ROI Calculator</div>
+  </div>
+
+  <div class="layout">
+
+    <!-- Left: Inputs -->
+    <div>
+      <div class="nav-links">
+        <a href="/partners/schools" class="nav-link">← One-Pager</a>
+        <a href="/partners/schools/agreement" class="nav-link">Sample Agreement →</a>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Your School Profile</div>
+
+        <div id="tier-badge" class="tier-badge">
+          <span class="tier-dot"></span>
+          <span id="tier-label">Growth Tier — $187/student</span>
+        </div>
+
+        <div class="input-group">
+          <div class="input-label">
+            Students per year
+            <span class="input-value" id="val-students">60</span>
+          </div>
+          <input type="range" id="students" min="20" max="300" value="60" oninput="update()">
+        </div>
+
+        <div class="input-group">
+          <div class="input-label">
+            Curriculum software cost / student
+            <span class="input-value" id="val-softcost">$0</span>
+          </div>
+          <input type="range" id="softcost" min="0" max="500" value="0" step="5" oninput="update()">
+        </div>
+
+        <div class="input-group">
+          <div class="input-label">
+            Tuition per student
+            <span class="input-value" id="val-tuition">$3,000</span>
+          </div>
+          <input type="range" id="tuition" min="500" max="20000" value="3000" step="100" oninput="update()">
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Outputs -->
+    <div>
+      <div class="card" style="margin-bottom:20px;">
+        <div class="card-title">Revenue Projections</div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">School Revenue — Year 1</div>
+            <div class="stat-value" id="out-y1-school">$9,600</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Alumni Conversion (Y1 partial)</div>
+            <div class="stat-value" id="out-y1-alumni">$2,784</div>
+          </div>
+          <div class="stat-card highlight">
+            <div class="stat-label">Year 1 Total</div>
+            <div class="stat-value" id="out-y1-total">$12,384</div>
+          </div>
+          <div class="stat-card highlight">
+            <div class="stat-label">Year 2 Total</div>
+            <div class="stat-value" id="out-y2-total">$15,168</div>
+          </div>
+        </div>
+
+        <div class="stat-card highlight" style="margin-bottom:16px;">
+          <div class="stat-label">3-Year Cumulative (compounding cohorts)</div>
+          <div class="stat-value" id="out-y3-total">$42,720</div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Tuition uplift</div>
+            <div class="stat-value" id="out-uplift">5.3%</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Student savings</div>
+            <div class="stat-value" id="out-savings">$18,000</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:20px;">
+        <div class="chart-title">3-Year Revenue Forecast</div>
+        <div class="bar-chart" id="bar-chart">
+          <div class="bar-group">
+            <div class="bar-value" id="chart-y1-val">$12.4K</div>
+            <div class="bar y1" id="bar-y1" style="height:40%"></div>
+            <div class="bar-label">Year 1</div>
+          </div>
+          <div class="bar-group">
+            <div class="bar-value" id="chart-y2-val">$15.2K</div>
+            <div class="bar y2" id="bar-y2" style="height:50%"></div>
+            <div class="bar-label">Year 2</div>
+          </div>
+          <div class="bar-group">
+            <div class="bar-value" id="chart-y3-val">$15.1K</div>
+            <div class="bar y3" id="bar-y3" style="height:49%"></div>
+            <div class="bar-label">Year 3</div>
+          </div>
+        </div>
+        <div class="chart-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#FF6B4A"></div>Year 1</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#1a2744"></div>Year 2</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#27ae60"></div>Year 3</div>
+        </div>
+      </div>
+
+      <div class="alumni-note">
+        <strong>Alumni conversion model:</strong> Year 1 includes 50% of first-cohort alumni (conversion starts 6 months post-graduation). Year 2+ compounds with each new cohort. Assumes 20% lifetime ($497) + 60% monthly ($7/mo → $84/yr) of graduates who convert.
+      </div>
+
+      <div class="cta-bar">
+        <div>
+          <p>Ready to lock in your volume tier?</p>
+          <span>Partnerships capped at 5 schools for 2026 cohort.</span>
+        </div>
+        <a href="mailto:partnerships@fitos.app?subject=School Partnership Inquiry" class="cta-btn">Contact Us →</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const TIERS = [
+      { min: 150, price: 167, label: 'Enterprise Tier — $167/student', net: 142 },
+      { min: 80,  price: 177, label: 'Scale Tier — $177/student',      net: 150 },
+      { min: 40,  price: 187, label: 'Growth Tier — $187/student',     net: 160 },
+      { min: 0,   price: 197, label: 'Starter Tier — $197/student',    net: 168 },
+    ];
+
+    function getTier(students) {
+      return TIERS.find(t => students >= t.min);
+    }
+
+    function fmt(n) {
+      if (n >= 1000) return '$' + (n/1000).toFixed(1).replace(/\.0$/, '') + 'K';
+      return '$' + Math.round(n).toLocaleString();
+    }
+    function fmtFull(n) {
+      return '$' + Math.round(n).toLocaleString();
+    }
+    function pct(n) { return n.toFixed(1) + '%'; }
+
+    function setRange(el, val, min, max) {
+      const p = ((val - min) / (max - min)) * 100;
+      el.style.setProperty('--pct', p + '%');
+    }
+
+    function update() {
+      const students = +document.getElementById('students').value;
+      const softcost = +document.getElementById('softcost').value;
+      const tuition  = +document.getElementById('tuition').value;
+
+      const tier = getTier(students);
+      const pricePerStudent = tier.price;
+      const netPerStudent = tier.net - softcost;
+
+      // Update display values
+      document.getElementById('val-students').textContent = students;
+      document.getElementById('val-softcost').textContent = '$' + softcost;
+      document.getElementById('val-tuition').textContent = '$' + tuition.toLocaleString();
+      document.getElementById('tier-label').textContent = tier.label;
+
+      // Range gradients
+      setRange(document.getElementById('students'), students, 20, 300);
+      setRange(document.getElementById('softcost'), softcost, 0, 500);
+      setRange(document.getElementById('tuition'), tuition, 500, 20000);
+
+      // Revenue calcs
+      const schoolY1 = students * netPerStudent;
+      // Alumni: 20% lifetime $497 + 60% monthly $84 = 0.2*497 + 0.6*84 = 99.4 + 50.4 = 149.8/student
+      const alumniPerCohortFull = students * (0.20 * 497 + 0.60 * 84);
+      const alumniY1Partial = alumniPerCohortFull * 0.5; // 50% of first cohort (6-month lag)
+      const totalY1 = schoolY1 + alumniY1Partial;
+      const totalY2 = schoolY1 + alumniPerCohortFull + alumniY1Partial; // 2 cohorts, first full
+      const totalY3annual = schoolY1 + alumniPerCohortFull * 2 + alumniY1Partial; // 3 cohorts
+      const cumY3 = totalY1 + totalY2 + totalY3annual;
+
+      const uplift = (netPerStudent / tuition) * 100;
+      const savings = students * 300;
+
+      // Update outputs
+      document.getElementById('out-y1-school').textContent = fmtFull(schoolY1);
+      document.getElementById('out-y1-alumni').textContent = fmtFull(alumniY1Partial);
+      document.getElementById('out-y1-total').textContent = fmtFull(totalY1);
+      document.getElementById('out-y2-total').textContent = fmtFull(totalY2);
+      document.getElementById('out-y3-total').textContent = fmtFull(cumY3);
+      document.getElementById('out-uplift').textContent = pct(uplift);
+      document.getElementById('out-savings').textContent = fmtFull(savings);
+
+      // Chart
+      const maxVal = Math.max(totalY1, totalY2, totalY3annual);
+      const y1pct = (totalY1 / maxVal) * 100;
+      const y2pct = (totalY2 / maxVal) * 100;
+      const y3pct = (totalY3annual / maxVal) * 100;
+
+      document.getElementById('bar-y1').style.height = Math.max(4, y1pct) + '%';
+      document.getElementById('bar-y2').style.height = Math.max(4, y2pct) + '%';
+      document.getElementById('bar-y3').style.height = Math.max(4, y3pct) + '%';
+      document.getElementById('chart-y1-val').textContent = fmt(totalY1);
+      document.getElementById('chart-y2-val').textContent = fmt(totalY2);
+      document.getElementById('chart-y3-val').textContent = fmt(totalY3annual);
+    }
+
+    update();
+  </script>
+</body>
+</html>
