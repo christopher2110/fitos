@@ -1,0 +1,194 @@
+{
+  "id": "glute-hypertrophy",
+  "slug": "glute-hypertrophy",
+  "name": "Glute Hypertrophy Specialization",
+  "author": "FitOS Coaches",
+  "source": "Original programming based on Bret Contreras glute training principles — public domain methodology",
+  "goal": "hypertrophy",
+  "difficulty": "intermediate",
+  "daysPerWeek": 4,
+  "durationWeeks": 12,
+  "description": "A 4-day glute specialization program for female-focused coaching. Trains glutes with direct work on every session via hip thrusts, cable pull-throughs, and hip abduction. Supplemented with hamstring, quad, and upper body maintenance work. Designed to maximize glute hypertrophy while maintaining full-body strength.",
+  "equipment": ["barbell", "dumbbell", "cables", "hip thrust pad", "bench"],
+  "tags": ["hypertrophy", "glutes", "female-focused", "specialization"],
+  "weeks": [
+    {
+      "week": 1,
+      "label": "Week 1 — Establish Baseline",
+      "phase": "Accumulation",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Lower — Hip Dominant",
+          "exercises": [
+            { "name": "Barbell Hip Thrust", "sets": "4", "reps": "10", "load": "RPE 7", "rest": "120", "notes": "The primary driver of glute hypertrophy. Pause 1s at top." },
+            { "name": "Romanian Deadlift", "sets": "3", "reps": "10", "load": "RPE 7", "rest": "90", "notes": "" },
+            { "name": "Cable Pull-Through", "sets": "3", "reps": "15", "load": "RPE 7", "rest": "75", "notes": "Glute extension focus." },
+            { "name": "Hip Abduction Machine", "sets": "3", "reps": "20", "load": "RPE 7-8", "rest": "60", "notes": "Slow and controlled." },
+            { "name": "Lying Leg Curl", "sets": "3", "reps": "12", "load": "RPE 7", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Tuesday",
+          "focus": "Upper + Glute Pump",
+          "exercises": [
+            { "name": "DB Hip Thrust", "sets": "3", "reps": "15", "load": "RPE 6-7", "rest": "75", "notes": "Pump work — higher reps." },
+            { "name": "Cable Hip Abduction (standing)", "sets": "3", "reps": "15/side", "load": "RPE 7", "rest": "60", "notes": "" },
+            { "name": "Incline DB Press", "sets": "3", "reps": "10", "load": "RPE 7", "rest": "90", "notes": "" },
+            { "name": "Cable Row", "sets": "3", "reps": "12", "load": "RPE 7", "rest": "90", "notes": "" },
+            { "name": "Lateral Raise", "sets": "3", "reps": "15", "load": "RPE 7", "rest": "45", "notes": "" }
+          ]
+        },
+        {
+          "day": "Thursday",
+          "focus": "Lower — Quad Dominant",
+          "exercises": [
+            { "name": "Barbell Hip Thrust", "sets": "4", "reps": "10", "load": "RPE 7-8", "rest": "120", "notes": "Hit glutes in every session." },
+            { "name": "Back Squat or Leg Press", "sets": "3", "reps": "10", "load": "RPE 7", "rest": "120", "notes": "Client preference." },
+            { "name": "Bulgarian Split Squat", "sets": "3", "reps": "10/side", "load": "RPE 7", "rest": "90", "notes": "" },
+            { "name": "Leg Extension", "sets": "3", "reps": "15", "load": "RPE 7-8", "rest": "60", "notes": "" },
+            { "name": "Hip Abduction Machine", "sets": "3", "reps": "20", "load": "RPE 7-8", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Friday",
+          "focus": "Upper + Glute Pump",
+          "exercises": [
+            { "name": "Cable Pull-Through", "sets": "4", "reps": "15", "load": "RPE 7", "rest": "75", "notes": "" },
+            { "name": "Cable Hip Kick-Back", "sets": "3", "reps": "12/side", "load": "RPE 7", "rest": "60", "notes": "" },
+            { "name": "DB Shoulder Press", "sets": "3", "reps": "10", "load": "RPE 7", "rest": "90", "notes": "" },
+            { "name": "Lat Pulldown", "sets": "3", "reps": "10", "load": "RPE 7", "rest": "90", "notes": "" },
+            { "name": "Dumbbell Row", "sets": "3", "reps": "10/side", "load": "RPE 7", "rest": "75", "notes": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 2,
+      "label": "Week 2 — Volume Up",
+      "phase": "Accumulation",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Lower — Hip Dominant",
+          "exercises": [
+            { "name": "Barbell Hip Thrust", "sets": "4", "reps": "10", "load": "RPE 7-8", "rest": "120", "notes": "Add small weight or +5 lb if last week felt easy." },
+            { "name": "Romanian Deadlift", "sets": "4", "reps": "10", "load": "RPE 7-8", "rest": "90", "notes": "+1 set." },
+            { "name": "Cable Pull-Through", "sets": "3", "reps": "15", "load": "RPE 7-8", "rest": "75", "notes": "" },
+            { "name": "Hip Abduction Machine", "sets": "4", "reps": "20", "load": "RPE 7-8", "rest": "60", "notes": "+1 set." },
+            { "name": "Lying Leg Curl", "sets": "3", "reps": "12", "load": "RPE 7-8", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Tuesday",
+          "focus": "Upper + Glute Pump",
+          "exercises": [
+            { "name": "DB Hip Thrust", "sets": "4", "reps": "15", "load": "RPE 7", "rest": "75", "notes": "+1 set." },
+            { "name": "Cable Hip Abduction (standing)", "sets": "3", "reps": "15/side", "load": "RPE 7-8", "rest": "60", "notes": "" },
+            { "name": "Incline DB Press", "sets": "3", "reps": "10", "load": "RPE 7-8", "rest": "90", "notes": "" },
+            { "name": "Cable Row", "sets": "3", "reps": "12", "load": "RPE 7-8", "rest": "90", "notes": "" },
+            { "name": "Lateral Raise", "sets": "4", "reps": "15", "load": "RPE 7-8", "rest": "45", "notes": "" }
+          ]
+        },
+        {
+          "day": "Thursday",
+          "focus": "Lower — Quad Dominant",
+          "exercises": [
+            { "name": "Barbell Hip Thrust", "sets": "5", "reps": "10", "load": "RPE 7-8", "rest": "120", "notes": "+1 set." },
+            { "name": "Back Squat or Leg Press", "sets": "4", "reps": "10", "load": "RPE 7-8", "rest": "120", "notes": "" },
+            { "name": "Bulgarian Split Squat", "sets": "3", "reps": "10/side", "load": "RPE 7-8", "rest": "90", "notes": "" },
+            { "name": "Leg Extension", "sets": "3", "reps": "15", "load": "RPE 8", "rest": "60", "notes": "" },
+            { "name": "Hip Abduction Machine", "sets": "4", "reps": "20", "load": "RPE 8", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Friday",
+          "focus": "Upper + Glute Pump",
+          "exercises": [
+            { "name": "Cable Pull-Through", "sets": "4", "reps": "15", "load": "RPE 7-8", "rest": "75", "notes": "" },
+            { "name": "Cable Hip Kick-Back", "sets": "4", "reps": "12/side", "load": "RPE 7-8", "rest": "60", "notes": "+1 set." },
+            { "name": "DB Shoulder Press", "sets": "3", "reps": "10", "load": "RPE 7-8", "rest": "90", "notes": "" },
+            { "name": "Lat Pulldown", "sets": "3", "reps": "10", "load": "RPE 7-8", "rest": "90", "notes": "" },
+            { "name": "Dumbbell Row", "sets": "3", "reps": "10/side", "load": "RPE 7-8", "rest": "75", "notes": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 3,
+      "label": "Week 3 — Peak Volume",
+      "phase": "Accumulation",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Lower — Hip Dominant",
+          "exercises": [
+            { "name": "Barbell Hip Thrust", "sets": "5", "reps": "10", "load": "RPE 8", "rest": "120", "notes": "Peak week — push load." },
+            { "name": "Romanian Deadlift", "sets": "4", "reps": "10", "load": "RPE 8", "rest": "90", "notes": "" },
+            { "name": "Cable Pull-Through", "sets": "4", "reps": "15", "load": "RPE 8", "rest": "75", "notes": "" },
+            { "name": "Hip Abduction Machine", "sets": "4", "reps": "20", "load": "RPE 8", "rest": "60", "notes": "" },
+            { "name": "Lying Leg Curl", "sets": "3", "reps": "12", "load": "RPE 8", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Tuesday",
+          "focus": "Upper + Glute Pump",
+          "exercises": [
+            { "name": "DB Hip Thrust", "sets": "4", "reps": "15", "load": "RPE 8", "rest": "75", "notes": "" },
+            { "name": "Cable Hip Abduction (standing)", "sets": "4", "reps": "15/side", "load": "RPE 8", "rest": "60", "notes": "" },
+            { "name": "Incline DB Press", "sets": "4", "reps": "10", "load": "RPE 8", "rest": "90", "notes": "" },
+            { "name": "Cable Row", "sets": "4", "reps": "12", "load": "RPE 8", "rest": "90", "notes": "" },
+            { "name": "Lateral Raise", "sets": "4", "reps": "15", "load": "RPE 8", "rest": "45", "notes": "" }
+          ]
+        },
+        {
+          "day": "Thursday",
+          "focus": "Lower — Quad Dominant",
+          "exercises": [
+            { "name": "Barbell Hip Thrust", "sets": "5", "reps": "10", "load": "RPE 8-9", "rest": "120", "notes": "" },
+            { "name": "Back Squat or Leg Press", "sets": "4", "reps": "10", "load": "RPE 8", "rest": "120", "notes": "" },
+            { "name": "Bulgarian Split Squat", "sets": "4", "reps": "10/side", "load": "RPE 8", "rest": "90", "notes": "" },
+            { "name": "Leg Extension", "sets": "4", "reps": "15", "load": "RPE 8", "rest": "60", "notes": "" },
+            { "name": "Hip Abduction Machine", "sets": "4", "reps": "20", "load": "RPE 8", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Friday",
+          "focus": "Upper + Glute Pump",
+          "exercises": [
+            { "name": "Cable Pull-Through", "sets": "5", "reps": "15", "load": "RPE 8", "rest": "75", "notes": "" },
+            { "name": "Cable Hip Kick-Back", "sets": "4", "reps": "12/side", "load": "RPE 8", "rest": "60", "notes": "" },
+            { "name": "DB Shoulder Press", "sets": "4", "reps": "10", "load": "RPE 8", "rest": "90", "notes": "" },
+            { "name": "Lat Pulldown", "sets": "4", "reps": "10", "load": "RPE 8", "rest": "90", "notes": "" },
+            { "name": "Dumbbell Row", "sets": "4", "reps": "10/side", "load": "RPE 8", "rest": "75", "notes": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 4,
+      "label": "Week 4 — Deload",
+      "phase": "Deload",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Lower Deload",
+          "exercises": [
+            { "name": "Barbell Hip Thrust", "sets": "3", "reps": "10", "load": "RPE 5-6", "rest": "90", "notes": "Full range, easy weight." },
+            { "name": "Hip Abduction Machine", "sets": "2", "reps": "20", "load": "RPE 5", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Wednesday",
+          "focus": "Lower Deload",
+          "exercises": [
+            { "name": "DB Hip Thrust", "sets": "3", "reps": "15", "load": "RPE 5-6", "rest": "75", "notes": "" },
+            { "name": "Cable Pull-Through", "sets": "3", "reps": "15", "load": "RPE 5", "rest": "60", "notes": "" }
+          ]
+        }
+      ]
+    }
+  ],
+  "progression": "Hip thrust is the #1 priority — add load whenever it feels easy at RPE 7. Track thrust weight carefully: it's the single best indicator of glute development progress. Cycle 4 weeks, reset after deload.",
+  "notes": "Hip thrust form is critical: shoulders on bench, feet flat, barbell padded, drive hips to full extension. Don't skip the abduction machine — it targets the gluteus medius, which is often undertrained and critical for shape."
+}
