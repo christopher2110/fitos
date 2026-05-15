@@ -1,0 +1,171 @@
+{
+  "id": "full-body-3x",
+  "slug": "full-body-3x",
+  "name": "Full-Body 3×/Week",
+  "author": "FitOS Coaches",
+  "source": "Original programming — FitOS coaching methodology",
+  "goal": "general",
+  "difficulty": "beginner",
+  "daysPerWeek": 3,
+  "durationWeeks": 12,
+  "description": "Designed for busy professionals and general population clients. Three full-body sessions per week hitting every major muscle group in each session. Low complexity, high compliance. The perfect starting point for most adult clients who aren't competitive athletes.",
+  "equipment": ["dumbbell", "cable machine", "bench", "pull-up bar"],
+  "tags": ["general-fitness", "busy-professional", "full-body", "beginner"],
+  "weeks": [
+    {
+      "week": 1,
+      "label": "Week 1 — Learn the Movements",
+      "phase": "Foundation",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Full Body A",
+          "exercises": [
+            { "name": "Goblet Squat", "sets": "3", "reps": "10", "load": "RPE 6-7", "rest": "90", "notes": "Heels flat, chest up, elbows inside knees at bottom." },
+            { "name": "DB Romanian Deadlift", "sets": "3", "reps": "10", "load": "RPE 6-7", "rest": "90", "notes": "Feel hamstring stretch. No rounding lower back." },
+            { "name": "DB Bench Press", "sets": "3", "reps": "10", "load": "RPE 6-7", "rest": "90", "notes": "" },
+            { "name": "Seated Cable Row", "sets": "3", "reps": "10", "load": "RPE 6-7", "rest": "90", "notes": "" },
+            { "name": "DB Shoulder Press", "sets": "3", "reps": "12", "load": "RPE 6-7", "rest": "60", "notes": "" },
+            { "name": "Plank", "sets": "3", "reps": "30s", "load": "BW", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Wednesday",
+          "focus": "Full Body B",
+          "exercises": [
+            { "name": "Leg Press", "sets": "3", "reps": "12", "load": "RPE 6-7", "rest": "90", "notes": "" },
+            { "name": "Hip Thrust", "sets": "3", "reps": "12", "load": "RPE 6-7", "rest": "90", "notes": "Use barbell, DB, or bodyweight." },
+            { "name": "Incline DB Press", "sets": "3", "reps": "10", "load": "RPE 6-7", "rest": "90", "notes": "" },
+            { "name": "Lat Pulldown", "sets": "3", "reps": "10", "load": "RPE 6-7", "rest": "90", "notes": "" },
+            { "name": "DB Lateral Raise", "sets": "3", "reps": "15", "load": "RPE 7", "rest": "60", "notes": "" },
+            { "name": "Dead Bug", "sets": "3", "reps": "8/side", "load": "BW", "rest": "60", "notes": "Press lower back to floor throughout." }
+          ]
+        },
+        {
+          "day": "Friday",
+          "focus": "Full Body A",
+          "exercises": [
+            { "name": "Goblet Squat", "sets": "3", "reps": "10", "load": "RPE 6-7", "rest": "90", "notes": "Add 5 lb if last Monday felt easy." },
+            { "name": "DB Romanian Deadlift", "sets": "3", "reps": "10", "load": "RPE 6-7", "rest": "90", "notes": "" },
+            { "name": "DB Bench Press", "sets": "3", "reps": "10", "load": "RPE 6-7", "rest": "90", "notes": "" },
+            { "name": "Seated Cable Row", "sets": "3", "reps": "10", "load": "RPE 6-7", "rest": "90", "notes": "" },
+            { "name": "DB Shoulder Press", "sets": "3", "reps": "12", "load": "RPE 6-7", "rest": "60", "notes": "" },
+            { "name": "Plank", "sets": "3", "reps": "35s", "load": "BW", "rest": "60", "notes": "+5s from Monday." }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 2,
+      "label": "Week 2 — Add Load",
+      "phase": "Foundation",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Full Body A",
+          "exercises": [
+            { "name": "Goblet Squat", "sets": "3", "reps": "12", "load": "RPE 7", "rest": "90", "notes": "+2 reps or +5 lb." },
+            { "name": "DB Romanian Deadlift", "sets": "3", "reps": "12", "load": "RPE 7", "rest": "90", "notes": "" },
+            { "name": "DB Bench Press", "sets": "3", "reps": "10", "load": "RPE 7", "rest": "90", "notes": "+5 lb if previous week felt manageable." },
+            { "name": "Seated Cable Row", "sets": "3", "reps": "10", "load": "RPE 7", "rest": "90", "notes": "" },
+            { "name": "DB Shoulder Press", "sets": "3", "reps": "12", "load": "RPE 7", "rest": "60", "notes": "" },
+            { "name": "Plank", "sets": "3", "reps": "40s", "load": "BW", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Wednesday",
+          "focus": "Full Body B",
+          "exercises": [
+            { "name": "Leg Press", "sets": "3", "reps": "12", "load": "RPE 7", "rest": "90", "notes": "" },
+            { "name": "Hip Thrust", "sets": "3", "reps": "12", "load": "RPE 7", "rest": "90", "notes": "" },
+            { "name": "Incline DB Press", "sets": "3", "reps": "10", "load": "RPE 7", "rest": "90", "notes": "" },
+            { "name": "Lat Pulldown", "sets": "3", "reps": "10", "load": "RPE 7", "rest": "90", "notes": "" },
+            { "name": "DB Lateral Raise", "sets": "3", "reps": "15", "load": "RPE 7", "rest": "60", "notes": "" },
+            { "name": "Dead Bug", "sets": "3", "reps": "10/side", "load": "BW", "rest": "60", "notes": "+2 reps per side." }
+          ]
+        },
+        {
+          "day": "Friday",
+          "focus": "Full Body A",
+          "exercises": [
+            { "name": "Goblet Squat", "sets": "4", "reps": "10", "load": "RPE 7", "rest": "90", "notes": "+1 set." },
+            { "name": "DB Romanian Deadlift", "sets": "4", "reps": "10", "load": "RPE 7", "rest": "90", "notes": "" },
+            { "name": "DB Bench Press", "sets": "3", "reps": "10", "load": "RPE 7", "rest": "90", "notes": "" },
+            { "name": "Seated Cable Row", "sets": "3", "reps": "10", "load": "RPE 7", "rest": "90", "notes": "" },
+            { "name": "DB Shoulder Press", "sets": "3", "reps": "12", "load": "RPE 7", "rest": "60", "notes": "" },
+            { "name": "Plank", "sets": "3", "reps": "45s", "load": "BW", "rest": "60", "notes": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 3,
+      "label": "Week 3 — Increased Volume",
+      "phase": "Foundation",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Full Body A",
+          "exercises": [
+            { "name": "Goblet Squat", "sets": "4", "reps": "12", "load": "RPE 7-8", "rest": "90", "notes": "" },
+            { "name": "DB Romanian Deadlift", "sets": "4", "reps": "12", "load": "RPE 7-8", "rest": "90", "notes": "" },
+            { "name": "DB Bench Press", "sets": "4", "reps": "10", "load": "RPE 7-8", "rest": "90", "notes": "+1 set." },
+            { "name": "Seated Cable Row", "sets": "4", "reps": "10", "load": "RPE 7-8", "rest": "90", "notes": "" },
+            { "name": "DB Shoulder Press", "sets": "3", "reps": "12", "load": "RPE 7-8", "rest": "60", "notes": "" },
+            { "name": "Plank", "sets": "3", "reps": "50s", "load": "BW", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Wednesday",
+          "focus": "Full Body B",
+          "exercises": [
+            { "name": "Leg Press", "sets": "4", "reps": "12", "load": "RPE 7-8", "rest": "90", "notes": "" },
+            { "name": "Hip Thrust", "sets": "4", "reps": "12", "load": "RPE 7-8", "rest": "90", "notes": "" },
+            { "name": "Incline DB Press", "sets": "4", "reps": "10", "load": "RPE 7-8", "rest": "90", "notes": "" },
+            { "name": "Lat Pulldown", "sets": "4", "reps": "10", "load": "RPE 7-8", "rest": "90", "notes": "" },
+            { "name": "DB Lateral Raise", "sets": "3", "reps": "15", "load": "RPE 7-8", "rest": "60", "notes": "" },
+            { "name": "Dead Bug", "sets": "3", "reps": "10/side", "load": "BW", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Friday",
+          "focus": "Full Body A",
+          "exercises": [
+            { "name": "Goblet Squat", "sets": "4", "reps": "12", "load": "RPE 7-8", "rest": "90", "notes": "" },
+            { "name": "DB Romanian Deadlift", "sets": "4", "reps": "12", "load": "RPE 7-8", "rest": "90", "notes": "" },
+            { "name": "DB Bench Press", "sets": "4", "reps": "10", "load": "RPE 7-8", "rest": "90", "notes": "" },
+            { "name": "Seated Cable Row", "sets": "4", "reps": "10", "load": "RPE 7-8", "rest": "90", "notes": "" },
+            { "name": "DB Shoulder Press", "sets": "3", "reps": "12", "load": "RPE 7-8", "rest": "60", "notes": "" },
+            { "name": "Plank", "sets": "3", "reps": "55s", "load": "BW", "rest": "60", "notes": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 4,
+      "label": "Week 4 — Deload",
+      "phase": "Deload",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Full Body Deload",
+          "exercises": [
+            { "name": "Goblet Squat", "sets": "2", "reps": "10", "load": "RPE 5", "rest": "90", "notes": "Lighter and slower — restore movement quality." },
+            { "name": "DB Bench Press", "sets": "2", "reps": "10", "load": "RPE 5", "rest": "90", "notes": "" },
+            { "name": "Seated Cable Row", "sets": "2", "reps": "10", "load": "RPE 5", "rest": "90", "notes": "" }
+          ]
+        },
+        {
+          "day": "Wednesday",
+          "focus": "Full Body Deload",
+          "exercises": [
+            { "name": "Leg Press", "sets": "2", "reps": "12", "load": "RPE 5", "rest": "90", "notes": "" },
+            { "name": "Lat Pulldown", "sets": "2", "reps": "10", "load": "RPE 5", "rest": "90", "notes": "" }
+          ]
+        }
+      ]
+    }
+  ],
+  "progression": "Progress by adding reps or small load increases each week. When you hit the top of the rep range at comfortable RPE, add 5 lb next session. Deload every 4th week.",
+  "notes": "Sessions should take 45–60 min max. Ideal for 5am lifters and parents. No barbell required — dumbbells and cables only. Scale sets down first if life is chaotic; never skip entirely."
+}
