@@ -1,0 +1,18 @@
+{
+  "id": "form-cue-generator",
+  "name": "Form Cue Generator",
+  "description": "For each main lift trained in the last 14 days, generates one personalized form cue based on the client's RPE pattern and session comments. Writes cues to the Messages tab as coach_agent messages pending review.",
+  "version": "1.0.0",
+  "model": "claude-haiku-4-5",
+  "schedule": "0 20 * * *",
+  "schedule_label": "Daily, after session window",
+  "inputs": [
+    { "tab": "Workouts",    "range": "Workouts!A1:K500" },
+    { "tab": "Completions", "range": "Completions!A1:H500" },
+    { "tab": "Profile",     "range": "Profile!A2:D50" }
+  ],
+  "outputs": [
+    { "tab": "Messages", "action": "append", "from": "coach_agent", "type": "cue" }
+  ],
+  "requires_tools": []
+}
