@@ -1,0 +1,195 @@
+<\!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitOS Demo &mdash; AI Agents</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --cream: #F4EFE6; --cream-light: #FDFAF5; --cream-mid: #EDE6D8; --olive: #5C6B2A; --olive-dark: #3D4A1A; --olive-muted: #8A9650; --olive-pale: #E8EDD6; --text: #2C2A24; --text-muted: #7A7570; --border: #DDD8CA; --sidebar-w: 220px; --topbar-h: 60px; }
+    html, body { min-height: 100%; background: var(--cream); color: var(--text); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+    .layout { display: flex; min-height: 100vh; }
+    .sidebar { width: var(--sidebar-w); background: var(--cream-light); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 50; }
+    .sidebar-brand { padding: 22px 20px 20px; border-bottom: 1px solid var(--border); }
+    .brand-wordmark { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; color: var(--olive); letter-spacing: -0.02em; }
+    .brand-tagline { font-size: 10px; font-weight: 500; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 6px; }
+    .demo-chip { margin: 8px 10px; padding: 6px 10px; background: #FEF3CD; border: 1px solid #F0D060; border-radius: 8px; font-size: 11px; font-weight: 600; color: #8A6220; text-align: center; }
+    .sidebar-nav { flex: 1; padding: 12px 10px; display: flex; flex-direction: column; gap: 2px; }
+    .nav-section-label { font-size: 10px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; padding: 10px 10px 4px; }
+    .nav-link { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 10px; text-decoration: none; font-size: 13.5px; font-weight: 500; color: var(--text-muted); transition: background 0.12s; }
+    .nav-link:hover { background: var(--cream-mid); color: var(--text); }
+    .nav-link.active { background: var(--olive-pale); color: var(--olive-dark); font-weight: 600; }
+    .sidebar-footer { padding: 14px; border-top: 1px solid var(--border); }
+    .coach-avatar-sm { width: 32px; height: 32px; border-radius: 50%; background: var(--olive); color: white; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; }
+    .main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+    .topbar { height: var(--topbar-h); background: var(--cream-light); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 28px; position: sticky; top: 0; z-index: 40; }
+    .topbar-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; }
+    .page-content { padding: 28px; max-width: 900px; }
+    .page-intro { margin-bottom: 28px; }
+    .page-intro h2 { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+    .page-intro p { font-size: 14px; color: var(--text-muted); line-height: 1.55; }
+    .skill-card { background: var(--cream-light); border: 1px solid var(--border); border-radius: 16px; margin-bottom: 16px; overflow: hidden; }
+    .skill-header { padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; }
+    .skill-header-left { display: flex; align-items: center; gap: 14px; }
+    .skill-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--olive-pale); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .skill-name { font-size: 15px; font-weight: 700; color: var(--text); }
+    .skill-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .skill-client { font-size: 11px; background: var(--olive-pale); color: var(--olive-dark); padding: 3px 10px; border-radius: 10px; font-weight: 600; }
+    .run-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--olive); color: white; font-size: 13px; font-weight: 600; padding: 8px 18px; border-radius: 10px; border: none; cursor: pointer; transition: background 0.15s; }
+    .run-btn:hover { background: var(--olive-dark); }
+    .run-btn.running { background: var(--olive-muted); cursor: not-allowed; }
+    .skill-output { display: none; padding: 20px; border-top: 1px solid var(--border); background: var(--cream); }
+    .skill-output.visible { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:translateY(0); } }
+    .output-header { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+    .output-label { font-size: 11px; font-weight: 700; color: var(--olive-muted); text-transform: uppercase; letter-spacing: 0.1em; font-family: 'JetBrains Mono', monospace; }
+    .output-time { font-size: 11px; color: var(--text-muted); }
+    .output-text { font-size: 13.5px; line-height: 1.7; color: var(--text); }
+    .thinking-dots { display: inline-flex; gap: 4px; }
+    .thinking-dots span { width: 6px; height: 6px; border-radius: 50%; background: var(--olive-muted); animation: bounce 1.2s ease-in-out infinite; }
+    .thinking-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .thinking-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+    .cta-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--olive-dark); color: white; padding: 12px 28px; display: flex; align-items: center; justify-content: center; gap: 16px; z-index: 200; font-size: 14px; font-weight: 500; }
+    .cta-bar a { background: white; color: var(--olive-dark); font-size: 13px; font-weight: 700; padding: 8px 20px; border-radius: 20px; text-decoration: none; }
+    body { padding-bottom: 60px; }
+    @media (max-width: 600px) { .sidebar { display: none; } .main { margin-left: 0; } .page-content { padding: 16px; } }
+  </style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-wordmark">FitOS</div>
+      <div class="brand-tagline">Coaching OS</div>
+    </div>
+    <div class="demo-chip">&#9889; Demo Mode</div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Coach</div>
+      <a href="/demo/dashboard" class="nav-link">Dashboard</a>
+      <a href="/demo/dashboard/clients" class="nav-link">Clients</a>
+      <div class="nav-section-label">AI Tools</div>
+      <a href="/demo/dashboard/agents" class="nav-link active">AI Agents</a>
+      <a href="/demo/dashboard/agents/builder" class="nav-link">Program Builder &#10024;</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div style="display:flex;align-items:center;gap:9px">
+        <div class="coach-avatar-sm">CA</div>
+        <div>
+          <div style="font-size:13px;font-weight:600">Coach Alex</div>
+          <div style="font-size:11px;color:var(--text-muted)">Demo Account</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-title">AI Agents</div>
+    </div>
+    <div class="page-content">
+      <div class="page-intro">
+        <h2>Your AI coaching assistant</h2>
+        <p>Each skill reads client data from your Google Sheet and writes its output back. Click Run to see a live demo output &mdash; this is exactly what it produces for real clients.</p>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-header">
+          <div class="skill-header-left">
+            <div class="skill-icon">&#9989;</div>
+            <div>
+              <div class="skill-name">Weekly Check-In Summary</div>
+              <div class="skill-desc">Reads this week's check-in, writes a coaching summary back to the Sheet</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="skill-client">Sarah Chen</span>
+            <button class="run-btn" id="btn-checkin" onclick="runSkill('checkin','btn-checkin','out-checkin')">&#9654; Run</button>
+          </div>
+        </div>
+        <div class="skill-output" id="out-checkin"></div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-header">
+          <div class="skill-header-left">
+            <div class="skill-icon">&#9888;&#65039;</div>
+            <div>
+              <div class="skill-name">Deload / Fatigue Flag</div>
+              <div class="skill-desc">Analyzes check-in trends for fatigue signals, recommends deload if needed</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="skill-client" style="background:#FEF3CD;color:#8A6220">Marcus Reeves</span>
+            <button class="run-btn" id="btn-deload" onclick="runSkill('deload','btn-deload','out-deload')">&#9654; Run</button>
+          </div>
+        </div>
+        <div class="skill-output" id="out-deload"></div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-header">
+          <div class="skill-header-left">
+            <div class="skill-icon">&#127947;&#65039;</div>
+            <div>
+              <div class="skill-name">Exercise Form Cue</div>
+              <div class="skill-desc">Generates specific technique cues based on client notes and movement patterns</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="skill-client">Sarah Chen</span>
+            <button class="run-btn" id="btn-form" onclick="runSkill('form','btn-form','out-form')">&#9654; Run</button>
+          </div>
+        </div>
+        <div class="skill-output" id="out-form"></div>
+      </div>
+
+      <div style="margin-top:24px;text-align:center">
+        <a href="/demo/dashboard/agents/builder" style="display:inline-flex;align-items:center;gap:8px;background:var(--olive-pale);color:var(--olive-dark);font-size:14px;font-weight:600;padding:12px 24px;border-radius:12px;text-decoration:none;border:1px solid #C8D5A0">&#10024; Try the AI Program Builder &rarr;</a>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="cta-bar">
+  <span>Like what you see?</span>
+  <a href="/trial/signup">Start your 14-day free trial &rarr;</a>
+</div>
+<script>
+function track(e){try{fetch('/demo/api/analytics',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event:e,ts:Date.now()})}).catch(()=>{});}catch(_){}}
+track('demo_agents_view');
+
+var OUTPUTS={
+  checkin:{
+    time:'May 8, 2026 at 2:30 PM',
+    html:'<p><strong>Week 4 Summary &mdash; Sarah Chen</strong></p><br><p><strong>Overall: On Track &#10003;</strong></p><br><p>Weight: 62.8 kg (&minus;0.4 kg this week, &minus;2.1 kg total). Trend is excellent for a recomp &mdash; moving in the right direction.</p><br><p><strong>Highlights</strong></p><ul style="margin:8px 0 0 18px;display:flex;flex-direction:column;gap:4px"><li>Sleep improved to 7.8h avg vs 7.2h last week &mdash; likely from managing evening screen time</li><li>Energy rating up to 8/10, highest since starting</li><li>All 5 sessions completed with progressive loads</li></ul><br><p><strong>Coaching Note</strong></p><p>Squat form note from Sarah: hip tightness at depth. Recommend hip flexor protocol post-session (3&times;60s couch stretch). Box squat variation next Lower day to reinforce pattern.</p><br><p><strong>Next Week:</strong> Progress squat load to 62.5 kg. Keep calories at current level &mdash; recomp is working.</p>'
+  },
+  deload:{
+    time:'May 10, 2026 at 9:15 AM',
+    html:'<p><strong>Recommendation: Reduce intensity this week</strong></p><br><p>Fatigue indicators detected across four dimensions:</p><ul style="margin:8px 0 0 18px;display:flex;flex-direction:column;gap:4px"><li>Sleep dropped to 6.5h (&minus;1h vs 4-week avg)</li><li>Stress rating 7/10 &mdash; highest in 8 weeks</li><li>Reported knee ache (first time in 12 weeks)</li><li>Energy 6/10, down from 8/10 last check-in</li></ul><br><p><strong>Context:</strong> Week 2 of 3-week peaking block. This is expected accumulation fatigue, not a red flag &mdash; but competing into a comp squat attempt from here risks a poor performance.</p><br><p><strong>Recommendation:</strong> Reduce top-set load 5&ndash;8% for 3&ndash;4 days. Maintain movement pattern. Pre-meet emotional stress is masking real readiness &mdash; heart rate at working sets is the better signal here.</p>'
+  },
+  form:{
+    time:'May 9, 2026 at 3:20 PM',
+    html:'<p><strong>Issue:</strong> Hip tightness at depth, causing slight forward lean at ~90&deg;.</p><br><p><strong>Root cause:</strong> Limited hip flexor mobility &mdash; common when lower body volume increases rapidly.</p><br><p><strong>Cues to use:</strong></p><ol style="margin:8px 0 0 18px;display:flex;flex-direction:column;gap:6px"><li><em>"Push knees out over pinky toes"</em> &mdash; activates external rotators, opens the hip socket</li><li><em>"Tall chest all the way down"</em> &mdash; counteracts the forward lean pattern</li><li><em>"Sit between your heels, not behind them"</em> &mdash; shifts load back without sacrificing depth</li></ol><br><p><strong>Protocol:</strong></p><ul style="margin:8px 0 0 18px;display:flex;flex-direction:column;gap:4px"><li>90/90 hip stretch: 2&times;60s per side before squatting</li><li>Couch stretch: 3&times;60s per side post-session</li><li>Box squat 1 warm-up set to establish depth cue before loading</li></ul><br><p>Expected improvement in 2&ndash;3 weeks of consistency.</p>'
+  }
+};
+
+function runSkill(id,btnId,outId){
+  var btn=document.getElementById(btnId);
+  var out=document.getElementById(outId);
+  btn.disabled=true;
+  btn.classList.add('running');
+  btn.innerHTML='<span class="thinking-dots"><span></span><span></span><span></span></span>';
+  out.classList.remove('visible');
+  setTimeout(function(){
+    var d=OUTPUTS[id];
+    out.innerHTML='<div class="output-header"><span class="output-label">AI Output</span><span class="output-time">'+d.time+'</span></div><div class="output-text">'+d.html+'</div>';
+    out.classList.add('visible');
+    btn.disabled=false;
+    btn.classList.remove('running');
+    btn.innerHTML='&#9654; Run again';
+    track('skill_run_'+id);
+  },900);
+}
+</script>
+</body>
+</html>
