@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitOS — Client Results</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:        #F4EFE6;
+      --cream-light:  #FDFAF5;
+      --cream-mid:    #EDE6D8;
+      --olive:        #5C6B2A;
+      --olive-dark:   #3D4A1A;
+      --olive-muted:  #8A9650;
+      --olive-pale:   #E8EDD6;
+      --text:         #2C2A24;
+      --text-muted:   #7A7570;
+      --border:       #DDD8CA;
+      --amber:        #956E20;
+      --red-muted:    #A83030;
+      --sidebar-w:    220px;
+      --topbar-h:     60px;
+    }
+
+    html, body { height: 100%; background: var(--cream); color: var(--text); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+    .layout { display: flex; min-height: 100vh; }
+
+    /* SIDEBAR */
+    .sidebar { width: var(--sidebar-w); background: var(--cream-light); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 50; }
+    .sidebar-brand { padding: 22px 20px 20px; border-bottom: 1px solid var(--border); }
+    .brand-wordmark { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; color: var(--olive); letter-spacing: -0.02em; }
+    .brand-tagline { font-size: 10px; font-weight: 500; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 6px; }
+    .sidebar-nav { flex: 1; padding: 12px 10px; display: flex; flex-direction: column; gap: 2px; }
+    .nav-section-label { font-size: 10px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; padding: 10px 10px 4px; }
+    .nav-link { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 10px; text-decoration: none; font-size: 13.5px; font-weight: 500; color: var(--text-muted); transition: background 0.12s, color 0.12s; cursor: pointer; }
+    .nav-link:hover { background: var(--cream-mid); color: var(--text); }
+    .nav-link.active { background: var(--olive-pale); color: var(--olive-dark); font-weight: 600; }
+    .nav-icon { width: 17px; height: 17px; flex-shrink: 0; opacity: 0.7; }
+    .nav-link.active .nav-icon { opacity: 1; }
+    .sidebar-footer { padding: 14px; border-top: 1px solid var(--border); }
+    .coach-chip { display: flex; align-items: center; gap: 9px; }
+    .coach-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--olive); color: var(--cream-light); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; }
+    .coach-name-small { font-size: 13px; font-weight: 600; color: var(--text); }
+    .coach-role { font-size: 11px; color: var(--text-muted); }
+
+    /* MAIN */
+    .main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+    .topbar { height: var(--topbar-h); background: var(--cream-light); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 28px; position: sticky; top: 0; z-index: 40; gap: 12px; }
+    .topbar-back { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border); background: transparent; font-size: 12px; font-weight: 600; color: var(--text-muted); cursor: pointer; text-decoration: none; transition: background 0.12s; }
+    .topbar-back:hover { background: var(--cream-mid); color: var(--text); }
+    .topbar-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; color: var(--text); }
+    .topbar-actions { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+    .page-content { padding: 28px; flex: 1; max-width: 1100px; }
+
+    /* TAB BAR (client detail style) */
+    .tab-bar { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
+    .tab-btn { padding: 12px 20px; font-size: 13px; font-weight: 600; color: var(--text-muted); background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; transition: all 0.12s; text-decoration: none; display: inline-flex; align-items: center; }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--olive-dark); border-bottom-color: var(--olive); }
+
+    /* UNIT TOGGLE */
+    .unit-toggle { display: flex; background: var(--cream-mid); border-radius: 20px; padding: 3px; gap: 2px; }
+    .unit-btn { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 16px; border: none; background: transparent; color: var(--text-muted); cursor: pointer; transition: background 0.15s, color 0.15s; letter-spacing: 0.03em; }
+    .unit-btn.active { background: var(--cream-light); color: var(--olive-dark); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+
+    /* EXPORT BUTTON */
+    .export-btn { display: flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--cream-light); font-size: 12px; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: background 0.12s; }
+    .export-btn:hover { background: var(--cream-mid); color: var(--text); }
+
+    /* SUMMARY CARDS */
+    .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }
+    .summary-card { background: var(--cream-light); border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px; }
+    .summary-label { font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
+    .summary-value { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 700; color: var(--text); line-height: 1; letter-spacing: -0.02em; }
+    .summary-sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+    .delta-positive { color: var(--red-muted); font-weight: 600; }
+    .delta-negative { color: var(--olive); font-weight: 600; }
+    .delta-zero { color: var(--text-muted); }
+
+    /* CHART GRID */
+    .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 24px; }
+
+    /* CHART CARD */
+    .chart-card { background: var(--cream-light); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
+    .chart-title { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 600; color: var(--text); letter-spacing: -0.01em; margin-bottom: 2px; }
+    .chart-sub { font-size: 11px; color: var(--text-muted); font-weight: 500; letter-spacing: 0.02em; margin-bottom: 14px; }
+    .chart-container { position: relative; height: 180px; }
+    .chart-full { grid-column: 1 / -1; }
+
+    /* LEGEND */
+    .chart-legend { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 12px; }
+    .legend-item { display: flex; align-items: center; gap: 5px; }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .legend-label { font-size: 11px; font-weight: 500; color: var(--text-muted); }
+
+    /* LIFT TOGGLE */
+    .lift-toggle-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+    .lift-pill { padding: 4px 10px; border-radius: 14px; border: 1px solid var(--border); background: var(--cream); font-size: 11px; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.12s; }
+    .lift-pill.active { background: var(--olive); border-color: var(--olive); color: #fff; }
+
+    /* PHOTO COMPARISON */
+    .compare-section { background: var(--cream-light); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 24px; }
+    .compare-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; }
+    .compare-title { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 600; color: var(--text); }
+    .compare-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .compare-pickers { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; max-width: 480px; }
+    .compare-picker-label { font-size: 10px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
+    .compare-date-select { width: 100%; height: 36px; background: var(--cream); border: 1px solid var(--border); border-radius: 8px; padding: 0 10px; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; color: var(--text); outline: none; appearance: none; -webkit-appearance: none; cursor: pointer; }
+    .compare-photos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; max-width: 480px; }
+    .compare-photo-slot { aspect-ratio: 3/4; border-radius: 10px; overflow: hidden; background: var(--cream-mid); display: flex; align-items: center; justify-content: center; position: relative; }
+    .compare-photo-slot img { width: 100%; height: 100%; object-fit: cover; }
+    .compare-photo-empty { display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--text-muted); padding: 16px; text-align: center; }
+    .compare-photo-empty svg { opacity: 0.4; }
+    .compare-photo-empty-text { font-size: 11px; font-weight: 500; line-height: 1.3; opacity: 0.7; }
+    .compare-photo-date-badge { position: absolute; bottom: 6px; left: 6px; background: rgba(44,42,36,0.75); color: #FDFAF5; font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 6px; }
+    .compare-deltas { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 8px; }
+    .compare-delta-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; background: var(--cream); border-radius: 8px; }
+    .compare-delta-label { font-size: 12px; font-weight: 500; color: var(--text-muted); }
+    .compare-delta-val { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+    /* SKELETON */
+    .skeleton { background: linear-gradient(90deg, var(--cream-mid) 25%, var(--border) 50%, var(--cream-mid) 75%); background-size: 200% 100%; animation: shimmer 1.4s ease-in-out infinite; border-radius: 6px; height: 28px; }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+    /* EMPTY STATE */
+    .empty-state { text-align: center; padding: 40px 24px; color: var(--text-muted); }
+    .empty-icon { font-size: 40px; margin-bottom: 12px; }
+    .empty-title { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .empty-sub { font-size: 13px; line-height: 1.5; }
+
+    /* PRINT STYLES */
+    @media print {
+      .sidebar, .topbar, .tab-bar, .topbar-actions, .export-btn, .unit-toggle, .lift-pill { display: none !important; }
+      .main { margin-left: 0; }
+      .page-content { padding: 16px; }
+      .charts-grid { grid-template-columns: 1fr 1fr; }
+      .summary-grid { grid-template-columns: repeat(4, 1fr); }
+      .compare-photos { max-width: 360px; }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .charts-grid { grid-template-columns: 1fr; }
+      .summary-grid { grid-template-columns: 1fr 1fr; }
+      .chart-full { grid-column: 1; }
+    }
+
+    @media (max-width: 720px) {
+      :root { --sidebar-w: 0px; }
+      .sidebar { display: none; }
+      .main { margin-left: 0; }
+      .page-content { padding: 16px; }
+      .summary-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-wordmark">FitOS</div>
+      <div class="brand-tagline">Coaching Platform</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Workspace</div>
+      <a class="nav-link" href="/dashboard">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a class="nav-link" href="/dashboard/messages">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Messages
+      </a>
+      <a class="nav-link active" href="/dashboard/clients">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Clients
+      </a>
+      <a class="nav-link" href="/settings/agents">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        Agents
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="coach-chip">
+        <div class="coach-avatar" id="coach-avatar-init">C</div>
+        <div>
+          <div class="coach-name-small" id="coach-name-display">Coach</div>
+          <div class="coach-role">FitOS Coaching</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <header class="topbar">
+      <a class="topbar-back" id="back-link" href="/dashboard/clients">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        <span id="back-label">Clients</span>
+      </a>
+      <div class="topbar-title" id="topbar-client-name">Results</div>
+      <div class="topbar-actions">
+        <div class="unit-toggle">
+          <button class="unit-btn active" id="btn-kg" onclick="setUnit('kg')">kg</button>
+          <button class="unit-btn" id="btn-lb" onclick="setUnit('lb')">lb</button>
+        </div>
+        <button class="export-btn" onclick="window.print()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Export PDF
+        </button>
+      </div>
+    </header>
+
+    <div class="page-content" id="page-content">
+      <!-- TAB BAR — mirrors client-detail tabs -->
+      <div class="tab-bar">
+        <a class="tab-btn" id="tab-overview" href="">Overview</a>
+        <a class="tab-btn" id="tab-workouts" href="">Workouts</a>
+        <a class="tab-btn" id="tab-calendar" href="">Calendar</a>
+        <a class="tab-btn" id="tab-checkins" href="">Check-ins</a>
+        <a class="tab-btn" id="tab-messages" href="">Messages</a>
+        <a class="tab-btn active" id="tab-results" href="">Results</a>
+      </div>
+
+      <!-- LOADING STATE -->
+      <div id="loading-state">
+        <div class="summary-grid">
+          <div class="summary-card"><div class="skeleton" style="width:80px;margin-bottom:8px"></div><div class="skeleton" style="width:120px;height:36px"></div></div>
+          <div class="summary-card"><div class="skeleton" style="width:80px;margin-bottom:8px"></div><div class="skeleton" style="width:120px;height:36px"></div></div>
+          <div class="summary-card"><div class="skeleton" style="width:80px;margin-bottom:8px"></div><div class="skeleton" style="width:120px;height:36px"></div></div>
+          <div class="summary-card"><div class="skeleton" style="width:80px;margin-bottom:8px"></div><div class="skeleton" style="width:120px;height:36px"></div></div>
+        </div>
+      </div>
+
+      <!-- RESULTS CONTENT (populated by JS) -->
+      <div id="results-content" style="display:none">
+
+        <!-- SUMMARY CARDS -->
+        <div class="summary-grid" id="summary-cards"></div>
+
+        <!-- CHARTS -->
+        <div class="charts-grid">
+          <!-- Bodyweight 90d -->
+          <div class="chart-card" id="card-bw">
+            <div class="chart-title">Bodyweight</div>
+            <div class="chart-sub" id="sub-bw">90 days · 7-day moving average</div>
+            <div class="chart-container"><canvas id="chart-bw"></canvas></div>
+          </div>
+
+          <!-- Wellness 30d -->
+          <div class="chart-card" id="card-wellness">
+            <div class="chart-title">Wellness · 30 days</div>
+            <div class="chart-sub">Sleep · Energy · Stress · Scale 1–10</div>
+            <div class="chart-container"><canvas id="chart-wellness"></canvas></div>
+            <div class="chart-legend">
+              <div class="legend-item"><div class="legend-dot" style="background:#5C6B2A"></div><span class="legend-label">Sleep</span></div>
+              <div class="legend-item"><div class="legend-dot" style="background:#7B9E3C"></div><span class="legend-label">Energy</span></div>
+              <div class="legend-item"><div class="legend-dot" style="background:#A83030"></div><span class="legend-label">Stress</span></div>
+            </div>
+          </div>
+
+          <!-- Circumferences 12w -->
+          <div class="chart-card" id="card-measure">
+            <div class="chart-title">Body Circumferences · 12 weeks</div>
+            <div class="chart-sub" id="sub-measure">Waist · Hip · Chest · Arms · Thighs</div>
+            <div class="chart-container" style="height:200px"><canvas id="chart-measure"></canvas></div>
+            <div class="chart-legend">
+              <div class="legend-item"><div class="legend-dot" style="background:#5C6B2A"></div><span class="legend-label">Waist</span></div>
+              <div class="legend-item"><div class="legend-dot" style="background:#7B9E3C"></div><span class="legend-label">Hip</span></div>
+              <div class="legend-item"><div class="legend-dot" style="background:#C07820"></div><span class="legend-label">Chest</span></div>
+              <div class="legend-item"><div class="legend-dot" style="background:#6A8FBF"></div><span class="legend-label">L Arm</span></div>
+              <div class="legend-item"><div class="legend-dot" style="background:#9370AB"></div><span class="legend-label">R Arm</span></div>
+              <div class="legend-item"><div class="legend-dot" style="background:#C07860"></div><span class="legend-label">L Thigh</span></div>
+              <div class="legend-item"><div class="legend-dot" style="background:#708070"></div><span class="legend-label">R Thigh</span></div>
+            </div>
+          </div>
+
+          <!-- Top-set progression -->
+          <div class="chart-card" id="card-lifts">
+            <div class="chart-title">Lift Progression · 12 weeks</div>
+            <div class="chart-sub">Top-set weight per session</div>
+            <div class="lift-toggle-row" id="lift-toggles"></div>
+            <div class="chart-container"><canvas id="chart-lifts"></canvas></div>
+          </div>
+        </div>
+
+        <!-- PHOTO COMPARISON -->
+        <div class="compare-section" id="compare-section">
+          <div class="compare-header">
+            <div>
+              <div class="compare-title">Photo Comparison</div>
+              <div class="compare-sub">Side-by-side progress · pick two dates</div>
+            </div>
+          </div>
+          <div id="compare-inner"></div>
+        </div>
+
+      </div><!-- /results-content -->
+
+    </div><!-- /page-content -->
+  </div><!-- /main -->
+</div><!-- /layout -->
+
+<script>
+(function () {
+  const LIVE_CFG  = window.__COACH_LIVE__ || {};
+  const clientId  = window.__CLIENT_ID__ || 1;
+  const coachName = LIVE_CFG.coachName || 'Coach';
+
+  // Coach identity
+  const avatarEl = document.getElementById('coach-avatar-init');
+  const nameEl   = document.getElementById('coach-name-display');
+  if (avatarEl) avatarEl.textContent = coachName.split(' ').filter(Boolean).map(w => w[0]).join('').toUpperCase().slice(0, 2) || 'C';
+  if (nameEl)   nameEl.textContent   = coachName;
+
+  // Tab links
+  document.getElementById('back-link').href    = `/dashboard/clients/${clientId}`;
+  document.getElementById('back-label').textContent = 'Client';
+  document.getElementById('tab-overview').href  = `/dashboard/clients/${clientId}`;
+  document.getElementById('tab-workouts').href  = `/dashboard/clients/${clientId}`;
+  document.getElementById('tab-calendar').href  = `/dashboard/clients/${clientId}/calendar`;
+  document.getElementById('tab-checkins').href  = `/dashboard/clients/${clientId}`;
+  document.getElementById('tab-messages').href  = `/dashboard/clients/${clientId}`;
+  document.getElementById('tab-results').href   = `/dashboard/clients/${clientId}/results`;
+
+  // Unit state
+  let unit = localStorage.getItem('fitos_unit') || 'lb';
+  document.getElementById('btn-kg').classList.toggle('active', unit === 'kg');
+  document.getElementById('btn-lb').classList.toggle('active', unit === 'lb');
+
+  window.setUnit = function (u) {
+    unit = u;
+    localStorage.setItem('fitos_unit', u);
+    document.getElementById('btn-kg').classList.toggle('active', u === 'kg');
+    document.getElementById('btn-lb').classList.toggle('active', u === 'lb');
+    if (resultsData) renderAll(resultsData);
+  };
+
+  // Constants
+  const KG_TO_LB = 2.20462;
+  const CM_TO_IN = 0.393701;
+  const MONTH_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  let resultsData  = null;
+  let chartBW      = null;
+  let chartWellness = null;
+  let chartMeasure  = null;
+  let chartLifts    = null;
+  let activeLift    = 'squat'; // default lift for top-set chart
+  let compareA      = 0;
+  let compareB      = 1;
+
+  // Chart style helpers (same palette as history.html)
+  function baseLineDataset(color, dashed) {
+    return {
+      borderColor: color,
+      backgroundColor: 'transparent',
+      borderWidth: dashed ? 1.5 : 2,
+      borderDash: dashed ? [5, 4] : [],
+      pointRadius: dashed ? 0 : 3,
+      pointHoverRadius: dashed ? 0 : 5,
+      pointBackgroundColor: color,
+      pointBorderColor: '#FDFAF5',
+      pointBorderWidth: 1.5,
+      tension: 0.35,
+      fill: false,
+      spanGaps: false,
+    };
+  }
+
+  const axisDefaults = {
+    grid: { color: 'rgba(0,0,0,0.05)', drawTicks: false },
+    border: { display: false },
+    ticks: {
+      font: { family: "'Inter', sans-serif", size: 10, weight: '500' },
+      color: '#7A7570',
+      padding: 6,
+      maxRotation: 0,
+      autoSkipPadding: 12,
+    },
+  };
+
+  const tooltipDefaults = {
+    backgroundColor: '#2C2A24',
+    titleFont: { family: "'Inter', sans-serif", size: 11, weight: '600' },
+    bodyFont:  { family: "'Inter', sans-serif", size: 12, weight: '500' },
+    padding: 10,
+    cornerRadius: 8,
+    displayColors: false,
+  };
+
+  function fmtDate(iso) {
+    if (!iso) return '';
+    const d = new Date(iso + 'T00:00:00');
+    return MONTH_SHORT[d.getMonth()] + ' ' + d.getDate();
+  }
+
+  function fmtDateLong(iso) {
+    if (!iso) return '';
+    const d = new Date(iso + 'T00:00:00');
+    return MONTH_SHORT[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+  }
+
+  function cvtBW(kg) {
+    return unit === 'lb' ? Math.round(kg * KG_TO_LB * 10) / 10 : kg;
+  }
+
+  function cvtCm(cm) {
+    return unit === 'cm' ? cm : (cm != null ? Math.round(cm * CM_TO_IN * 10) / 10 : null);
+  }
+
+  function movingAvg(arr, n) {
+    return arr.map((_, i) => {
+      if (i < n - 1) return null;
+      const slice = arr.slice(i - n + 1, i + 1);
+      const sum = slice.reduce((a, b) => a + b, 0);
+      return Math.round((sum / n) * 10) / 10;
+    });
+  }
+
+  function destroyCharts() {
+    [chartBW, chartWellness, chartMeasure, chartLifts].forEach(c => { if (c) c.destroy(); });
+    chartBW = chartWellness = chartMeasure = chartLifts = null;
+  }
+
+  // ── FETCH DATA ──────────────────────────────────────────────────────────────
+  async function loadResults() {
+    try {
+      const res  = await fetch(`/dashboard/clients/${clientId}/api/results`);
+      const data = await res.json();
+
+      document.getElementById('loading-state').style.display = 'none';
+      document.getElementById('results-content').style.display = '';
+
+      if (!data.ok) {
+        document.getElementById('results-content').innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">⚠️</div>
+            <div class="empty-title">Could not load results</div>
+            <div class="empty-sub">${data.error || 'Unknown error'}</div>
+          </div>`;
+        return;
+      }
+
+      resultsData = data;
+
+      // Client name in topbar
+      if (data.client && data.client.name) {
+        document.getElementById('topbar-client-name').textContent = data.client.name + ' · Results';
+        document.title = `FitOS — ${data.client.name} Results`;
+      }
+
+      renderAll(data);
+    } catch (err) {
+      document.getElementById('loading-state').innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">⚠️</div>
+          <div class="empty-title">Network error</div>
+          <div class="empty-sub">Could not reach the server.</div>
+        </div>`;
+    }
+  }
+
+  // ── RENDER ALL ──────────────────────────────────────────────────────────────
+  function renderAll(data) {
+    destroyCharts();
+    renderSummaryCards(data.summary);
+    renderBWChart(data.charts.bodyweight || []);
+    renderWellnessChart(data.charts.wellness || []);
+    renderMeasureChart(data.charts.measurements || []);
+    renderLiftsChart(data.charts.squatSets || [], data.charts.allLifts || {});
+    renderCompare(data.photoCheckins || [], data.charts.measurements || [], data.charts.bodyweight || []);
+  }
+
+  // ── SUMMARY CARDS ────────────────────────────────────────────────────────────
+  function renderSummaryCards(s) {
+    if (!s) return;
+    const bwLabel = unit === 'kg' ? 'kg' : 'lb';
+    const bwVal   = s.currentBodyweight != null ? cvtBW(s.currentBodyweight) : '—';
+    const bwDelta = s.bwDelta30d != null ? cvtBW(s.bwDelta30d) : null;
+
+    const deltaHtml = (val) => {
+      if (val == null) return '';
+      const sign = val > 0 ? '+' : '';
+      const cls  = val < 0 ? 'delta-negative' : (val > 0 ? 'delta-positive' : 'delta-zero');
+      return `<span class="${cls}">${sign}${val} ${bwLabel} vs 30d ago</span>`;
+    };
+
+    const lastCheckinFmt = s.lastCheckin ? fmtDateLong(s.lastCheckin) : '—';
+
+    document.getElementById('summary-cards').innerHTML = `
+      <div class="summary-card">
+        <div class="summary-label">Current Bodyweight</div>
+        <div class="summary-value">${bwVal}<span style="font-size:15px;font-weight:500;color:var(--text-muted);margin-left:4px">${bwVal !== '—' ? bwLabel : ''}</span></div>
+        <div class="summary-sub">${deltaHtml(bwDelta)}</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-label">Workouts (30d)</div>
+        <div class="summary-value">${s.workoutsLast30d ?? '—'}</div>
+        <div class="summary-sub">sessions logged</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-label">This Week</div>
+        <div class="summary-value">${s.adherencePct ?? '—'}<span style="font-size:15px;font-weight:500;color:var(--text-muted);margin-left:1px">${s.adherencePct != null ? '%' : ''}</span></div>
+        <div class="summary-sub">check-in adherence</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-label">Last Check-in</div>
+        <div class="summary-value" style="font-size:18px">${s.lastCheckin ? fmtDate(s.lastCheckin) : '—'}</div>
+        <div class="summary-sub">${s.lastCheckin ? lastCheckinFmt : 'No data yet'}</div>
+      </div>
+    `;
+  }
+
+  // ── BODYWEIGHT CHART ─────────────────────────────────────────────────────────
+  function renderBWChart(rawBW) {
+    const card = document.getElementById('card-bw');
+    if (!rawBW || rawBW.length < 2) {
+      card.innerHTML = `<div class="chart-title">Bodyweight</div><div class="empty-state" style="padding:24px"><div class="empty-icon">⚖️</div><div class="empty-sub">Not enough bodyweight data yet.</div></div>`;
+      return;
+    }
+
+    // Last 90 days
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - 90);
+    const filtered = rawBW.filter(r => new Date(r.date + 'T00:00:00') >= cutoff);
+
+    if (filtered.length < 2) {
+      card.innerHTML = `<div class="chart-title">Bodyweight</div><div class="empty-state" style="padding:24px"><div class="empty-icon">⚖️</div><div class="empty-sub">Need at least 2 entries in the last 90 days.</div></div>`;
+      return;
+    }
+
+    const labels  = filtered.map(r => fmtDate(r.date));
+    const values  = filtered.map(r => cvtBW(r.weight));
+    const maVals  = movingAvg(values, 7);
+    const unitLbl = unit === 'kg' ? 'kg' : 'lb';
+    document.getElementById('sub-bw').textContent = `90 days · 7-day avg · ${unitLbl}`;
+
+    chartBW = new Chart(document.getElementById('chart-bw'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          {
+            ...baseLineDataset('rgba(92,107,42,0.35)', false),
+            label: `Daily (${unitLbl})`,
+            data: values,
+            pointRadius: 0,
+            pointHoverRadius: 4,
+            borderWidth: 1.5,
+            tension: 0.2,
+          },
+          {
+            ...baseLineDataset('#5C6B2A', true),
+            label: '7-day avg',
+            data: maVals,
+            borderWidth: 2.5,
+            borderDash: [6, 4],
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 300 },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            ...tooltipDefaults,
+            mode: 'index',
+            intersect: false,
+            filter: item => item.dataIndex >= 6,
+            callbacks: {
+              label: ctx => {
+                const lbl = ctx.datasetIndex === 0 ? 'Daily' : '7-day avg';
+                return `${lbl}: ${ctx.parsed.y} ${unitLbl}`;
+              },
+            },
+          },
+        },
+        scales: {
+          x: { ...axisDefaults, ticks: { ...axisDefaults.ticks, maxTicksLimit: 7 } },
+          y: { ...axisDefaults, ticks: { ...axisDefaults.ticks, callback: v => `${v}` } },
+        },
+      },
+    });
+  }
+
+  // ── WELLNESS CHART ───────────────────────────────────────────────────────────
+  function renderWellnessChart(rawWellness) {
+    const card = document.getElementById('card-wellness');
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - 30);
+    const filtered = rawWellness.filter(r => new Date(r.date + 'T00:00:00') >= cutoff);
+
+    if (!filtered || filtered.length < 2) {
+      document.getElementById('card-wellness').querySelector('.chart-container').innerHTML = `<div class="empty-state" style="padding:16px"><div class="empty-sub">Not enough wellness check-in data yet.</div></div>`;
+      return;
+    }
+
+    const labels = filtered.map(r => fmtDate(r.date));
+
+    chartWellness = new Chart(document.getElementById('chart-wellness'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          { ...baseLineDataset('#5C6B2A', false), label: 'Sleep',  data: filtered.map(r => r.sleep),  pointRadius: 0, pointHoverRadius: 4, tension: 0.4 },
+          { ...baseLineDataset('#7B9E3C', false), label: 'Energy', data: filtered.map(r => r.energy), pointRadius: 0, pointHoverRadius: 4, tension: 0.4 },
+          { ...baseLineDataset('#A83030', false), label: 'Stress', data: filtered.map(r => r.stress), pointRadius: 0, pointHoverRadius: 4, tension: 0.4 },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 300 },
+        plugins: {
+          legend: { display: false },
+          tooltip: { ...tooltipDefaults, mode: 'index', intersect: false, callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y}` } },
+        },
+        scales: {
+          x: { ...axisDefaults, ticks: { ...axisDefaults.ticks, maxTicksLimit: 8 } },
+          y: { ...axisDefaults, min: 0, max: 10, ticks: { ...axisDefaults.ticks, stepSize: 2 } },
+        },
+      },
+    });
+  }
+
+  // ── MEASUREMENTS CHART ───────────────────────────────────────────────────────
+  function renderMeasureChart(rawMeasure) {
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - 84); // 12 weeks
+    const filtered = rawMeasure.filter(r => new Date(r.date + 'T00:00:00') >= cutoff);
+
+    if (!filtered || filtered.length < 2) {
+      document.getElementById('card-measure').querySelector('.chart-container').innerHTML = `<div class="empty-state" style="padding:16px"><div class="empty-sub">Not enough measurement data yet.</div></div>`;
+      return;
+    }
+
+    const labels  = filtered.map(r => fmtDate(r.date));
+    const unitLbl = unit === 'cm' ? 'cm' : 'in';
+    const conv    = unit === 'cm' ? (v => v) : (v => v != null ? Math.round(v * CM_TO_IN * 10) / 10 : null);
+    document.getElementById('sub-measure').textContent = `${unitLbl} · 12 weeks`;
+
+    const COLORS = { waist: '#5C6B2A', hip: '#7B9E3C', chest: '#C07820', larm: '#6A8FBF', rarm: '#9370AB', lthigh: '#C07860', rthigh: '#708070' };
+    const LABELS = { waist: 'Waist', hip: 'Hip', chest: 'Chest', larm: 'L Arm', rarm: 'R Arm', lthigh: 'L Thigh', rthigh: 'R Thigh' };
+
+    const datasets = Object.keys(COLORS).map(key => ({
+      ...baseLineDataset(COLORS[key], false),
+      label: `${LABELS[key]} (${unitLbl})`,
+      data: filtered.map(r => r[key] != null ? conv(r[key]) : null),
+      pointRadius: 3,
+      pointHoverRadius: 5,
+      tension: 0.3,
+      borderWidth: 1.8,
+      spanGaps: true,
+    }));
+
+    chartMeasure = new Chart(document.getElementById('chart-measure'), {
+      type: 'line',
+      data: { labels, datasets },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 300 },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            ...tooltipDefaults,
+            mode: 'index',
+            intersect: false,
+            callbacks: { label: ctx => ctx.parsed.y != null ? `${ctx.dataset.label.split(' (')[0]}: ${ctx.parsed.y} ${unitLbl}` : null },
+          },
+        },
+        scales: {
+          x: { ...axisDefaults, ticks: { ...axisDefaults.ticks, maxTicksLimit: 7 } },
+          y: { ...axisDefaults, ticks: { ...axisDefaults.ticks, callback: v => `${v}` } },
+        },
+      },
+    });
+  }
+
+  // ── LIFTS CHART ──────────────────────────────────────────────────────────────
+  // squatSets: [{ date, exercise, weight }] — from API (squat only for now)
+  // For multi-lift view, all lifts are grouped by exercise name client-side
+  function renderLiftsChart(squatSets) {
+    const card = document.getElementById('card-lifts');
+    const toggleRow = document.getElementById('lift-toggles');
+
+    if (!squatSets || squatSets.length === 0) {
+      toggleRow.style.display = 'none';
+      card.querySelector('.chart-container').innerHTML = `<div class="empty-state" style="padding:16px"><div class="empty-sub">No top-set data found. Log squats, bench, or deadlift workouts to see progress here.</div></div>`;
+      return;
+    }
+
+    // Group by exercise — find unique exercise names in the data
+    const byExercise = {};
+    for (const row of squatSets) {
+      const key = (row.exercise || 'Lift').toLowerCase().trim();
+      if (!byExercise[key]) byExercise[key] = { label: row.exercise || 'Lift', rows: [] };
+      byExercise[key].rows.push(row);
+    }
+
+    const exerciseKeys = Object.keys(byExercise);
+    // Build toggle pills
+    toggleRow.innerHTML = exerciseKeys.map(k => `
+      <button class="lift-pill ${k === exerciseKeys[0] ? 'active' : ''}" data-lift="${k}" onclick="selectLift('${k}')">${byExercise[k].label}</button>
+    `).join('');
+
+    // Keep globally accessible for re-render
+    window._liftData = byExercise;
+    window._exerciseKeys = exerciseKeys;
+    activeLift = exerciseKeys[0];
+
+    drawLiftChart();
+  }
+
+  window.selectLift = function (key) {
+    activeLift = key;
+    document.querySelectorAll('.lift-pill').forEach(p => p.classList.toggle('active', p.dataset.lift === key));
+    if (chartLifts) { chartLifts.destroy(); chartLifts = null; }
+    drawLiftChart();
+  };
+
+  function drawLiftChart() {
+    const data = (window._liftData || {})[activeLift];
+    if (!data) return;
+
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - 84); // 12 weeks
+    const filtered = data.rows.filter(r => new Date(r.date + 'T00:00:00') >= cutoff);
+
+    if (filtered.length < 2) {
+      document.getElementById('chart-lifts').parentElement.innerHTML = `<div class="empty-state" style="padding:16px"><div class="empty-sub">Not enough data for the selected lift in the last 12 weeks.</div></div>`;
+      return;
+    }
+
+    const unitLbl = unit === 'kg' ? 'kg' : 'lb';
+    const labels  = filtered.map(r => fmtDate(r.date));
+    const values  = filtered.map(r => unit === 'lb' ? Math.round(r.weight * KG_TO_LB) : r.weight);
+
+    chartLifts = new Chart(document.getElementById('chart-lifts'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          ...baseLineDataset('#5C6B2A', false),
+          label: `${data.label} (${unitLbl})`,
+          data: values,
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 300 },
+        plugins: {
+          legend: { display: false },
+          tooltip: { ...tooltipDefaults, callbacks: { label: ctx => `${ctx.parsed.y} ${unitLbl}` } },
+        },
+        scales: {
+          x: { ...axisDefaults, ticks: { ...axisDefaults.ticks, maxTicksLimit: 8 } },
+          y: { ...axisDefaults, ticks: { ...axisDefaults.ticks, callback: v => `${v}` } },
+        },
+      },
+    });
+  }
+
+  // ── PHOTO COMPARISON ─────────────────────────────────────────────────────────
+  function renderCompare(photos, measurements, bodyweightArr) {
+    const container = document.getElementById('compare-inner');
+
+    // Use check-in dates from measurements or bodyweight
+    const datesSet = new Set();
+    measurements.forEach(r => datesSet.add(r.date));
+    bodyweightArr.forEach(r => datesSet.add(r.date));
+    const checkinDates = [...datesSet].sort();
+
+    if (checkinDates.length < 2) {
+      container.innerHTML = `<div class="empty-state" style="padding:24px"><div class="empty-sub">Need at least 2 check-in dates to compare.</div></div>`;
+      return;
+    }
+
+    const maxIdx = checkinDates.length - 1;
+    if (compareA > maxIdx) compareA = 0;
+    if (compareB > maxIdx) compareB = maxIdx;
+
+    const dateA  = checkinDates[compareA];
+    const dateB  = checkinDates[compareB];
+    const phA    = photos.find(p => p.date === dateA);
+    const phB    = photos.find(p => p.date === dateB);
+    const mA     = measurements.find(r => r.date === dateA);
+    const mB     = measurements.find(r => r.date === dateB);
+    const bwA    = bodyweightArr.find(r => r.date === dateA);
+    const bwB    = bodyweightArr.find(r => r.date === dateB);
+
+    const unitLbl = unit === 'kg' ? 'kg' : 'lb';
+    const cmLbl   = unit === 'cm' ? 'cm' : 'in';
+
+    function optionsHtml(selectedIdx) {
+      return checkinDates.map((d, i) => `<option value="${i}" ${i === selectedIdx ? 'selected' : ''}>${fmtDateLong(d)}</option>`).join('');
+    }
+
+    function photoSlotHtml(ph, date, label) {
+      if (ph && ph.photoUrl) {
+        return `<div class="compare-photo-slot">
+          <img src="${ph.photoUrl}" alt="Photo ${label}" loading="lazy">
+          <div class="compare-photo-date-badge">${fmtDate(date)}</div>
+        </div>`;
+      }
+      return `<div class="compare-photo-slot">
+        <div class="compare-photo-empty">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <div class="compare-photo-empty-text">${fmtDate(date)}<br>No photo</div>
+        </div>
+      </div>`;
+    }
+
+    function deltaRow(label, valA, valB, lowerIsBetter, unitStr) {
+      if (valA == null || valB == null) return '';
+      const diff = Math.round((valB - valA) * 10) / 10;
+      const sign = diff > 0 ? '+' : '';
+      const cls  = diff === 0 ? 'delta-zero'
+        : (lowerIsBetter ? (diff < 0 ? 'delta-negative' : 'delta-positive')
+          : (diff > 0 ? 'delta-negative' : 'delta-positive'));
+      return `<div class="compare-delta-row">
+        <span class="compare-delta-label">${label}</span>
+        <span class="compare-delta-val ${cls}">${sign}${diff} ${unitStr}</span>
+      </div>`;
+    }
+
+    const bwDelta    = bwA && bwB ? deltaRow(`Bodyweight`, cvtBW(bwA.weight), cvtBW(bwB.weight), true, unitLbl) : '';
+    const waistDelta = mA && mB   ? deltaRow('Waist', cvtCm(mA.waist), cvtCm(mB.waist), true, cmLbl) : '';
+    const hipDelta   = mA && mB   ? deltaRow('Hip', cvtCm(mA.hip), cvtCm(mB.hip), true, cmLbl) : '';
+    const chestDelta = mA && mB   ? deltaRow('Chest', cvtCm(mA.chest), cvtCm(mB.chest), false, cmLbl) : '';
+    const armDelta   = mA && mB   ? deltaRow('L Arm', cvtCm(mA.larm), cvtCm(mB.larm), false, cmLbl) : '';
+    const hasDelta   = bwDelta || waistDelta || hipDelta || chestDelta || armDelta;
+
+    container.innerHTML = `
+      <div class="compare-pickers">
+        <div>
+          <div class="compare-picker-label">Before</div>
+          <select class="compare-date-select" onchange="setCompareA(parseInt(this.value))">${optionsHtml(compareA)}</select>
+        </div>
+        <div>
+          <div class="compare-picker-label">After</div>
+          <select class="compare-date-select" onchange="setCompareB(parseInt(this.value))">${optionsHtml(compareB)}</select>
+        </div>
+      </div>
+      <div class="compare-photos">
+        ${photoSlotHtml(phA, dateA, 'before')}
+        ${photoSlotHtml(phB, dateB, 'after')}
+      </div>
+      ${hasDelta ? `<div class="compare-deltas">${bwDelta}${waistDelta}${hipDelta}${chestDelta}${armDelta}</div>` : ''}
+    `;
+  }
+
+  window.setCompareA = function (idx) {
+    compareA = idx;
+    if (resultsData) renderCompare(resultsData.photoCheckins || [], resultsData.charts.measurements || [], resultsData.charts.bodyweight || []);
+  };
+
+  window.setCompareB = function (idx) {
+    compareB = idx;
+    if (resultsData) renderCompare(resultsData.photoCheckins || [], resultsData.charts.measurements || [], resultsData.charts.bodyweight || []);
+  };
+
+  // ── INIT ─────────────────────────────────────────────────────────────────────
+  loadResults();
+
+})();
+</script>
+</body>
+</html>
