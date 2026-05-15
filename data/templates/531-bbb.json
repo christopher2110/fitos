@@ -1,0 +1,198 @@
+{
+  "id": "531-bbb",
+  "slug": "531-bbb",
+  "name": "5/3/1 Boring But Big",
+  "author": "Jim Wendler",
+  "source": "5/3/1 2nd Edition (Jim Wendler, 2011) — public programming methodology",
+  "goal": "strength",
+  "difficulty": "intermediate",
+  "daysPerWeek": 4,
+  "durationWeeks": 12,
+  "description": "The gold standard of strength programming. Four main lifts cycled across four days, each trained at increasing intensities over a 3-week loading block followed by a deload. The 'Boring But Big' accessory scheme adds 5×10 at 50–60% to build muscle alongside the strength work.",
+  "equipment": ["barbell", "rack", "bench"],
+  "tags": ["strength", "powerlifting", "classic"],
+  "weeks": [
+    {
+      "week": 1,
+      "label": "Week 1 — 65/75/85%",
+      "phase": "Loading Block 1",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Overhead Press + BBB Bench",
+          "exercises": [
+            { "name": "Overhead Press", "sets": "3", "reps": "5/5/5+", "load": "65/75/85% of TM", "rest": "180", "notes": "Last set AMRAP. Aim for 5+ reps at 85%." },
+            { "name": "Bench Press (BBB)", "sets": "5", "reps": "10", "load": "50% of TM", "rest": "90", "notes": "Boring But Big supplemental — slow and controlled." },
+            { "name": "Dumbbell Row", "sets": "5", "reps": "10/side", "load": "Moderate", "rest": "60", "notes": "" },
+            { "name": "Face Pulls", "sets": "3", "reps": "15", "load": "Light", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Tuesday",
+          "focus": "Deadlift + BBB Squat",
+          "exercises": [
+            { "name": "Deadlift", "sets": "3", "reps": "5/5/5+", "load": "65/75/85% of TM", "rest": "240", "notes": "Last set AMRAP." },
+            { "name": "Back Squat (BBB)", "sets": "5", "reps": "10", "load": "50% of TM", "rest": "120", "notes": "Supplemental squats." },
+            { "name": "Leg Press", "sets": "3", "reps": "15", "load": "Moderate", "rest": "90", "notes": "" },
+            { "name": "Hanging Leg Raise", "sets": "3", "reps": "12", "load": "BW", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Thursday",
+          "focus": "Bench Press + BBB OHP",
+          "exercises": [
+            { "name": "Bench Press", "sets": "3", "reps": "5/5/5+", "load": "65/75/85% of TM", "rest": "180", "notes": "Last set AMRAP." },
+            { "name": "Overhead Press (BBB)", "sets": "5", "reps": "10", "load": "50% of TM", "rest": "90", "notes": "Supplemental press." },
+            { "name": "Dumbbell Flye", "sets": "3", "reps": "12", "load": "Light-Moderate", "rest": "60", "notes": "" },
+            { "name": "Tricep Pushdown", "sets": "3", "reps": "15", "load": "Moderate", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Friday",
+          "focus": "Back Squat + BBB Deadlift",
+          "exercises": [
+            { "name": "Back Squat", "sets": "3", "reps": "5/5/5+", "load": "65/75/85% of TM", "rest": "210", "notes": "Last set AMRAP." },
+            { "name": "Deadlift (BBB)", "sets": "5", "reps": "10", "load": "50% of TM", "rest": "120", "notes": "Romanian DL acceptable substitute." },
+            { "name": "Leg Curl", "sets": "3", "reps": "12", "load": "Moderate", "rest": "60", "notes": "" },
+            { "name": "Ab Wheel Rollout", "sets": "3", "reps": "10", "load": "BW", "rest": "60", "notes": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 2,
+      "label": "Week 2 — 70/80/90%",
+      "phase": "Loading Block 1",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Overhead Press + BBB Bench",
+          "exercises": [
+            { "name": "Overhead Press", "sets": "3", "reps": "3/3/3+", "load": "70/80/90% of TM", "rest": "180", "notes": "Last set AMRAP — aim for 3+ at 90%." },
+            { "name": "Bench Press (BBB)", "sets": "5", "reps": "10", "load": "50% of TM", "rest": "90", "notes": "" },
+            { "name": "Dumbbell Row", "sets": "5", "reps": "10/side", "load": "Moderate", "rest": "60", "notes": "" },
+            { "name": "Face Pulls", "sets": "3", "reps": "15", "load": "Light", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Tuesday",
+          "focus": "Deadlift + BBB Squat",
+          "exercises": [
+            { "name": "Deadlift", "sets": "3", "reps": "3/3/3+", "load": "70/80/90% of TM", "rest": "240", "notes": "Last set AMRAP." },
+            { "name": "Back Squat (BBB)", "sets": "5", "reps": "10", "load": "50% of TM", "rest": "120", "notes": "" },
+            { "name": "Leg Press", "sets": "3", "reps": "15", "load": "Moderate", "rest": "90", "notes": "" },
+            { "name": "Hanging Leg Raise", "sets": "3", "reps": "12", "load": "BW", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Thursday",
+          "focus": "Bench Press + BBB OHP",
+          "exercises": [
+            { "name": "Bench Press", "sets": "3", "reps": "3/3/3+", "load": "70/80/90% of TM", "rest": "180", "notes": "Last set AMRAP." },
+            { "name": "Overhead Press (BBB)", "sets": "5", "reps": "10", "load": "50% of TM", "rest": "90", "notes": "" },
+            { "name": "Dumbbell Flye", "sets": "3", "reps": "12", "load": "Light-Moderate", "rest": "60", "notes": "" },
+            { "name": "Tricep Pushdown", "sets": "3", "reps": "15", "load": "Moderate", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Friday",
+          "focus": "Back Squat + BBB Deadlift",
+          "exercises": [
+            { "name": "Back Squat", "sets": "3", "reps": "3/3/3+", "load": "70/80/90% of TM", "rest": "210", "notes": "Last set AMRAP." },
+            { "name": "Deadlift (BBB)", "sets": "5", "reps": "10", "load": "50% of TM", "rest": "120", "notes": "" },
+            { "name": "Leg Curl", "sets": "3", "reps": "12", "load": "Moderate", "rest": "60", "notes": "" },
+            { "name": "Ab Wheel Rollout", "sets": "3", "reps": "10", "load": "BW", "rest": "60", "notes": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 3,
+      "label": "Week 3 — 75/85/95%",
+      "phase": "Loading Block 1",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Overhead Press + BBB Bench",
+          "exercises": [
+            { "name": "Overhead Press", "sets": "3", "reps": "5/3/1+", "load": "75/85/95% of TM", "rest": "180", "notes": "Last set AMRAP — chase a PR at 95%." },
+            { "name": "Bench Press (BBB)", "sets": "5", "reps": "10", "load": "50% of TM", "rest": "90", "notes": "" },
+            { "name": "Dumbbell Row", "sets": "5", "reps": "10/side", "load": "Moderate", "rest": "60", "notes": "" },
+            { "name": "Face Pulls", "sets": "3", "reps": "15", "load": "Light", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Tuesday",
+          "focus": "Deadlift + BBB Squat",
+          "exercises": [
+            { "name": "Deadlift", "sets": "3", "reps": "5/3/1+", "load": "75/85/95% of TM", "rest": "240", "notes": "Last set AMRAP — PR attempt." },
+            { "name": "Back Squat (BBB)", "sets": "5", "reps": "10", "load": "50% of TM", "rest": "120", "notes": "" },
+            { "name": "Leg Press", "sets": "3", "reps": "15", "load": "Moderate", "rest": "90", "notes": "" },
+            { "name": "Hanging Leg Raise", "sets": "3", "reps": "12", "load": "BW", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Thursday",
+          "focus": "Bench Press + BBB OHP",
+          "exercises": [
+            { "name": "Bench Press", "sets": "3", "reps": "5/3/1+", "load": "75/85/95% of TM", "rest": "180", "notes": "PR attempt on last set." },
+            { "name": "Overhead Press (BBB)", "sets": "5", "reps": "10", "load": "50% of TM", "rest": "90", "notes": "" },
+            { "name": "Dumbbell Flye", "sets": "3", "reps": "12", "load": "Light-Moderate", "rest": "60", "notes": "" },
+            { "name": "Tricep Pushdown", "sets": "3", "reps": "15", "load": "Moderate", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Friday",
+          "focus": "Back Squat + BBB Deadlift",
+          "exercises": [
+            { "name": "Back Squat", "sets": "3", "reps": "5/3/1+", "load": "75/85/95% of TM", "rest": "210", "notes": "PR attempt on last set." },
+            { "name": "Deadlift (BBB)", "sets": "5", "reps": "10", "load": "50% of TM", "rest": "120", "notes": "" },
+            { "name": "Leg Curl", "sets": "3", "reps": "12", "load": "Moderate", "rest": "60", "notes": "" },
+            { "name": "Ab Wheel Rollout", "sets": "3", "reps": "10", "load": "BW", "rest": "60", "notes": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 4,
+      "label": "Week 4 — Deload",
+      "phase": "Deload",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "OHP Deload",
+          "exercises": [
+            { "name": "Overhead Press", "sets": "3", "reps": "5", "load": "40/50/60% of TM", "rest": "120", "notes": "Full deload — light and fast. No AMRAP." },
+            { "name": "Dumbbell Row", "sets": "3", "reps": "10/side", "load": "Light", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Tuesday",
+          "focus": "Deadlift Deload",
+          "exercises": [
+            { "name": "Deadlift", "sets": "3", "reps": "5", "load": "40/50/60% of TM", "rest": "180", "notes": "Deload — focus on perfect bar path." },
+            { "name": "Leg Press", "sets": "3", "reps": "10", "load": "Light", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Thursday",
+          "focus": "Bench Deload",
+          "exercises": [
+            { "name": "Bench Press", "sets": "3", "reps": "5", "load": "40/50/60% of TM", "rest": "120", "notes": "Deload week — let your body recover." },
+            { "name": "Face Pulls", "sets": "3", "reps": "15", "load": "Light", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Friday",
+          "focus": "Squat Deload",
+          "exercises": [
+            { "name": "Back Squat", "sets": "3", "reps": "5", "load": "40/50/60% of TM", "rest": "120", "notes": "Easy speed work — stay fresh." },
+            { "name": "Ab Wheel Rollout", "sets": "3", "reps": "8", "load": "BW", "rest": "60", "notes": "" }
+          ]
+        }
+      ]
+    }
+  ],
+  "progression": "After each 4-week cycle: add 5 lb (2.5 kg) to upper-body TM, add 10 lb (5 kg) to lower-body TM. Repeat blocks with new training max.",
+  "notes": "TM = Training Max = 90% of your actual 1RM. Start conservative — the program works best when you have room to AMRAP. Wendler strongly recommends under-estimating your TM."
+}
