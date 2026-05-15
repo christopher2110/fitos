@@ -1,0 +1,197 @@
+{
+  "id": "bodyweight-home",
+  "slug": "bodyweight-home",
+  "name": "Bodyweight Home Program",
+  "author": "FitOS Coaches",
+  "source": "Original programming — FitOS coaching methodology",
+  "goal": "general",
+  "difficulty": "beginner",
+  "daysPerWeek": 4,
+  "durationWeeks": 8,
+  "description": "Four days per week, zero equipment needed. Progressive bodyweight training that builds real strength and conditioning — not cardio cosplaying as lifting. Uses rep targets, rest manipulation, and load progressions (elevating feet, adding pauses, slowing tempo) to drive adaptation.",
+  "equipment": ["none"],
+  "tags": ["bodyweight", "home", "no-equipment", "beginner"],
+  "weeks": [
+    {
+      "week": 1,
+      "label": "Week 1 — Movement Quality",
+      "phase": "Foundation",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Lower Body + Core",
+          "exercises": [
+            { "name": "Bodyweight Squat", "sets": "4", "reps": "12", "load": "BW", "rest": "60", "notes": "Heels flat, full depth. Tempo 3-1-1-0." },
+            { "name": "Reverse Lunge", "sets": "3", "reps": "10/side", "load": "BW", "rest": "60", "notes": "" },
+            { "name": "Hip Bridge", "sets": "3", "reps": "15", "load": "BW", "rest": "60", "notes": "Squeeze glutes hard at top, 1s pause." },
+            { "name": "Lying Hip Extension", "sets": "3", "reps": "12/side", "load": "BW", "rest": "45", "notes": "" },
+            { "name": "Plank", "sets": "3", "reps": "30s", "load": "BW", "rest": "45", "notes": "" },
+            { "name": "Dead Bug", "sets": "3", "reps": "8/side", "load": "BW", "rest": "45", "notes": "" }
+          ]
+        },
+        {
+          "day": "Tuesday",
+          "focus": "Upper Body Push + Pull",
+          "exercises": [
+            { "name": "Push-Up", "sets": "4", "reps": "8-12", "load": "BW", "rest": "75", "notes": "Hands under shoulders. Full ROM — chest to floor." },
+            { "name": "Pike Push-Up", "sets": "3", "reps": "8", "load": "BW", "rest": "75", "notes": "Trains shoulder press pattern." },
+            { "name": "Australian Pull-Up (Table Row)", "sets": "3", "reps": "10", "load": "BW", "rest": "75", "notes": "Use a table edge or low bar. Pull chest to hands." },
+            { "name": "Superman Hold", "sets": "3", "reps": "10", "load": "BW", "rest": "45", "notes": "Prone, lift arms + legs simultaneously. Hold 2s." },
+            { "name": "Tricep Dip (chair)", "sets": "3", "reps": "10", "load": "BW", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Thursday",
+          "focus": "Lower Body — Unilateral",
+          "exercises": [
+            { "name": "Split Squat", "sets": "4", "reps": "10/side", "load": "BW", "rest": "75", "notes": "Front foot flat, back knee tracks." },
+            { "name": "Single-Leg Hip Bridge", "sets": "3", "reps": "12/side", "load": "BW", "rest": "60", "notes": "" },
+            { "name": "Step-Up (chair/stairs)", "sets": "3", "reps": "10/side", "load": "BW", "rest": "60", "notes": "" },
+            { "name": "Nordic Curl Negative", "sets": "3", "reps": "5", "load": "BW", "rest": "90", "notes": "Hold ankles under sofa. Lower as slow as possible. Push back up." },
+            { "name": "Side Plank", "sets": "3", "reps": "25s/side", "load": "BW", "rest": "45", "notes": "" }
+          ]
+        },
+        {
+          "day": "Friday",
+          "focus": "Upper Body — Volume Day",
+          "exercises": [
+            { "name": "Push-Up", "sets": "5", "reps": "Max (stop 2 short of failure)", "load": "BW", "rest": "90", "notes": "More sets, same quality." },
+            { "name": "Wide Push-Up", "sets": "3", "reps": "10", "load": "BW", "rest": "60", "notes": "Targets outer pec." },
+            { "name": "Narrow Push-Up", "sets": "3", "reps": "10", "load": "BW", "rest": "60", "notes": "Targets triceps." },
+            { "name": "Australian Pull-Up (Table Row)", "sets": "4", "reps": "Max (stop 2 short of failure)", "load": "BW", "rest": "90", "notes": "" },
+            { "name": "Prone Y/T/W Raises", "sets": "3", "reps": "8 each", "load": "BW", "rest": "45", "notes": "Face-down, small arm raises. Builds rear delt/lower trap." }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 2,
+      "label": "Week 2 — Add Difficulty",
+      "phase": "Foundation",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Lower Body + Core",
+          "exercises": [
+            { "name": "Bodyweight Squat", "sets": "4", "reps": "15", "load": "BW", "rest": "60", "notes": "+3 reps." },
+            { "name": "Reverse Lunge", "sets": "4", "reps": "10/side", "load": "BW", "rest": "60", "notes": "+1 set." },
+            { "name": "Hip Bridge", "sets": "3", "reps": "20", "load": "BW", "rest": "60", "notes": "+5 reps." },
+            { "name": "Single-Leg Hip Bridge", "sets": "3", "reps": "10/side", "load": "BW", "rest": "60", "notes": "Upgrade from lying hip extension." },
+            { "name": "Plank", "sets": "3", "reps": "40s", "load": "BW", "rest": "45", "notes": "+10s." },
+            { "name": "Dead Bug", "sets": "3", "reps": "10/side", "load": "BW", "rest": "45", "notes": "" }
+          ]
+        },
+        {
+          "day": "Tuesday",
+          "focus": "Upper Body Push + Pull",
+          "exercises": [
+            { "name": "Push-Up", "sets": "4", "reps": "10-15", "load": "BW", "rest": "75", "notes": "" },
+            { "name": "Elevated Push-Up (feet on chair)", "sets": "3", "reps": "8", "load": "BW", "rest": "75", "notes": "More weight on shoulders." },
+            { "name": "Australian Pull-Up", "sets": "4", "reps": "10", "load": "BW", "rest": "75", "notes": "+1 set." },
+            { "name": "Superman Hold", "sets": "3", "reps": "12", "load": "BW", "rest": "45", "notes": "" },
+            { "name": "Tricep Dip (chair)", "sets": "3", "reps": "12", "load": "BW", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Thursday",
+          "focus": "Lower Body — Unilateral",
+          "exercises": [
+            { "name": "Split Squat", "sets": "4", "reps": "12/side", "load": "BW", "rest": "75", "notes": "" },
+            { "name": "Single-Leg Hip Bridge", "sets": "4", "reps": "12/side", "load": "BW", "rest": "60", "notes": "" },
+            { "name": "Step-Up with 3s lower", "sets": "3", "reps": "10/side", "load": "BW", "rest": "60", "notes": "Slow eccentric adds difficulty." },
+            { "name": "Nordic Curl Negative", "sets": "3", "reps": "6", "load": "BW", "rest": "90", "notes": "+1 rep." },
+            { "name": "Side Plank", "sets": "3", "reps": "35s/side", "load": "BW", "rest": "45", "notes": "" }
+          ]
+        },
+        {
+          "day": "Friday",
+          "focus": "Upper Body — Volume Day",
+          "exercises": [
+            { "name": "Push-Up", "sets": "5", "reps": "Max -2", "load": "BW", "rest": "90", "notes": "" },
+            { "name": "Wide Push-Up", "sets": "3", "reps": "12", "load": "BW", "rest": "60", "notes": "" },
+            { "name": "Decline Push-Up (feet on chair)", "sets": "3", "reps": "10", "load": "BW", "rest": "75", "notes": "More upper pec involvement." },
+            { "name": "Australian Pull-Up", "sets": "4", "reps": "Max -2", "load": "BW", "rest": "90", "notes": "" },
+            { "name": "Prone Y/T/W Raises", "sets": "3", "reps": "10 each", "load": "BW", "rest": "45", "notes": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 3,
+      "label": "Week 3 — Increase Difficulty",
+      "phase": "Progressive Overload",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Lower Body + Core",
+          "exercises": [
+            { "name": "Paused Squat (2s at bottom)", "sets": "4", "reps": "10", "load": "BW", "rest": "75", "notes": "Pause at parallel strengthens the bottom position." },
+            { "name": "Walking Lunge", "sets": "4", "reps": "10/side", "load": "BW", "rest": "75", "notes": "" },
+            { "name": "Hip Thrust (elevated shoulders)", "sets": "3", "reps": "15", "load": "BW", "rest": "75", "notes": "Shoulders on sofa/bench for more range." },
+            { "name": "Hamstring Curl (lying, using towel on floor)", "sets": "3", "reps": "10", "load": "BW", "rest": "75", "notes": "Floor curl: lie on back, heels on smooth floor, curl." },
+            { "name": "Plank to Hip Tap", "sets": "3", "reps": "10/side", "load": "BW", "rest": "60", "notes": "" },
+            { "name": "Hollow Body Hold", "sets": "3", "reps": "20s", "load": "BW", "rest": "60", "notes": "Lower back pressed to floor, arms overhead." }
+          ]
+        },
+        {
+          "day": "Tuesday",
+          "focus": "Upper Body Push + Pull",
+          "exercises": [
+            { "name": "Archer Push-Up", "sets": "3", "reps": "5/side", "load": "BW", "rest": "90", "notes": "One-arm assisted push-up — progression toward full OA." },
+            { "name": "Push-Up", "sets": "3", "reps": "12-15", "load": "BW", "rest": "75", "notes": "" },
+            { "name": "Pike Push-Up (feet elevated)", "sets": "3", "reps": "8", "load": "BW", "rest": "75", "notes": "More vertical pressing strength." },
+            { "name": "Australian Pull-Up (low, near horizontal)", "sets": "4", "reps": "10", "load": "BW", "rest": "90", "notes": "Lower the bar = harder." },
+            { "name": "Superman Hold + Arm Reach", "sets": "3", "reps": "10", "load": "BW", "rest": "45", "notes": "" }
+          ]
+        },
+        {
+          "day": "Thursday",
+          "focus": "Lower — Strength",
+          "exercises": [
+            { "name": "Bulgarian Split Squat (rear foot elevated)", "sets": "4", "reps": "8/side", "load": "BW", "rest": "90", "notes": "" },
+            { "name": "Single-Leg Romanian Deadlift", "sets": "3", "reps": "8/side", "load": "BW", "rest": "75", "notes": "Hinge at hip, back flat." },
+            { "name": "Lateral Lunge", "sets": "3", "reps": "10/side", "load": "BW", "rest": "60", "notes": "" },
+            { "name": "Nordic Curl Negative", "sets": "3", "reps": "7", "load": "BW", "rest": "90", "notes": "" },
+            { "name": "Side Plank with Hip Dip", "sets": "3", "reps": "10/side", "load": "BW", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Friday",
+          "focus": "Upper — Peak Volume",
+          "exercises": [
+            { "name": "Push-Up", "sets": "6", "reps": "Max -2", "load": "BW", "rest": "90", "notes": "+1 set." },
+            { "name": "Decline Push-Up", "sets": "3", "reps": "10", "load": "BW", "rest": "75", "notes": "" },
+            { "name": "Archer Push-Up", "sets": "3", "reps": "5/side", "load": "BW", "rest": "90", "notes": "" },
+            { "name": "Australian Pull-Up", "sets": "5", "reps": "Max -2", "load": "BW", "rest": "90", "notes": "" },
+            { "name": "Prone YTW", "sets": "3", "reps": "10 each", "load": "BW", "rest": "45", "notes": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 4,
+      "label": "Week 4 — Deload",
+      "phase": "Deload",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Lower Body — Easy",
+          "exercises": [
+            { "name": "Bodyweight Squat", "sets": "3", "reps": "10", "load": "BW", "rest": "60", "notes": "Light and fluid. Restore mobility." },
+            { "name": "Hip Bridge", "sets": "3", "reps": "15", "load": "BW", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Wednesday",
+          "focus": "Upper Body — Easy",
+          "exercises": [
+            { "name": "Push-Up", "sets": "3", "reps": "8", "load": "BW", "rest": "75", "notes": "Half normal volume." },
+            { "name": "Australian Pull-Up", "sets": "3", "reps": "8", "load": "BW", "rest": "75", "notes": "" }
+          ]
+        }
+      ]
+    }
+  ],
+  "progression": "Progress via rep increases, set increases, and difficulty scaling (e.g., elevating feet, pauses, tempo). When push-ups become easy at 15 reps, elevate feet or try archer push-ups. Bodyweight has layers — explore them.",
+  "notes": "No equipment needed but a yoga mat helps. Consider a door-frame pull-up bar (< $20) to unlock vertical pulling. Progress is real — Nordic curl negatives build hamstrings comparable to leg curls."
+}
