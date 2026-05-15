@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing — FitOS</title>
+  <meta name="description" content="Simple, honest pricing. Start free for 14 days. $497 one-time for a lifetime license. Your data stays in your Google Sheet, always.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:       #F5F1E8;
+      --cream-light: #FDFAF5;
+      --cream-mid:   #EDE6D8;
+      --olive:       #5C6E3F;
+      --olive-dark:  #3D4A1A;
+      --olive-muted: #8A9650;
+      --olive-pale:  #E8EDD6;
+      --text:        #2C2A24;
+      --text-muted:  #7A7570;
+      --border:      #DDD8CA;
+      --gold:        #B8820A;
+      --gold-pale:   #FDF5DC;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── STICKY HEADER ──────────────────────────────────── */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(245,241,232,0.92);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(221,216,202,0.6);
+      padding: 0 48px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .site-header-logo {
+      font-family: 'Fraunces', serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: #3D4A1A;
+      letter-spacing: -0.02em;
+      text-decoration: none;
+    }
+    .site-header-nav {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .site-header-link {
+      font-size: 13px;
+      font-weight: 500;
+      color: #7A7570;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .site-header-link:hover { color: #2C2A24; }
+    .site-header-link.active { color: var(--olive); }
+    .site-header-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #5C6E3F;
+      color: #FDFAF5;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 9px 18px;
+      border-radius: 22px;
+      text-decoration: none;
+      transition: background 0.18s, transform 0.12s;
+    }
+    .site-header-cta:hover { background: #3D4A1A; transform: translateY(-1px); }
+
+    /* ── HERO ────────────────────────────────────────────── */
+    .pricing-hero {
+      background: var(--olive-dark);
+      text-align: center;
+      padding: 80px 24px 88px;
+      position: relative;
+      overflow: hidden;
+    }
+    .pricing-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 20% 80%, rgba(138,150,80,0.16) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(92,110,63,0.12) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      color: #8A9650;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      background: rgba(138,150,80,0.15);
+      border: 1px solid rgba(138,150,80,0.3);
+      padding: 6px 14px;
+      border-radius: 20px;
+      margin-bottom: 28px;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-h1 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      font-weight: 700;
+      line-height: 1.06;
+      letter-spacing: -0.03em;
+      color: #F5F1E8;
+      margin-bottom: 18px;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-h1 em { font-style: italic; color: #8A9650; }
+    .hero-sub {
+      font-size: 17px;
+      line-height: 1.65;
+      color: rgba(245,241,232,0.65);
+      max-width: 540px;
+      margin: 0 auto 36px;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--olive);
+      color: #FDFAF5;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 16px 32px;
+      border-radius: 50px;
+      text-decoration: none;
+      transition: background 0.18s, transform 0.15s, box-shadow 0.18s;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-cta:hover { background: #4a5c32; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+    .hero-trust {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 20px;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-trust-item {
+      font-size: 12px;
+      color: rgba(245,241,232,0.5);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .hero-trust-item + .hero-trust-item { padding-left: 20px; position: relative; }
+    .hero-trust-item + .hero-trust-item::before {
+      content: '·';
+      position: absolute;
+      left: 7px;
+      opacity: 0.4;
+    }
+
+    /* ── PRICING GRID ────────────────────────────────────── */
+    .pricing-section {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 72px 24px 80px;
+    }
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--olive);
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .section-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      text-align: center;
+      color: var(--text);
+      margin-bottom: 48px;
+      line-height: 1.12;
+    }
+    .section-title em { font-style: italic; color: var(--olive); }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      align-items: start;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .tier-card {
+      background: var(--cream-light);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px 24px 28px;
+      position: relative;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .tier-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(44,42,36,0.10);
+    }
+    .tier-card.featured {
+      border-color: var(--olive);
+      border-width: 2px;
+      background: #FDFAF5;
+    }
+    .tier-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      background: var(--olive);
+      color: #FDFAF5;
+      padding: 4px 12px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    .tier-name {
+      font-family: 'Fraunces', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.015em;
+      margin-bottom: 6px;
+    }
+    .tier-tagline {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      line-height: 1.45;
+    }
+
+    .tier-price {
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .tier-price-num {
+      font-family: 'Fraunces', serif;
+      font-size: 40px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      color: var(--olive-dark);
+      line-height: 1;
+    }
+    .tier-price-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+    .tier-price-sub strong { color: var(--text); font-weight: 600; }
+
+    .tier-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      margin-bottom: 24px;
+    }
+    .tier-features li {
+      font-size: 13px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.45;
+    }
+    .tier-features li::before {
+      content: '✓';
+      flex-shrink: 0;
+      color: var(--olive);
+      font-weight: 600;
+      font-size: 12px;
+      margin-top: 1px;
+    }
+
+    .tier-cta {
+      display: block;
+      text-align: center;
+      padding: 11px 20px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.18s, color 0.18s, transform 0.12s;
+    }
+    .tier-cta.primary {
+      background: var(--olive);
+      color: #FDFAF5;
+    }
+    .tier-cta.primary:hover { background: var(--olive-dark); transform: translateY(-1px); }
+    .tier-cta.secondary {
+      background: transparent;
+      color: var(--olive);
+      border: 1.5px solid var(--olive);
+    }
+    .tier-cta.secondary:hover { background: var(--olive-pale); transform: translateY(-1px); }
+    .tier-cta.muted {
+      background: var(--cream-mid);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+    .tier-cta.muted:hover { background: var(--border); }
+
+    /* ── COST CALLOUT ────────────────────────────────────── */
+    .cost-callout {
+      max-width: 800px;
+      margin: 0 auto 80px;
+      background: var(--olive-pale);
+      border: 1px solid rgba(92,110,63,0.25);
+      border-radius: 16px;
+      padding: 28px 32px;
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+    .cost-callout-left {
+      flex: 1;
+    }
+    .cost-callout-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--olive);
+      margin-bottom: 6px;
+    }
+    .cost-callout-title {
+      font-family: 'Fraunces', serif;
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--olive-dark);
+      margin-bottom: 6px;
+    }
+    .cost-callout-body {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+    .cost-split {
+      display: flex;
+      gap: 24px;
+      flex-shrink: 0;
+    }
+    .cost-split-item {
+      text-align: center;
+    }
+    .cost-split-amount {
+      font-family: 'Fraunces', serif;
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+    .cost-split-amount.them { color: #C0392B; }
+    .cost-split-amount.us { color: var(--olive); }
+    .cost-split-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .cost-split-detail {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .cost-divider {
+      font-size: 22px;
+      color: var(--border);
+      font-weight: 300;
+      align-self: center;
+    }
+
+    /* ── FAQ ─────────────────────────────────────────────── */
+    .faq-section {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 24px 96px;
+    }
+    .faq-section .section-label { text-align: left; }
+    .faq-section .section-title { text-align: left; margin-bottom: 32px; }
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .faq-item {
+      border-top: 1px solid var(--border);
+      padding: 20px 0;
+    }
+    .faq-item:last-child { border-bottom: 1px solid var(--border); }
+    .faq-q {
+      font-family: 'Fraunces', serif;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.01em;
+      margin-bottom: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .faq-q-toggle {
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--cream-mid);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: var(--text-muted);
+      transition: background 0.15s, transform 0.2s;
+    }
+    .faq-item.open .faq-q-toggle { background: var(--olive-pale); color: var(--olive); transform: rotate(45deg); }
+    .faq-a {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.65;
+      display: none;
+    }
+    .faq-a code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      background: var(--cream-mid);
+      padding: 1px 5px;
+      border-radius: 4px;
+      color: var(--olive-dark);
+    }
+    .faq-item.open .faq-a { display: block; }
+
+    /* ── BOTTOM CTA ──────────────────────────────────────── */
+    .bottom-cta {
+      background: var(--olive-dark);
+      padding: 72px 24px 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .bottom-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle at 30% 70%, rgba(138,150,80,0.14) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .bottom-cta-h2 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      color: #F5F1E8;
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
+    }
+    .bottom-cta-h2 em { font-style: italic; color: #8A9650; }
+    .bottom-cta-p {
+      font-size: 16px;
+      color: rgba(245,241,232,0.6);
+      max-width: 480px;
+      margin: 0 auto 32px;
+      line-height: 1.6;
+      position: relative;
+      z-index: 1;
+    }
+    .bottom-cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+    }
+    .btn-primary-lg {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--olive);
+      color: #FDFAF5;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 14px 28px;
+      border-radius: 50px;
+      text-decoration: none;
+      transition: background 0.18s, transform 0.15s;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+    .btn-primary-lg:hover { background: #4a5c32; transform: translateY(-2px); }
+    .btn-ghost-lg {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: rgba(245,241,232,0.7);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      padding: 14px 28px;
+      border-radius: 50px;
+      text-decoration: none;
+      border: 1px solid rgba(245,241,232,0.2);
+      transition: border-color 0.18s, color 0.18s;
+    }
+    .btn-ghost-lg:hover { border-color: rgba(245,241,232,0.5); color: #F5F1E8; }
+
+    /* ── MOBILE ──────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .site-header { padding: 0 20px; }
+      .site-header-nav .site-header-link { display: none; }
+    }
+    @media (max-width: 640px) {
+      .pricing-grid { grid-template-columns: 1fr; }
+      .cost-callout { flex-direction: column; gap: 20px; }
+      .cost-split { justify-content: center; }
+      .pricing-hero { padding: 60px 20px 68px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- STICKY HEADER -->
+<header class="site-header">
+  <a href="/" class="site-header-logo">FitOS</a>
+  <nav class="site-header-nav">
+    <a href="/pricing" class="site-header-link active">Pricing</a>
+    <a href="/vs/trainerize" class="site-header-link">vs Trainerize</a>
+    <a href="/vs/truecoach" class="site-header-link">vs TrueCoach</a>
+    <a href="/demo" class="site-header-link">Live Demo</a>
+    <a href="/dashboard" class="site-header-link">Sign In</a>
+    <a href="/trial/signup" class="site-header-cta">
+      Start Free Trial <span style="opacity:0.7;font-size:12px">→</span>
+    </a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="pricing-hero">
+  <div class="hero-kicker">Simple, honest pricing</div>
+  <h1 class="hero-h1">Pay once.<br><em>Own it forever.</em></h1>
+  <p class="hero-sub">
+    No seat fees. No per-client charges. No platform lock-in.
+    Start free — upgrade when you're ready.
+  </p>
+  <div style="display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:20px">
+    <a href="/trial/signup" class="hero-cta" style="margin-bottom:0">Start 14-day free trial →</a>
+    <a href="/demo" style="font-size:14px;font-weight:500;color:var(--text-muted);text-decoration:none;border-bottom:1px solid var(--border);padding-bottom:2px">See a live demo first →</a>
+  </div>
+  <div class="hero-trust">
+    <span class="hero-trust-item">No credit card required</span>
+    <span class="hero-trust-item">Your data in your Google Sheet</span>
+    <span class="hero-trust-item">Cancel anytime</span>
+  </div>
+</section>
+
+<!-- PRICING TIERS -->
+<section class="pricing-section">
+  <div class="section-label">Two tiers, one direction</div>
+  <h2 class="section-title">Pay once.<br><em>Keep it forever.</em></h2>
+
+  <div class="pricing-grid">
+
+    <!-- TIER 1: Lifetime License -->
+    <div class="tier-card featured">
+      <div class="tier-badge">Best Value</div>
+      <div class="tier-name">Lifetime License</div>
+      <div class="tier-tagline">Everything you need to run a professional coaching business — forever. Includes 3 months of free managed hosting.</div>
+      <div class="tier-price">
+        <div class="tier-price-num">$497</div>
+        <div class="tier-price-sub"><strong>One-time payment.</strong> 3 months free hosting included. Then $7/mo if you want us to run it — or self-host free.</div>
+      </div>
+      <ul class="tier-features">
+        <li>Full PWA for coaches + clients</li>
+        <li>Google Sheet as your database — you own the data</li>
+        <li>Unlimited clients, no per-client fees</li>
+        <li>AI Program Builder (BYOK Anthropic key)</li>
+        <li>Client calendar + results dashboard</li>
+        <li>Progress photo storage via Google Drive</li>
+        <li>MIT licensed — fork, extend, self-host free</li>
+        <li>3 months managed hosting included</li>
+      </ul>
+      <a href="https://buy.stripe.com/eVq9ATbHdeUz6AA4v6fAc01" class="tier-cta primary" target="_blank" rel="noopener">
+        Buy Lifetime License — $497 →
+      </a>
+      <p style="font-size:11px;color:var(--text-muted);text-align:center;margin-top:10px;line-height:1.5">
+        Already have a trial? Your data carries over automatically.
+      </p>
+    </div>
+
+    <!-- TIER 2: FitOS Hosted -->
+    <div class="tier-card">
+      <div class="tier-name">FitOS Hosted</div>
+      <div class="tier-tagline">We run it, you coach. Starts month 4 after your lifetime license purchase — the first 3 months are on us.</div>
+      <div class="tier-price">
+        <div class="tier-price-num">$7<span style="font-size:20px;font-weight:400;letter-spacing:-0.01em">/mo</span></div>
+        <div class="tier-price-sub"><strong>Free for months 1–3</strong> with Lifetime License. Kicks in month 4+.</div>
+      </div>
+      <ul class="tier-features">
+        <li>Managed deploy on Render</li>
+        <li>Automated backups &amp; updates</li>
+        <li>Custom subdomain (yourname.fitos.app)</li>
+        <li>Uptime monitoring + incident response</li>
+        <li>One-click Google Sheets connection</li>
+        <li>Or self-host free any time — MIT licensed</li>
+      </ul>
+      <a href="/trial/signup" class="tier-cta secondary">
+        Start Free Trial →
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- 5-YEAR COST CALLOUT -->
+<div style="max-width:1160px;margin:0 auto;padding:0 24px;">
+  <div class="cost-callout">
+    <div class="cost-callout-left">
+      <div class="cost-callout-label">5-year cost comparison</div>
+      <div class="cost-callout-title">Save $1,500+ vs the alternatives.</div>
+      <div class="cost-callout-body">
+        Trainerize costs $39–$79/mo — that's $2,340–$4,740 over five years, and you never own anything.
+        With FitOS: $497 lifetime + $7/mo hosted (month 4+) = <strong>$833 total</strong> over five years.
+        And you own the code. Self-host free anytime.
+      </div>
+    </div>
+    <div class="cost-split">
+      <div class="cost-split-item">
+        <div class="cost-split-amount them">$2,340</div>
+        <div class="cost-split-name">Trainerize</div>
+        <div class="cost-split-detail">$39/mo × 60 months</div>
+      </div>
+      <div class="cost-divider">vs</div>
+      <div class="cost-split-item">
+        <div class="cost-split-amount us">$833</div>
+        <div class="cost-split-name">FitOS</div>
+        <div class="cost-split-detail">$497 + $7/mo × 48mo</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<section class="faq-section">
+  <div class="section-label" style="text-align:left">Questions</div>
+  <h2 class="section-title" style="text-align:left;font-size:2rem">Frequently asked</h2>
+
+  <div class="faq-list" id="faq-list">
+
+    <div class="faq-item open">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        What happens after month 3?
+        <span class="faq-q-toggle">+</span>
+      </div>
+      <div class="faq-a">
+        After your 3 free months of managed hosting, you have two paths: continue on $7/mo and we keep running it for you,
+        or self-host it yourself for free — clone the repo, deploy to your own Render account, done.
+        We'll email you before anything changes. No surprise charges, no lock-in.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        Can I self-host for free?
+        <span class="faq-q-toggle">+</span>
+      </div>
+      <div class="faq-a">
+        Yes. FitOS is MIT licensed — <code>git clone</code>, set your environment variables, and deploy anywhere that runs Node.js.
+        Render, Fly.io, Railway, your own VPS — all work. The only requirement is a Postgres database (Neon free tier works fine)
+        and a Google service account for Sheets access. Full guide at <code>github.com/Polsia-Inc/fitos</code>.
+        Self-hosting is free forever with no monthly cost to us.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        Do I own my code?
+        <span class="faq-q-toggle">+</span>
+      </div>
+      <div class="faq-a">
+        Yes. FitOS is MIT licensed — you get the full source code, no strings attached.
+        Fork it, extend it, white-label it, sell it. No permission needed.
+        Your client data lives in your Google Sheet (your Google Drive) — not our servers.
+        If FitOS disappeared tomorrow, your data and your code would still be right there.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        What is BYOK Anthropic?
+        <span class="faq-q-toggle">+</span>
+      </div>
+      <div class="faq-a">
+        BYOK = Bring Your Own Key. The AI Program Builder uses Anthropic's Claude API.
+        You supply your own Anthropic API key — it's stored AES-256-GCM encrypted in your Google Sheet's Profile tab, never logged, never shared with us.
+        Your AI usage bill goes to Anthropic directly. No markup, no tokens counted against us.
+        Keys are free to create at <code>console.anthropic.com</code>.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        How many clients can I have?
+        <span class="faq-q-toggle">+</span>
+      </div>
+      <div class="faq-a">
+        Unlimited. No per-client fee, no tier limits. The only practical ceiling is your Google Sheet's row capacity,
+        which handles thousands of clients comfortably.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        Is the 14-day trial the full product?
+        <span class="faq-q-toggle">+</span>
+      </div>
+      <div class="faq-a">
+        Yes — full access to every feature. No feature walls, no "upgrade to unlock."
+        We want you to see the real thing before paying.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        What is the $7/mo for?
+        <span class="faq-q-toggle">+</span>
+      </div>
+      <div class="faq-a">
+        $7/mo is for managed cloud hosting — we run FitOS on our infrastructure so you don't have to think about servers,
+        deploys, or uptime. It kicks in month 4 after your lifetime license purchase (first 3 months are free).
+        If you'd rather self-host, it's free forever — deploy to your own Render account or any Node.js host.
+        The $7/mo is 100% optional.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        Can I get a refund?
+        <span class="faq-q-toggle">+</span>
+      </div>
+      <div class="faq-a">
+        Yes — 14-day money-back guarantee. If FitOS isn't right for you within 14 days of purchase, email
+        <a href="mailto:fitos@polsia.app" style="color:var(--olive)">fitos@polsia.app</a> and we'll refund you in full. No questions asked.
+        After 14 days, sales are final (you've had 28+ days of total access between trial and post-purchase).
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        Do I get updates?
+        <span class="faq-q-toggle">+</span>
+      </div>
+      <div class="faq-a">
+        Yes — lifetime updates are included. As we ship new features (new AI skills, integrations, UI improvements),
+        they're pushed to the repo and auto-deployed if you're on managed hosting.
+        Self-hosters get updates via <code>git pull</code>. There's no separate "update plan" or upgrade pricing.
+        You paid once — you get everything, forever.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        I already have a trial — does my data carry over?
+        <span class="faq-q-toggle">+</span>
+      </div>
+      <div class="faq-a">
+        Yes, automatically. Your trial account, Google Sheet, clients, workouts, and check-ins all carry over the moment
+        your payment is verified. There's nothing to migrate. You'll be logged in to the same account you used during the trial.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- BOTTOM CTA -->
+<section class="bottom-cta">
+  <h2 class="bottom-cta-h2">Ready to build something<br><em>you actually own?</em></h2>
+  <p class="bottom-cta-p">
+    Start with 14 days free. No card. Connect your Google Sheet and run your first session in under 10 minutes.
+  </p>
+  <div class="bottom-cta-row">
+    <a href="/trial/signup" class="btn-primary-lg">Start Free Trial →</a>
+    <a href="/vs/trainerize" class="btn-ghost-lg">vs Trainerize</a>
+    <a href="/vs/truecoach" class="btn-ghost-lg">vs TrueCoach</a>
+  </div>
+</section>
+
+<script>
+function toggleFaq(item) {
+  item.classList.toggle('open');
+}
+</script>
+
+<!-- FitOS traffic tracker -->
+<script>
+(function() {
+  var PAGE = '/pricing';
+  var sid = sessionStorage.getItem('fitos_sid');
+  if (!sid) {
+    sid = Math.random().toString(36).slice(2) + Date.now().toString(36);
+    sessionStorage.setItem('fitos_sid', sid);
+  }
+  var src = (new URLSearchParams(location.search)).get('utm_source') || document.referrer || '';
+  function track(ev, extra) {
+    fetch('/api/track', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(Object.assign({ event: ev, page: PAGE, session_id: sid, source: src }, extra)),
+      keepalive: true
+    }).catch(function(){});
+  }
+  track('page_view');
+  document.addEventListener('click', function(e) {
+    var a = e.target.closest('a[href]');
+    if (!a) return;
+    var h = a.getAttribute('href') || '';
+    if (h.includes('buy.stripe.com')) { track('checkout_start', {}); }
+    else if (h.includes('/trial') || h.includes('/buy')) { track('cta_click', {}); }
+  }, true);
+})();
+</script>
+</body>
+</html>
