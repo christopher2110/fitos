@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitOS — How Skills Work</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:        #F4EFE6;
+      --cream-light:  #FDFAF5;
+      --cream-mid:    #EDE6D8;
+      --olive:        #5C6B2A;
+      --olive-dark:   #3D4A1A;
+      --olive-muted:  #8A9650;
+      --olive-pale:   #E8EDD6;
+      --text:         #2C2A24;
+      --text-muted:   #7A7570;
+      --border:       #DDD8CA;
+      --sidebar-w:    220px;
+      --topbar-h:     60px;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--cream);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .layout { display: flex; min-height: 100vh; }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--cream-light);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 50;
+    }
+
+    .sidebar-brand {
+      padding: 22px 20px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand-wordmark {
+      font-family: 'Fraunces', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--olive);
+      letter-spacing: -0.02em;
+      text-decoration: none;
+      display: block;
+    }
+
+    .brand-tagline {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-top: 6px;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 12px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      overflow-y: auto;
+    }
+
+    .nav-section-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 10px 10px 4px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .nav-link:hover { background: var(--cream-mid); color: var(--text); }
+    .nav-link.active { background: var(--olive-pale); color: var(--olive-dark); }
+
+    .nav-icon { width: 16px; height: 16px; flex-shrink: 0; }
+
+    /* ── MAIN ── */
+    .main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      height: var(--topbar-h);
+      background: var(--cream-light);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 28px;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+
+    .topbar-breadcrumb {
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .topbar-breadcrumb a { color: var(--text-muted); text-decoration: none; }
+    .topbar-breadcrumb a:hover { color: var(--text); }
+    .topbar-sep { color: var(--border); }
+    .topbar-current { color: var(--text); font-weight: 500; }
+
+    /* ── CONTENT ── */
+    .content {
+      flex: 1;
+      padding: 40px 48px;
+      max-width: 860px;
+    }
+
+    .page-header {
+      margin-bottom: 40px;
+    }
+
+    .page-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--olive);
+      background: var(--olive-pale);
+      border: 1px solid rgba(92,107,42,0.2);
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+    }
+
+    .page-title {
+      font-family: 'Fraunces', serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.12;
+      letter-spacing: -0.025em;
+      margin-bottom: 14px;
+    }
+
+    .page-title em { font-style: italic; color: var(--olive); }
+
+    .page-lead {
+      font-size: 16px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      max-width: 640px;
+    }
+
+    /* ── DIVIDER ── */
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 36px 0;
+    }
+
+    /* ── SECTION HEADING ── */
+    .section-heading {
+      font-family: 'Fraunces', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+
+    .section-sub {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.65;
+      margin-bottom: 20px;
+    }
+
+    .section-sub strong { color: var(--text); font-weight: 600; }
+    .section-sub code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      background: var(--cream-mid);
+      padding: 1px 5px;
+      border-radius: 4px;
+      color: var(--olive-dark);
+    }
+
+    /* ── FILE TREE ── */
+    .file-tree {
+      background: var(--text);
+      border-radius: 10px;
+      padding: 16px 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: #ccd0bb;
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+
+    .file-tree .dir   { color: #A8C373; }
+    .file-tree .file  { color: #ccd0bb; }
+    .file-tree .comment { color: #6B7558; }
+
+    /* ── CODE BLOCK ── */
+    .code-block {
+      background: var(--text);
+      border-radius: 10px;
+      padding: 16px 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #ccd0bb;
+      line-height: 1.75;
+      margin-bottom: 20px;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .code-block .key    { color: #A8C373; }
+    .code-block .str    { color: #F0C77A; }
+    .code-block .num    { color: #79B8FF; }
+    .code-block .punct  { color: #ccd0bb; }
+    .code-block .comment{ color: #6B7558; }
+    .code-block .cmd    { color: #A8C373; }
+    .code-block .bash-comment { color: #6B7558; }
+
+    /* ── CODE LABEL ── */
+    .code-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      margin-top: 16px;
+    }
+
+    /* ── STEPS ── */
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .step {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--olive);
+      color: var(--cream-light);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .step-body { flex: 1; }
+
+    .step-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .step-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    .step-desc code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      background: var(--cream-mid);
+      padding: 1px 5px;
+      border-radius: 4px;
+      color: var(--olive-dark);
+    }
+
+    /* ── BYOK CARDS ── */
+    .byok-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .byok-card {
+      background: var(--cream-light);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 18px;
+    }
+
+    .byok-card-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--olive);
+      margin-bottom: 8px;
+    }
+
+    .byok-card-text {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    /* ── DETAILS / EXPANDABLE ── */
+    details {
+      background: var(--cream-light);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    summary {
+      padding: 14px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      user-select: none;
+    }
+
+    summary::-webkit-details-marker { display: none; }
+
+    summary::after {
+      content: '+';
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--text-muted);
+      transition: transform 0.15s ease;
+    }
+
+    details[open] summary::after {
+      content: '−';
+    }
+
+    .details-body {
+      padding: 0 18px 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── CTA LINKS ── */
+    .cta-links {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .cta-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--olive);
+      text-decoration: none;
+      border: 1px solid rgba(92,107,42,0.3);
+      background: var(--olive-pale);
+      padding: 8px 16px;
+      border-radius: 20px;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .cta-link:hover { background: var(--cream-mid); border-color: var(--olive); }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; }
+      .content { padding: 24px 20px; }
+      .byok-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="layout">
+  <!-- ── SIDEBAR ── -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <a class="brand-wordmark" href="/">FitOS</a>
+      <div class="brand-tagline">Coaching OS</div>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-section-label">Client</div>
+      <a class="nav-link" href="/workouts">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v6m0 4v6M18 4v6m0 4v6M2 9h4m12 0h4M2 15h4m12 0h4"/></svg>
+        Workouts
+      </a>
+      <a class="nav-link" href="/checkin">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        Check-in
+      </a>
+      <a class="nav-link" href="/history">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        History
+      </a>
+      <a class="nav-link" href="/messages">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Messages
+      </a>
+      <div class="nav-section-label" style="margin-top:8px;">Coach</div>
+      <a class="nav-link" href="/dashboard">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a class="nav-link" href="/settings/agents">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93A10 10 0 0 0 4.93 19.07M4.93 4.93A10 10 0 0 0 19.07 19.07"/></svg>
+        Agents
+      </a>
+      <a class="nav-link active" href="/docs/agents">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        How Skills Work
+      </a>
+    </div>
+  </nav>
+
+  <!-- ── MAIN ── -->
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-breadcrumb">
+        <a href="/settings/agents">Agents</a>
+        <span class="topbar-sep">›</span>
+        <span class="topbar-current">How Skills Work</span>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <div class="page-header">
+        <div class="page-eyebrow">Documentation</div>
+        <h1 class="page-title">How FitOS <em>Skills</em> Work</h1>
+        <p class="page-lead">
+          FitOS skills are Claude-compatible AI agents you import, configure, and own. No closed AI layer. No vendor lock. Your Anthropic key, your agent loop.
+        </p>
+      </div>
+
+      <hr class="section-divider">
+
+      <!-- ── WHAT IS A SKILL ── -->
+      <h2 class="section-heading">What a Skill Is</h2>
+      <p class="section-sub">
+        A skill is a folder with two files. Drop the folder into <code>/skills/</code>. Run <code>npm run skills:scan</code>. Enable in <a href="/settings/agents" style="color:var(--olive);font-weight:500;">settings</a>. Done.
+      </p>
+
+      <div class="file-tree">
+        <span class="dir">skills/</span>
+        └── <span class="dir">weekly-checkin-summary/</span>
+            ├── <span class="file">manifest.json</span>   <span class="comment">← skill metadata and routing</span>
+            └── <span class="file">system.md</span>       <span class="comment">← instructions Claude follows</span>
+      </div>
+
+      <hr class="section-divider">
+
+      <!-- ── MANIFEST FORMAT ── -->
+      <h2 class="section-heading">Skill Manifest Format</h2>
+      <p class="section-sub">
+        Every skill uses the same structure. <strong>All fields are required</strong> — the scanner skips folders with missing or malformed <code>manifest.json</code>.
+      </p>
+
+      <div class="code-label">manifest.json</div>
+<div class="code-block"><span class="punct">{</span>
+  <span class="key">"id"</span><span class="punct">:</span>          <span class="str">"skill-name"</span><span class="punct">,</span>         <span class="comment">// unique identifier, matches folder name</span>
+  <span class="key">"name"</span><span class="punct">:</span>        <span class="str">"Human-readable Name"</span><span class="punct">,</span>
+  <span class="key">"description"</span><span class="punct">:</span> <span class="str">"What this skill does (shown in the dashboard)"</span><span class="punct">,</span>
+  <span class="key">"version"</span><span class="punct">:</span>     <span class="str">"1.0.0"</span><span class="punct">,</span>
+  <span class="key">"model"</span><span class="punct">:</span>       <span class="str">"claude-haiku-4-5"</span><span class="punct">,</span>   <span class="comment">// or claude-sonnet-4-5 / claude-opus-4</span>
+  <span class="key">"inputs"</span><span class="punct">:</span> [
+    <span class="punct">{</span> <span class="key">"tab"</span><span class="punct">:</span> <span class="str">"CheckIns"</span><span class="punct">,</span> <span class="key">"range"</span><span class="punct">:</span> <span class="str">"CheckIns!A1:J200"</span> <span class="punct">}</span>
+  ]<span class="punct">,</span>
+  <span class="key">"outputs"</span><span class="punct">:</span> [
+    <span class="punct">{</span> <span class="key">"tab"</span><span class="punct">:</span> <span class="str">"Activity"</span><span class="punct">,</span> <span class="key">"action"</span><span class="punct">:</span> <span class="str">"append"</span> <span class="punct">}</span>   <span class="comment">// append | prepend | overwrite</span>
+  ]<span class="punct">,</span>
+  <span class="key">"requires_tools"</span><span class="punct">:</span> []                         <span class="comment">// list tool names if needed</span>
+<span class="punct">}</span></div>
+
+      <div class="code-label">system.md</div>
+      <div class="code-block">You are a fitness coaching assistant working with {coach_name}.
+
+When {client_name} submits their weekly check-in, analyse their responses
+and return a structured summary the coach can act on immediately.
+
+## Output Format
+- Compliance score (0–100)
+- Top 3 wins — specific, from the client's own words
+- Single coaching priority
+- Suggested reply message
+
+Be specific. Reference actual data. Flag anything that looks like a red flag.</div>
+
+      <hr class="section-divider">
+
+      <!-- ── EXAMPLE SKILL ── -->
+      <h2 class="section-heading">Example: <code style="font-size:18px">weekly-checkin-summary</code></h2>
+      <p class="section-sub">
+        The built-in summary skill runs every time you click Run in settings. It reads 7 days of check-in data, scores the week, surfaces coaching priorities, and drafts a reply — in under 3 seconds.
+      </p>
+
+      <details>
+        <summary>View full weekly-checkin-summary skill files</summary>
+        <div class="details-body">
+          <div class="code-label" style="margin-top:16px">manifest.json</div>
+<div class="code-block"><span class="punct">{</span>
+  <span class="key">"id"</span><span class="punct">:</span>          <span class="str">"weekly-checkin-summary"</span><span class="punct">,</span>
+  <span class="key">"name"</span><span class="punct">:</span>        <span class="str">"Weekly Check-in Summary"</span><span class="punct">,</span>
+  <span class="key">"description"</span><span class="punct">:</span> <span class="str">"Reads the last 7 days of check-in data and writes a coaching summary to the Activity feed."</span><span class="punct">,</span>
+  <span class="key">"version"</span><span class="punct">:</span>     <span class="str">"1.0.0"</span><span class="punct">,</span>
+  <span class="key">"model"</span><span class="punct">:</span>       <span class="str">"claude-haiku-4-5"</span><span class="punct">,</span>
+  <span class="key">"inputs"</span><span class="punct">:</span> [
+    <span class="punct">{</span> <span class="key">"tab"</span><span class="punct">:</span> <span class="str">"CheckIns"</span><span class="punct">,</span> <span class="key">"range"</span><span class="punct">:</span> <span class="str">"CheckIns!A1:J200"</span> <span class="punct">}</span><span class="punct">,</span>
+    <span class="punct">{</span> <span class="key">"tab"</span><span class="punct">:</span> <span class="str">"Profile"</span><span class="punct">,</span>  <span class="key">"range"</span><span class="punct">:</span> <span class="str">"Profile!A2:D50"</span>   <span class="punct">}</span>
+  ]<span class="punct">,</span>
+  <span class="key">"outputs"</span><span class="punct">:</span> [
+    <span class="punct">{</span> <span class="key">"tab"</span><span class="punct">:</span> <span class="str">"Activity"</span><span class="punct">,</span> <span class="key">"action"</span><span class="punct">:</span> <span class="str">"append"</span> <span class="punct">}</span>
+  ]<span class="punct">,</span>
+  <span class="key">"requires_tools"</span><span class="punct">:</span> []
+<span class="punct">}</span></div>
+          <div class="code-label">system.md</div>
+          <div class="code-block">You are a fitness coaching assistant. Your job is to read a client's check-in
+responses and produce a concise, actionable coaching summary.
+
+## Data
+You will receive rows from the CheckIns tab. Each row contains:
+- Date, workouts completed vs planned, nutrition rating (1-10),
+  sleep hours, sleep quality (1-10), energy (1-10), mood (1-10),
+  bodyweight, client notes.
+
+## Output Format
+Write to the Activity tab in this format:
+
+### Weekly Summary — [date range]
+**Compliance score:** [0-100]
+**Top wins:** [3 specific wins from the client's own language]
+**Priority this week:** [single most important coaching focus]
+**Suggested reply:** [2-3 sentences the coach can send or edit]
+
+## Rules
+- Be specific. Reference actual numbers and the client's exact words.
+- Flag anything unusual: injury language, burnout signals, >5% bodyweight change.
+- Tone: warm and precise. Coaches are time-pressed.</div>
+        </div>
+      </details>
+
+      <hr class="section-divider">
+
+      <!-- ── HOW TO IMPORT ── -->
+      <h2 class="section-heading">How to Import a Skill</h2>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">Copy the skill folder into <code>/skills/</code></div>
+            <div class="step-desc">Each skill is a self-contained folder with <code>manifest.json</code> + <code>system.md</code>. No other files required (unless the skill uses <code>tools.json</code>).</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">Run <code>npm run skills:scan</code></div>
+            <div class="step-desc">Validates the manifest, checks for required fields, and registers the skill with the dashboard. Exits with an error if the manifest is malformed so you catch it before deploy.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">Enable in <a href="/settings/agents" style="color:var(--olive);">Agent Settings</a></div>
+            <div class="step-desc">Open <code>/settings/agents</code>, find your skill in the list, and toggle it on. Skills hot-load on the next run — no server restart required.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="code-label">Terminal</div>
+<div class="code-block"><span class="bash-comment"># 1. Drop the skill folder in</span>
+<span class="cmd">$</span> cp -r ~/my-skill skills/
+
+<span class="bash-comment"># 2. Validate + register</span>
+<span class="cmd">$</span> npm run skills:scan
+
+<span class="bash-comment"># 3. Enable in /settings/agents — then run it from the dashboard</span></div>
+
+      <hr class="section-divider">
+
+      <!-- ── WHY BYOK ── -->
+      <h2 class="section-heading">Why BYOK</h2>
+      <p class="section-sub">
+        Your Anthropic key is stored encrypted in your own Google Sheet (AES-256-GCM). FitOS never sees it in plaintext. Here's what that means:
+      </p>
+
+      <div class="byok-grid">
+        <div class="byok-card">
+          <div class="byok-card-label">You pay Anthropic directly</div>
+          <div class="byok-card-text">No markup. No platform surcharge. A weekly check-in summary costs fractions of a cent — and that goes to Anthropic, not FitOS.</div>
+        </div>
+        <div class="byok-card">
+          <div class="byok-card-label">Your limits, your caps</div>
+          <div class="byok-card-text">Set rate limits and spend caps in your Anthropic console. FitOS reads your key at run time and has no control over your quotas.</div>
+        </div>
+        <div class="byok-card">
+          <div class="byok-card-label">Portable</div>
+          <div class="byok-card-text">Your key is in your environment. Migrate away from FitOS and your AI agents come with you. No lock-in.</div>
+        </div>
+        <div class="byok-card">
+          <div class="byok-card-label">Open stack</div>
+          <div class="byok-card-text">Every other coaching platform routes clients through a closed AI layer. FitOS doesn't. You own the agent loop end-to-end.</div>
+        </div>
+      </div>
+
+      <hr class="section-divider">
+
+      <!-- ── IMPORT FROM CLAUDE CODE ── -->
+      <h2 class="section-heading">Import from Claude Code</h2>
+      <p class="section-sub">
+        Any skill built for Claude Code can be adapted for FitOS with minimal changes. The agent loop is compatible — only the metadata format differs:
+      </p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">Rename <code>SKILL.md</code> → <code>system.md</code></div>
+            <div class="step-desc">The instructions file is identical in purpose. Just rename it.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">Add a <code>manifest.json</code></div>
+            <div class="step-desc">Claude Code uses YAML frontmatter in SKILL.md. FitOS uses a separate JSON file. Copy the <code>name</code>, <code>description</code>, and <code>version</code> fields, then add <code>id</code>, <code>model</code>, <code>inputs</code>, and <code>outputs</code> to declare what tabs the skill reads and writes.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">Run <code>npm run skills:scan</code></div>
+            <div class="step-desc">Validates the manifest and registers the skill. You're done.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── FOOTER LINKS ── -->
+      <div class="cta-links">
+        <a class="cta-link" href="/settings/agents">← Back to Agent Settings</a>
+        <a class="cta-link" href="https://github.com/anthropics/claude-code" target="_blank" rel="noopener">Claude Code on GitHub ↗</a>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /layout -->
+
+</body>
+</html>
