@@ -1,0 +1,238 @@
+{
+  "id": "rp-hypertrophy-male",
+  "slug": "rp-hypertrophy-male",
+  "name": "RP-Style Male Hypertrophy",
+  "author": "FitOS Coaches",
+  "source": "Original programming inspired by Renaissance Periodization principles — public domain hypertrophy methodology",
+  "goal": "hypertrophy",
+  "difficulty": "intermediate",
+  "daysPerWeek": 5,
+  "durationWeeks": 12,
+  "description": "A 5-day hypertrophy program based on Renaissance Periodization principles: MEV→MAV progression (minimum effective volume to maximum adaptive volume), RPE-based loading, and structured deloads. Muscle-group frequency of 2x/week. Designed for serious hypertrophy gains over a 12-week meso.",
+  "equipment": ["barbell", "dumbbell", "cables", "rack", "bench"],
+  "tags": ["hypertrophy", "bodybuilding", "RP-style", "mesocycle"],
+  "weeks": [
+    {
+      "week": 1,
+      "label": "Week 1 — MEV (Minimum Effective Volume)",
+      "phase": "Meso Week 1",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Chest + Triceps",
+          "exercises": [
+            { "name": "Incline Barbell Press", "sets": "3", "reps": "10", "load": "RPE 7", "rest": "120", "notes": "Start conservative. Week 1 is MEV — volume ramps up." },
+            { "name": "Flat DB Press", "sets": "3", "reps": "12", "load": "RPE 7", "rest": "90", "notes": "" },
+            { "name": "Cable Flye", "sets": "2", "reps": "15", "load": "RPE 7", "rest": "60", "notes": "" },
+            { "name": "Overhead Tricep Extension", "sets": "3", "reps": "12", "load": "RPE 7", "rest": "75", "notes": "" },
+            { "name": "Tricep Pushdown", "sets": "2", "reps": "15", "load": "RPE 7", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Tuesday",
+          "focus": "Back + Biceps",
+          "exercises": [
+            { "name": "Weighted Pull-Up", "sets": "3", "reps": "8", "load": "RPE 7", "rest": "150", "notes": "" },
+            { "name": "Barbell Row", "sets": "3", "reps": "10", "load": "RPE 7", "rest": "120", "notes": "" },
+            { "name": "Lat Pulldown", "sets": "2", "reps": "12", "load": "RPE 7", "rest": "90", "notes": "" },
+            { "name": "Seated Cable Row", "sets": "2", "reps": "12", "load": "RPE 7", "rest": "90", "notes": "" },
+            { "name": "DB Curl", "sets": "3", "reps": "12", "load": "RPE 7", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Wednesday",
+          "focus": "Legs",
+          "exercises": [
+            { "name": "Back Squat", "sets": "3", "reps": "10", "load": "RPE 7", "rest": "180", "notes": "" },
+            { "name": "Romanian Deadlift", "sets": "3", "reps": "10", "load": "RPE 7", "rest": "120", "notes": "" },
+            { "name": "Leg Press", "sets": "2", "reps": "15", "load": "RPE 7", "rest": "120", "notes": "" },
+            { "name": "Leg Extension", "sets": "2", "reps": "15", "load": "RPE 7", "rest": "75", "notes": "" },
+            { "name": "Lying Leg Curl", "sets": "2", "reps": "12", "load": "RPE 7", "rest": "75", "notes": "" },
+            { "name": "Standing Calf Raise", "sets": "3", "reps": "15", "load": "RPE 7", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Thursday",
+          "focus": "Shoulders + Biceps",
+          "exercises": [
+            { "name": "Overhead Press", "sets": "3", "reps": "10", "load": "RPE 7", "rest": "120", "notes": "" },
+            { "name": "DB Lateral Raise", "sets": "4", "reps": "15", "load": "RPE 7", "rest": "45", "notes": "" },
+            { "name": "Rear Delt Machine", "sets": "3", "reps": "15", "load": "RPE 7", "rest": "45", "notes": "" },
+            { "name": "EZ Bar Curl", "sets": "3", "reps": "10", "load": "RPE 7", "rest": "75", "notes": "" },
+            { "name": "Hammer Curl", "sets": "2", "reps": "12", "load": "RPE 7", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Friday",
+          "focus": "Chest + Back 2nd Frequency",
+          "exercises": [
+            { "name": "DB Incline Press", "sets": "3", "reps": "12", "load": "RPE 7", "rest": "90", "notes": "" },
+            { "name": "Cable Crossover", "sets": "3", "reps": "15", "load": "RPE 7", "rest": "60", "notes": "" },
+            { "name": "DB Row", "sets": "3", "reps": "12/side", "load": "RPE 7", "rest": "90", "notes": "" },
+            { "name": "Face Pulls", "sets": "3", "reps": "15", "load": "RPE 7", "rest": "45", "notes": "" },
+            { "name": "Tricep Dips", "sets": "2", "reps": "12", "load": "BW or weighted", "rest": "75", "notes": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 2,
+      "label": "Week 2 — Add 1 Set per Muscle Group",
+      "phase": "Meso Week 2",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Chest + Triceps",
+          "exercises": [
+            { "name": "Incline Barbell Press", "sets": "4", "reps": "10", "load": "RPE 7-8", "rest": "120", "notes": "+1 set. Volume climbs each week." },
+            { "name": "Flat DB Press", "sets": "3", "reps": "12", "load": "RPE 7-8", "rest": "90", "notes": "" },
+            { "name": "Cable Flye", "sets": "3", "reps": "15", "load": "RPE 7-8", "rest": "60", "notes": "+1 set." },
+            { "name": "Overhead Tricep Extension", "sets": "3", "reps": "12", "load": "RPE 7-8", "rest": "75", "notes": "" },
+            { "name": "Tricep Pushdown", "sets": "3", "reps": "15", "load": "RPE 7-8", "rest": "60", "notes": "+1 set." }
+          ]
+        },
+        {
+          "day": "Tuesday",
+          "focus": "Back + Biceps",
+          "exercises": [
+            { "name": "Weighted Pull-Up", "sets": "4", "reps": "8", "load": "RPE 7-8", "rest": "150", "notes": "+1 set." },
+            { "name": "Barbell Row", "sets": "3", "reps": "10", "load": "RPE 7-8", "rest": "120", "notes": "" },
+            { "name": "Lat Pulldown", "sets": "3", "reps": "12", "load": "RPE 7-8", "rest": "90", "notes": "+1 set." },
+            { "name": "Seated Cable Row", "sets": "3", "reps": "12", "load": "RPE 7-8", "rest": "90", "notes": "+1 set." },
+            { "name": "DB Curl", "sets": "3", "reps": "12", "load": "RPE 7-8", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Wednesday",
+          "focus": "Legs",
+          "exercises": [
+            { "name": "Back Squat", "sets": "4", "reps": "10", "load": "RPE 7-8", "rest": "180", "notes": "+1 set." },
+            { "name": "Romanian Deadlift", "sets": "3", "reps": "10", "load": "RPE 7-8", "rest": "120", "notes": "" },
+            { "name": "Leg Press", "sets": "3", "reps": "15", "load": "RPE 7-8", "rest": "120", "notes": "+1 set." },
+            { "name": "Leg Extension", "sets": "3", "reps": "15", "load": "RPE 7-8", "rest": "75", "notes": "+1 set." },
+            { "name": "Lying Leg Curl", "sets": "3", "reps": "12", "load": "RPE 7-8", "rest": "75", "notes": "+1 set." },
+            { "name": "Standing Calf Raise", "sets": "4", "reps": "15", "load": "RPE 7-8", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Thursday",
+          "focus": "Shoulders + Biceps",
+          "exercises": [
+            { "name": "Overhead Press", "sets": "3", "reps": "10", "load": "RPE 7-8", "rest": "120", "notes": "" },
+            { "name": "DB Lateral Raise", "sets": "5", "reps": "15", "load": "RPE 7-8", "rest": "45", "notes": "+1 set." },
+            { "name": "Rear Delt Machine", "sets": "4", "reps": "15", "load": "RPE 7-8", "rest": "45", "notes": "+1 set." },
+            { "name": "EZ Bar Curl", "sets": "3", "reps": "10", "load": "RPE 7-8", "rest": "75", "notes": "" },
+            { "name": "Hammer Curl", "sets": "3", "reps": "12", "load": "RPE 7-8", "rest": "60", "notes": "+1 set." }
+          ]
+        },
+        {
+          "day": "Friday",
+          "focus": "Chest + Back 2nd Frequency",
+          "exercises": [
+            { "name": "DB Incline Press", "sets": "4", "reps": "12", "load": "RPE 7-8", "rest": "90", "notes": "+1 set." },
+            { "name": "Cable Crossover", "sets": "3", "reps": "15", "load": "RPE 7-8", "rest": "60", "notes": "" },
+            { "name": "DB Row", "sets": "4", "reps": "12/side", "load": "RPE 7-8", "rest": "90", "notes": "+1 set." },
+            { "name": "Face Pulls", "sets": "3", "reps": "15", "load": "RPE 7", "rest": "45", "notes": "" },
+            { "name": "Tricep Dips", "sets": "3", "reps": "12", "load": "BW or weighted", "rest": "75", "notes": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 3,
+      "label": "Week 3 — MAV (Maximum Adaptive Volume)",
+      "phase": "Meso Week 3",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Chest + Triceps",
+          "exercises": [
+            { "name": "Incline Barbell Press", "sets": "4", "reps": "10", "load": "RPE 8-9", "rest": "120", "notes": "Peak intensity and volume week." },
+            { "name": "Flat DB Press", "sets": "4", "reps": "12", "load": "RPE 8-9", "rest": "90", "notes": "" },
+            { "name": "Cable Flye", "sets": "3", "reps": "15", "load": "RPE 8-9", "rest": "60", "notes": "" },
+            { "name": "Overhead Tricep Extension", "sets": "4", "reps": "12", "load": "RPE 8-9", "rest": "75", "notes": "" },
+            { "name": "Tricep Pushdown", "sets": "3", "reps": "15", "load": "RPE 8-9", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Tuesday",
+          "focus": "Back + Biceps",
+          "exercises": [
+            { "name": "Weighted Pull-Up", "sets": "4", "reps": "8", "load": "RPE 8-9", "rest": "150", "notes": "" },
+            { "name": "Barbell Row", "sets": "4", "reps": "10", "load": "RPE 8-9", "rest": "120", "notes": "" },
+            { "name": "Lat Pulldown", "sets": "3", "reps": "12", "load": "RPE 8-9", "rest": "90", "notes": "" },
+            { "name": "Seated Cable Row", "sets": "3", "reps": "12", "load": "RPE 8-9", "rest": "90", "notes": "" },
+            { "name": "DB Curl", "sets": "4", "reps": "12", "load": "RPE 8-9", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Wednesday",
+          "focus": "Legs",
+          "exercises": [
+            { "name": "Back Squat", "sets": "4", "reps": "10", "load": "RPE 8-9", "rest": "180", "notes": "" },
+            { "name": "Romanian Deadlift", "sets": "4", "reps": "10", "load": "RPE 8-9", "rest": "120", "notes": "" },
+            { "name": "Leg Press", "sets": "3", "reps": "15", "load": "RPE 8-9", "rest": "120", "notes": "" },
+            { "name": "Leg Extension", "sets": "3", "reps": "15", "load": "RPE 8-9", "rest": "75", "notes": "" },
+            { "name": "Lying Leg Curl", "sets": "3", "reps": "12", "load": "RPE 8-9", "rest": "75", "notes": "" },
+            { "name": "Standing Calf Raise", "sets": "4", "reps": "15", "load": "RPE 8-9", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Thursday",
+          "focus": "Shoulders + Biceps",
+          "exercises": [
+            { "name": "Overhead Press", "sets": "4", "reps": "10", "load": "RPE 8-9", "rest": "120", "notes": "" },
+            { "name": "DB Lateral Raise", "sets": "5", "reps": "15", "load": "RPE 8", "rest": "45", "notes": "" },
+            { "name": "Rear Delt Machine", "sets": "4", "reps": "15", "load": "RPE 8", "rest": "45", "notes": "" },
+            { "name": "EZ Bar Curl", "sets": "4", "reps": "10", "load": "RPE 8-9", "rest": "75", "notes": "" },
+            { "name": "Hammer Curl", "sets": "3", "reps": "12", "load": "RPE 8-9", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Friday",
+          "focus": "Chest + Back 2nd Frequency",
+          "exercises": [
+            { "name": "DB Incline Press", "sets": "4", "reps": "12", "load": "RPE 8-9", "rest": "90", "notes": "" },
+            { "name": "Cable Crossover", "sets": "4", "reps": "15", "load": "RPE 8-9", "rest": "60", "notes": "" },
+            { "name": "DB Row", "sets": "4", "reps": "12/side", "load": "RPE 8-9", "rest": "90", "notes": "" },
+            { "name": "Face Pulls", "sets": "3", "reps": "15", "load": "RPE 7-8", "rest": "45", "notes": "" },
+            { "name": "Tricep Dips", "sets": "3", "reps": "12", "load": "BW or weighted", "rest": "75", "notes": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 4,
+      "label": "Week 4 — Deload",
+      "phase": "Deload",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Chest Deload",
+          "exercises": [
+            { "name": "Flat DB Press", "sets": "2", "reps": "10", "load": "RPE 5-6", "rest": "90", "notes": "~40-50% of peak week volume." },
+            { "name": "Cable Flye", "sets": "2", "reps": "15", "load": "RPE 5-6", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Wednesday",
+          "focus": "Legs Deload",
+          "exercises": [
+            { "name": "Leg Press", "sets": "2", "reps": "12", "load": "RPE 5-6", "rest": "90", "notes": "" },
+            { "name": "Leg Curl", "sets": "2", "reps": "12", "load": "RPE 5-6", "rest": "75", "notes": "" }
+          ]
+        },
+        {
+          "day": "Friday",
+          "focus": "Back Deload",
+          "exercises": [
+            { "name": "Lat Pulldown", "sets": "2", "reps": "12", "load": "RPE 5-6", "rest": "90", "notes": "" },
+            { "name": "Cable Row", "sets": "2", "reps": "12", "load": "RPE 5-6", "rest": "75", "notes": "" }
+          ]
+        }
+      ]
+    }
+  ],
+  "progression": "Volume increases by ~1 set per muscle group per week (MEV→MAV over 4 weeks). Load increases when RPE is below target (add weight if RPE 7 feels like 6). Deload at week 4 by cutting volume ~50%. Repeat mesocycle with slightly higher MEV starting point.",
+  "notes": "RP-style programming is RPE-driven — if the prescribed RPE isn't being hit, you must add weight. Never use the same weight for 4 straight weeks just to 'finish the plan.' Adaptations require progressive overload."
+}
