@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#F4EFE6">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="FitOS">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <title>FitOS — History</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:        #F4EFE6;
+      --cream-light:  #FDFAF5;
+      --cream-mid:    #EDE6D8;
+      --olive:        #5C6B2A;
+      --olive-dark:   #3D4A1A;
+      --olive-muted:  #8A9650;
+      --olive-pale:   #E8EDD6;
+      --text:         #2C2A24;
+      --text-muted:   #7A7570;
+      --border:       #DDD8CA;
+      --amber:        #956E20;
+      --red-muted:    #A83030;
+      --nav-h:        72px;
+      --safe-bottom:  env(safe-area-inset-bottom, 0px);
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--cream);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overscroll-behavior: none;
+    }
+
+    .app {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    /* ── HEADER ──────────────────────────────────────── */
+    .header {
+      background: var(--cream);
+      padding: 52px 20px 12px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .header-title {
+      font-family: 'Fraunces', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
+    /* ── UNIT TOGGLE ────────────────────────────────── */
+    .unit-toggle {
+      display: flex;
+      background: var(--cream-mid);
+      border-radius: 20px;
+      padding: 3px;
+      gap: 2px;
+      flex-shrink: 0;
+    }
+
+    .unit-btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 16px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease;
+      -webkit-tap-highlight-color: transparent;
+      letter-spacing: 0.03em;
+    }
+
+    .unit-btn.active {
+      background: var(--cream-light);
+      color: var(--olive-dark);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    /* ── CALENDAR ────────────────────────────────────── */
+    .calendar-wrap {
+      flex-shrink: 0;
+      background: var(--cream);
+      padding: 0 16px 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 0 8px;
+    }
+
+    .cal-nav-btn {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: var(--cream-mid);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-muted);
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.12s ease;
+      flex-shrink: 0;
+    }
+
+    .cal-nav-btn:active { background: var(--border); }
+
+    .cal-month-label {
+      font-family: 'Fraunces', serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+
+    .cal-dow-row {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      margin-bottom: 4px;
+    }
+
+    .cal-dow {
+      text-align: center;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 2px 0;
+    }
+
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px;
+    }
+
+    .cal-cell {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.12s ease, color 0.12s ease;
+      user-select: none;
+    }
+
+    .cal-cell:empty { pointer-events: none; }
+
+    .cal-cell.has-data {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* dot indicator below date number for days with data */
+    .cal-cell.has-data::after {
+      content: '';
+      position: absolute;
+      bottom: 3px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--olive-muted);
+    }
+
+    .cal-cell.has-data {
+      position: relative;
+    }
+
+    .cal-cell:not(:empty):active { background: var(--cream-mid); }
+
+    .cal-cell.today {
+      color: var(--olive-dark);
+      font-weight: 700;
+    }
+
+    .cal-cell.selected {
+      background: var(--olive) !important;
+      color: #fff !important;
+      font-weight: 700;
+    }
+
+    /* hide data dot on selected cell */
+    .cal-cell.selected::after { display: none; }
+
+    .cal-cell.future {
+      color: var(--border);
+      pointer-events: none;
+    }
+
+    /* ── SCROLL AREA ─────────────────────────────────── */
+    .scroll-area {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 4px 16px calc(var(--nav-h) + var(--safe-bottom) + 20px);
+    }
+
+    .scroll-area::-webkit-scrollbar { display: none; }
+
+    /* ── SECTION LABEL ───────────────────────────────── */
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 16px 4px 8px;
+    }
+
+    /* ── DATE BADGE ──────────────────────────────────── */
+    .date-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--olive-pale);
+      border: 1px solid var(--olive-muted);
+      border-radius: 20px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--olive-dark);
+      letter-spacing: 0.02em;
+      margin: 8px 0 4px;
+    }
+
+    /* ── CHART CARD ──────────────────────────────────── */
+    .chart-card {
+      background: var(--cream-light);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px 16px 12px;
+      margin-bottom: 12px;
+    }
+
+    .chart-title {
+      font-family: 'Fraunces', serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.01em;
+      margin-bottom: 4px;
+    }
+
+    .chart-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      margin-bottom: 14px;
+    }
+
+    .chart-container {
+      position: relative;
+      height: 180px;
+    }
+
+    /* ── WELLNESS LEGEND ─────────────────────────────── */
+    .wellness-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      margin-top: 12px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .legend-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.02em;
+    }
+
+    /* ── PHOTO COMPARE ───────────────────────────────── */
+    .compare-section {
+      background: var(--cream-light);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .compare-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .compare-title {
+      font-family: 'Fraunces', serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+
+    .compare-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      margin-top: 2px;
+    }
+
+    .compare-pickers {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .compare-picker-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .compare-picker-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .compare-date-select {
+      width: 100%;
+      height: 36px;
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text);
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+
+    .compare-photos {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .compare-photo-slot {
+      aspect-ratio: 3/4;
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--cream-mid);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .compare-photo-slot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .compare-photo-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+      padding: 16px;
+      text-align: center;
+    }
+
+    .compare-photo-empty svg {
+      opacity: 0.4;
+    }
+
+    .compare-photo-empty-text {
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1.3;
+      opacity: 0.7;
+    }
+
+    .compare-photo-date-badge {
+      position: absolute;
+      bottom: 6px;
+      left: 6px;
+      background: rgba(44, 42, 36, 0.75);
+      color: #FDFAF5;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 6px;
+      letter-spacing: 0.02em;
+    }
+
+    .compare-deltas {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .compare-delta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      background: var(--cream);
+      border-radius: 8px;
+    }
+
+    .compare-delta-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .compare-delta-val {
+      font-size: 13px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .delta-down { color: var(--olive); }     /* weight/measurements decreasing = good */
+    .delta-up   { color: var(--red-muted); } /* increasing = neutral/flag */
+    .delta-zero { color: var(--text-muted); }
+
+    /* ── MEASUREMENTS LEGEND ─────────────────────────── */
+    .measure-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 14px;
+      margin-top: 10px;
+    }
+
+    /* ── OFFLINE BADGE ───────────────────────────────── */
+    .offline-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--cream-mid);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.03em;
+      margin-bottom: 12px;
+    }
+
+    .offline-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--amber);
+    }
+
+    /* ── EMPTY STATE ─────────────────────────────────── */
+    .empty-state {
+      text-align: center;
+      padding: 40px 24px;
+    }
+
+    .empty-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    .empty-title {
+      font-family: 'Fraunces', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .empty-sub {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ── BOTTOM NAV ──────────────────────────────────── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 480px;
+      background: var(--cream-light);
+      border-top: 1px solid var(--border);
+      display: flex;
+      padding: 0 8px;
+      padding-bottom: var(--safe-bottom);
+      height: calc(var(--nav-h) + var(--safe-bottom));
+      z-index: 100;
+    }
+
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      padding: 8px 4px;
+      cursor: pointer;
+      text-decoration: none;
+      -webkit-tap-highlight-color: transparent;
+      min-height: 44px;
+      border-radius: 12px;
+      transition: background 0.15s ease;
+    }
+
+    .nav-item:active { background: var(--cream-mid); }
+
+    .nav-icon {
+      width: 24px;
+      height: 24px;
+      color: var(--text-muted);
+      transition: color 0.15s ease;
+    }
+
+    .nav-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: color 0.15s ease;
+    }
+
+    .nav-item.active .nav-icon { color: var(--olive); }
+    .nav-item.active .nav-label { color: var(--olive); }
+  </style>
+</head>
+<body>
+  <div class="app">
+
+    <!-- HEADER -->
+    <div class="header">
+      <div>
+        <div class="header-title">History</div>
+      </div>
+      <div class="unit-toggle">
+        <button class="unit-btn active" id="btn-kg" onclick="setUnit('kg')">kg</button>
+        <button class="unit-btn"        id="btn-lb" onclick="setUnit('lb')">lb</button>
+      </div>
+    </div>
+
+    <!-- CALENDAR -->
+    <div class="calendar-wrap">
+      <div class="cal-header">
+        <button class="cal-nav-btn" id="cal-prev" onclick="calNav(-1)" aria-label="Previous month">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="10 4 6 8 10 12"/>
+          </svg>
+        </button>
+        <span class="cal-month-label" id="cal-month-label">—</span>
+        <button class="cal-nav-btn" id="cal-next" onclick="calNav(1)" aria-label="Next month">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 4 10 8 6 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="cal-dow-row">
+        <span class="cal-dow">Su</span>
+        <span class="cal-dow">Mo</span>
+        <span class="cal-dow">Tu</span>
+        <span class="cal-dow">We</span>
+        <span class="cal-dow">Th</span>
+        <span class="cal-dow">Fr</span>
+        <span class="cal-dow">Sa</span>
+      </div>
+      <div class="cal-grid" id="cal-grid"></div>
+    </div>
+
+    <!-- SCROLL CONTENT -->
+    <div class="scroll-area" id="scroll-area">
+      <div id="offline-notice" style="display:none">
+        <div class="offline-badge">
+          <span class="offline-dot"></span>
+          Showing cached data
+        </div>
+      </div>
+      <div id="compare-content"></div>
+      <div id="chart-content"></div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav">
+      <a class="nav-item" href="/workouts">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 4v6m0 4v6M18 4v6m0 4v6M2 9h4m12 0h4M2 15h4m12 0h4"/>
+        </svg>
+        <span class="nav-label">Workouts</span>
+      </a>
+      <a class="nav-item" href="/checkin">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 11l3 3L22 4"/>
+          <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+        </svg>
+        <span class="nav-label">Check-in</span>
+      </a>
+      <a class="nav-item active" href="/history">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
+        <span class="nav-label">History</span>
+      </a>
+      <a class="nav-item" href="/messages">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+        </svg>
+        <span class="nav-label">Messages</span>
+      </a>
+    </nav>
+
+  </div>
+
+  <!-- CONFIG injected by server -->
+  <script>window.__FITOS__ = __FITOS_CONFIG__;</script>
+
+  <script>
+  (function () {
+    const CACHE_KEY = 'fitos_history_v1';
+    const KG_TO_LB = 2.20462;
+    const MONTH_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const MONTH_LONG  = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+    let unit = localStorage.getItem('fitos_unit') || 'lb';
+    let chartSquat    = null;
+    let chartBW       = null;
+    let chartWellness = null;
+    let chartMeasure  = null;
+    let historyData   = null;
+
+    // Photo compare state: indices into photoCheckins array
+    let compareA = 0;
+    let compareB = 1;
+
+    // Today at midnight (local)
+    const todayDate = new Date();
+    todayDate.setHours(0, 0, 0, 0);
+    const todayISO = toISO(todayDate);
+
+    // Selected date — starts as today
+    let selectedISO = todayISO;
+
+    // Calendar view month (year + month)
+    let calYear  = todayDate.getFullYear();
+    let calMonth = todayDate.getMonth(); // 0-indexed
+
+    // ── DATA RESOLUTION ─────────────────────────────────────────
+    const serverData = (window.__FITOS__ || {}).history;
+    if (serverData) {
+      historyData = serverData;
+      localStorage.setItem(CACHE_KEY, JSON.stringify(serverData));
+    } else {
+      const cached = localStorage.getItem(CACHE_KEY);
+      if (cached) {
+        historyData = JSON.parse(cached);
+        document.getElementById('offline-notice').style.display = '';
+      }
+    }
+
+    // ── HELPERS ──────────────────────────────────────────────────
+    function toISO(d) {
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    }
+
+    function parseISO(isoStr) {
+      // Force local midnight to avoid UTC-offset issues
+      return new Date(isoStr + 'T00:00:00');
+    }
+
+    function fmtDate(isoStr) {
+      const d = parseISO(isoStr);
+      return MONTH_SHORT[d.getMonth()] + ' ' + d.getDate();
+    }
+
+    function fmtDateLong(isoStr) {
+      const d = parseISO(isoStr);
+      return MONTH_SHORT[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+    }
+
+    function convert(kg) {
+      return unit === 'lb' ? Math.round(kg * KG_TO_LB * 10) / 10 : kg;
+    }
+
+    function movingAvg(arr, n) {
+      return arr.map((_, i) => {
+        if (i < n - 1) return null;
+        const slice = arr.slice(i - n + 1, i + 1);
+        const sum = slice.reduce((a, b) => a + b, 0);
+        return Math.round((sum / n) * 10) / 10;
+      });
+    }
+
+    // Build a Set of ISO date strings that have any data
+    function buildDataDates() {
+      if (!historyData) return new Set();
+      const dates = new Set();
+      (historyData.squatSets   || []).forEach(r => dates.add(r.date));
+      (historyData.bodyweight  || []).forEach(r => dates.add(r.date));
+      (historyData.wellness    || []).forEach(r => dates.add(r.date));
+      (historyData.measurements|| []).forEach(r => dates.add(r.date));
+      return dates;
+    }
+
+    // ── UNIT CONVERSION ──────────────────────────────────────────
+    const CM_TO_IN = 0.393701;
+
+    const dataDates = buildDataDates();
+
+    // Shared chart style defaults
+    function baseLineDataset(color, dashed) {
+      return {
+        borderColor: color,
+        backgroundColor: 'transparent',
+        borderWidth: dashed ? 1.5 : 2,
+        borderDash: dashed ? [5, 4] : [],
+        pointRadius: dashed ? 0 : 3,
+        pointHoverRadius: dashed ? 0 : 5,
+        pointBackgroundColor: color,
+        pointBorderColor: '#FDFAF5',
+        pointBorderWidth: 1.5,
+        tension: 0.35,
+        fill: false,
+        spanGaps: false,
+      };
+    }
+
+    const axisDefaults = {
+      grid: { color: 'rgba(0,0,0,0.05)', drawTicks: false },
+      border: { display: false },
+      ticks: {
+        font: { family: "'Inter', sans-serif", size: 10, weight: '500' },
+        color: '#7A7570',
+        padding: 6,
+        maxRotation: 0,
+        autoSkipPadding: 12,
+      },
+    };
+
+    const tooltipDefaults = {
+      backgroundColor: '#2C2A24',
+      titleFont: { family: "'Inter', sans-serif", size: 11, weight: '600' },
+      bodyFont:  { family: "'Inter', sans-serif", size: 12, weight: '500' },
+      padding: 10,
+      cornerRadius: 8,
+      displayColors: false,
+    };
+
+    // ── UNIT TOGGLE ──────────────────────────────────────────────
+    window.setUnit = function (u) {
+      unit = u;
+      localStorage.setItem('fitos_unit', u);
+      document.getElementById('btn-kg').classList.toggle('active', u === 'kg');
+      document.getElementById('btn-lb').classList.toggle('active', u === 'lb');
+      renderCompare();
+      renderCharts();
+    };
+
+    // Apply stored unit preference to buttons on load
+    document.getElementById('btn-kg').classList.toggle('active', unit === 'kg');
+    document.getElementById('btn-lb').classList.toggle('active', unit === 'lb');
+
+    // ── CALENDAR ─────────────────────────────────────────────────
+
+    window.calNav = function(delta) {
+      calMonth += delta;
+      if (calMonth < 0)  { calMonth = 11; calYear--; }
+      if (calMonth > 11) { calMonth = 0;  calYear++; }
+      renderCalendar();
+    };
+
+    function renderCalendar() {
+      const grid = document.getElementById('cal-grid');
+      const label = document.getElementById('cal-month-label');
+      label.textContent = MONTH_LONG[calMonth] + ' ' + calYear;
+
+      // First day of this month, last day
+      const firstDay = new Date(calYear, calMonth, 1);
+      const lastDay  = new Date(calYear, calMonth + 1, 0);
+
+      // Padding cells before first day (Sunday = 0)
+      const startDow = firstDay.getDay();
+
+      grid.innerHTML = '';
+
+      // Empty leading cells
+      for (let i = 0; i < startDow; i++) {
+        const blank = document.createElement('div');
+        blank.className = 'cal-cell';
+        grid.appendChild(blank);
+      }
+
+      // Day cells
+      for (let d = 1; d <= lastDay.getDate(); d++) {
+        const cellDate = new Date(calYear, calMonth, d);
+        const iso = toISO(cellDate);
+        const isToday    = iso === todayISO;
+        const isSelected = iso === selectedISO;
+        const isFuture   = cellDate > todayDate;
+        const hasData    = dataDates.has(iso);
+
+        const cell = document.createElement('div');
+        cell.className = 'cal-cell';
+        if (isSelected) cell.classList.add('selected');
+        else if (isToday) cell.classList.add('today');
+        if (isFuture)    cell.classList.add('future');
+        if (hasData && !isSelected) cell.classList.add('has-data');
+
+        cell.textContent = d;
+
+        if (!isFuture) {
+          cell.addEventListener('click', function() {
+            selectedISO = iso;
+            renderCalendar();
+            renderCharts();
+            // Don't re-render compare on calendar select — compare has its own pickers
+          });
+        }
+
+        grid.appendChild(cell);
+      }
+
+      // Disable next button if already at current month
+      const now = new Date();
+      const atCurrentMonth = calYear === now.getFullYear() && calMonth === now.getMonth();
+      document.getElementById('cal-next').style.opacity = atCurrentMonth ? '0.3' : '1';
+      document.getElementById('cal-next').style.pointerEvents = atCurrentMonth ? 'none' : '';
+    }
+
+    // ── RENDER CHARTS ────────────────────────────────────────────
+    function renderCharts() {
+      // Destroy existing charts
+      if (chartSquat)    { chartSquat.destroy();    chartSquat    = null; }
+      if (chartBW)       { chartBW.destroy();        chartBW       = null; }
+      if (chartWellness) { chartWellness.destroy();  chartWellness = null; }
+      if (chartMeasure)  { chartMeasure.destroy();   chartMeasure  = null; }
+
+      if (!historyData) {
+        document.getElementById('chart-content').innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">📊</div>
+            <div class="empty-title">No data yet</div>
+            <div class="empty-sub">Your training history will appear here once check-ins are logged.</div>
+          </div>
+        `;
+        return;
+      }
+
+      // Compute windows relative to selected date
+      const anchor = parseISO(selectedISO);
+
+      // Squat: 12-week window ending on selected date
+      const squatStart = new Date(anchor);
+      squatStart.setDate(squatStart.getDate() - 84);
+      const squatFiltered = (historyData.squatSets || []).filter(r => {
+        const d = parseISO(r.date);
+        return d >= squatStart && d <= anchor;
+      });
+
+      // Bodyweight: 90-day window ending on selected date
+      const bwStart = new Date(anchor);
+      bwStart.setDate(bwStart.getDate() - 89);
+      const bwFiltered = (historyData.bodyweight || []).filter(r => {
+        const d = parseISO(r.date);
+        return d >= bwStart && d <= anchor;
+      });
+
+      // Wellness: 30-day window ending on selected date
+      const wellStart = new Date(anchor);
+      wellStart.setDate(wellStart.getDate() - 29);
+      const wellFiltered = (historyData.wellness || []).filter(r => {
+        const d = parseISO(r.date);
+        return d >= wellStart && d <= anchor;
+      });
+
+      // Measurements: 12-week window ending on selected date
+      const measureStart = new Date(anchor);
+      measureStart.setDate(measureStart.getDate() - 84);
+      const measureFiltered = (historyData.measurements || []).filter(r => {
+        const d = parseISO(r.date);
+        return d >= measureStart && d <= anchor;
+      });
+
+      const anyData = squatFiltered.length > 0 || bwFiltered.length > 0 || wellFiltered.length > 0 || measureFiltered.length > 0;
+
+      const isToday = selectedISO === todayISO;
+      const dateLabel = isToday ? 'Today' : fmtDateLong(selectedISO);
+
+      if (!anyData) {
+        document.getElementById('chart-content').innerHTML = `
+          <div class="date-badge">📅 ${dateLabel}</div>
+          <div class="empty-state">
+            <div class="empty-icon">🗓️</div>
+            <div class="empty-title">No data for this date</div>
+            <div class="empty-sub">No workouts or check-ins were recorded in the 12 weeks before ${fmtDate(selectedISO)}.</div>
+          </div>
+        `;
+        return;
+      }
+
+      document.getElementById('chart-content').innerHTML = `
+        <div class="date-badge">📅 ${dateLabel}</div>
+
+        <div class="section-label">Strength</div>
+        <div class="chart-card">
+          <div class="chart-title">Squat Top Set</div>
+          <div class="chart-sub" id="squat-sub">12 weeks to ${fmtDate(selectedISO)}</div>
+          <div class="chart-container"><canvas id="chart-squat"></canvas></div>
+        </div>
+
+        <div class="section-label">Body Composition</div>
+        <div class="chart-card">
+          <div class="chart-title">Bodyweight</div>
+          <div class="chart-sub" id="bw-sub">90 days · 7-day average overlay</div>
+          <div class="chart-container"><canvas id="chart-bw"></canvas></div>
+        </div>
+
+        <div class="section-label">Wellness · 30 days to ${fmtDate(selectedISO)}</div>
+        <div class="chart-card">
+          <div class="chart-title">Daily Wellness</div>
+          <div class="chart-sub">Scale 1–10</div>
+          <div class="chart-container"><canvas id="chart-wellness"></canvas></div>
+          <div class="wellness-legend">
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#5C6B2A"></div>
+              <span class="legend-label">Sleep</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#7B9E3C"></div>
+              <span class="legend-label">Energy</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#C07820"></div>
+              <span class="legend-label">Soreness</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#A83030"></div>
+              <span class="legend-label">Stress</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-label">Measurements · 12 weeks to ${fmtDate(selectedISO)}</div>
+        <div class="chart-card" id="measure-card">
+          <div class="chart-title">Body Circumferences</div>
+          <div class="chart-sub" id="measure-sub">${unit === 'cm' ? 'cm' : 'inches'} · toggle lines in legend</div>
+          <div class="chart-container" style="height:200px"><canvas id="chart-measure"></canvas></div>
+          <div class="measure-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:#5C6B2A"></div><span class="legend-label">Waist</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#7B9E3C"></div><span class="legend-label">Hip</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#C07820"></div><span class="legend-label">Chest</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#6A8FBF"></div><span class="legend-label">L Arm</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#9370AB"></div><span class="legend-label">R Arm</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#C07860"></div><span class="legend-label">L Thigh</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#708070"></div><span class="legend-label">R Thigh</span></div>
+          </div>
+        </div>
+      `;
+
+      buildSquatChart(squatFiltered);
+      buildBWChart(bwFiltered);
+      buildWellnessChart(wellFiltered);
+      buildMeasureChart(measureFiltered);
+    }
+
+    function buildSquatChart(filtered) {
+      if (filtered.length === 0) {
+        document.getElementById('chart-squat').parentElement.parentElement.style.display = 'none';
+        return;
+      }
+
+      const labels = filtered.map(r => fmtDate(r.date));
+      const values = filtered.map(r => convert(r.weight));
+      const unitLabel = unit === 'kg' ? 'kg' : 'lb';
+      document.getElementById('squat-sub').textContent = `12 weeks to ${fmtDate(selectedISO)} · ${unitLabel}`;
+
+      chartSquat = new Chart(document.getElementById('chart-squat'), {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            ...baseLineDataset('#5C6B2A', false),
+            label: `Weight (${unitLabel})`,
+            data: values,
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: { duration: 300 },
+          plugins: {
+            legend: { display: false },
+            tooltip: { ...tooltipDefaults, callbacks: {
+              label: ctx => `${ctx.parsed.y} ${unitLabel}`,
+            }},
+          },
+          scales: {
+            x: { ...axisDefaults, ticks: { ...axisDefaults.ticks, maxTicksLimit: 8 } },
+            y: {
+              ...axisDefaults,
+              ticks: { ...axisDefaults.ticks, callback: v => `${v}` },
+            },
+          },
+        },
+      });
+    }
+
+    function buildBWChart(filtered) {
+      if (filtered.length === 0) {
+        document.getElementById('chart-bw').parentElement.parentElement.style.display = 'none';
+        return;
+      }
+
+      const labels = filtered.map(r => fmtDate(r.date));
+      const values = filtered.map(r => convert(r.weight));
+      const maValues = movingAvg(values, 7);
+      const unitLabel = unit === 'kg' ? 'kg' : 'lb';
+      document.getElementById('bw-sub').textContent = `90 days to ${fmtDate(selectedISO)} · 7-day avg · ${unitLabel}`;
+
+      chartBW = new Chart(document.getElementById('chart-bw'), {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              ...baseLineDataset('rgba(92,107,42,0.35)', false),
+              label: `Bodyweight (${unitLabel})`,
+              data: values,
+              pointRadius: 0,
+              pointHoverRadius: 4,
+              borderWidth: 1.5,
+              tension: 0.2,
+            },
+            {
+              ...baseLineDataset('#5C6B2A', true),
+              label: '7-day avg',
+              data: maValues,
+              borderWidth: 2.5,
+              borderDash: [6, 4],
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: { duration: 300 },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              ...tooltipDefaults,
+              mode: 'index',
+              intersect: false,
+              filter: item => item.dataIndex >= 6,
+              callbacks: {
+                label: ctx => {
+                  const label = ctx.datasetIndex === 0 ? 'Daily' : '7-day avg';
+                  return `${label}: ${ctx.parsed.y} ${unitLabel}`;
+                },
+              },
+            },
+          },
+          scales: {
+            x: { ...axisDefaults, ticks: { ...axisDefaults.ticks, maxTicksLimit: 7 } },
+            y: { ...axisDefaults, ticks: { ...axisDefaults.ticks, callback: v => `${v}` } },
+          },
+        },
+      });
+    }
+
+    function buildWellnessChart(filtered) {
+      if (filtered.length === 0) {
+        document.getElementById('chart-wellness').parentElement.parentElement.style.display = 'none';
+        return;
+      }
+
+      const labels = filtered.map(r => fmtDate(r.date));
+
+      chartWellness = new Chart(document.getElementById('chart-wellness'), {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              ...baseLineDataset('#5C6B2A', false),
+              label: 'Sleep',
+              data: filtered.map(r => r.sleep),
+              pointRadius: 0,
+              pointHoverRadius: 4,
+              tension: 0.4,
+            },
+            {
+              ...baseLineDataset('#7B9E3C', false),
+              label: 'Energy',
+              data: filtered.map(r => r.energy),
+              pointRadius: 0,
+              pointHoverRadius: 4,
+              tension: 0.4,
+            },
+            {
+              ...baseLineDataset('#C07820', false),
+              label: 'Soreness',
+              data: filtered.map(r => r.soreness),
+              pointRadius: 0,
+              pointHoverRadius: 4,
+              tension: 0.4,
+            },
+            {
+              ...baseLineDataset('#A83030', false),
+              label: 'Stress',
+              data: filtered.map(r => r.stress),
+              pointRadius: 0,
+              pointHoverRadius: 4,
+              tension: 0.4,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: { duration: 300 },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              ...tooltipDefaults,
+              mode: 'index',
+              intersect: false,
+              callbacks: {
+                label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y}`,
+              },
+            },
+          },
+          scales: {
+            x: { ...axisDefaults, ticks: { ...axisDefaults.ticks, maxTicksLimit: 8 } },
+            y: {
+              ...axisDefaults,
+              min: 0,
+              max: 10,
+              ticks: { ...axisDefaults.ticks, stepSize: 2 },
+            },
+          },
+        },
+      });
+    }
+
+    function buildMeasureChart(filtered) {
+      if (!filtered || filtered.length === 0) {
+        const card = document.getElementById('measure-card');
+        if (card) card.style.display = 'none';
+        return;
+      }
+
+      const labels = filtered.map(r => fmtDate(r.date));
+      const unitLabel = unit === 'cm' ? 'cm' : 'in';
+      const conv = unit === 'cm' ? (v => v) : (v => v != null ? Math.round(v * CM_TO_IN * 10) / 10 : null);
+
+      if (document.getElementById('measure-sub')) {
+        document.getElementById('measure-sub').textContent = `${unitLabel} · 12 weeks to ${fmtDate(selectedISO)}`;
+      }
+
+      const MEASURE_COLORS = {
+        waist:  '#5C6B2A',
+        hip:    '#7B9E3C',
+        chest:  '#C07820',
+        larm:   '#6A8FBF',
+        rarm:   '#9370AB',
+        lthigh: '#C07860',
+        rthigh: '#708070',
+      };
+
+      const MEASURE_LABELS = {
+        waist: 'Waist', hip: 'Hip', chest: 'Chest',
+        larm: 'L Arm', rarm: 'R Arm', lthigh: 'L Thigh', rthigh: 'R Thigh',
+      };
+
+      const datasets = Object.keys(MEASURE_COLORS).map(key => ({
+        ...baseLineDataset(MEASURE_COLORS[key], false),
+        label: `${MEASURE_LABELS[key]} (${unitLabel})`,
+        data: filtered.map(r => r[key] != null ? conv(r[key]) : null),
+        pointRadius: 3,
+        pointHoverRadius: 5,
+        tension: 0.3,
+        borderWidth: 1.8,
+        spanGaps: true,
+      }));
+
+      chartMeasure = new Chart(document.getElementById('chart-measure'), {
+        type: 'line',
+        data: { labels, datasets },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: { duration: 300 },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              ...tooltipDefaults,
+              mode: 'index',
+              intersect: false,
+              callbacks: {
+                label: ctx => ctx.parsed.y != null ? `${ctx.dataset.label.split(' (')[0]}: ${ctx.parsed.y} ${unitLabel}` : null,
+              },
+            },
+          },
+          scales: {
+            x: { ...axisDefaults, ticks: { ...axisDefaults.ticks, maxTicksLimit: 7 } },
+            y: { ...axisDefaults, ticks: { ...axisDefaults.ticks, callback: v => `${v}` } },
+          },
+        },
+      });
+    }
+
+    // ── PHOTO COMPARE ────────────────────────────────────────────
+    function renderCompare() {
+      const container = document.getElementById('compare-content');
+      if (!container) return;
+
+      const photos = (historyData && historyData.photoCheckins) || [];
+      // Build date options from all check-in-like data: bodyweight or measurement dates
+      const checkinDates = [];
+      const seen = new Set();
+      [(historyData && historyData.measurements) || [], (historyData && historyData.bodyweight) || []].forEach(arr => {
+        arr.forEach(r => {
+          if (!seen.has(r.date)) {
+            seen.add(r.date);
+            checkinDates.push(r.date);
+          }
+        });
+      });
+      checkinDates.sort();
+
+      if (checkinDates.length < 2) {
+        container.innerHTML = '';
+        return;
+      }
+
+      // Ensure compare indices are valid
+      const maxIdx = checkinDates.length - 1;
+      if (compareA > maxIdx) compareA = 0;
+      if (compareB > maxIdx) compareB = maxIdx;
+
+      // Find matching photo check-ins for selected dates
+      const dateA = checkinDates[compareA];
+      const dateB = checkinDates[compareB];
+
+      // Find measurement data for delta display
+      const allMeasure = (historyData && historyData.measurements) || [];
+      const allBW      = (historyData && historyData.bodyweight)   || [];
+
+      const mA = allMeasure.find(r => r.date === dateA);
+      const mB = allMeasure.find(r => r.date === dateB);
+      const bwA = allBW.find(r => r.date === dateA);
+      const bwB = allBW.find(r => r.date === dateB);
+
+      // Photo for dates (from photoCheckins seed; real app uses Drive webViewLinks)
+      const phA = photos.find(p => p.date === dateA);
+      const phB = photos.find(p => p.date === dateB);
+
+      const unitLabel = unit === 'kg' ? 'kg' : 'lb';
+      const KG_TO_LB = 2.20462;
+      const convBW = v => v == null ? null : (unit === 'lb' ? Math.round(v * KG_TO_LB * 10) / 10 : v);
+      const convCm = v => v == null ? null : (unit === 'cm' ? v : Math.round(v * CM_TO_IN * 10) / 10);
+      const cmLabel = unit === 'cm' ? 'cm' : 'in';
+
+      function deltaHtml(labelText, valA, valB, lowerIsBetter) {
+        if (valA == null || valB == null) return '';
+        const diff = Math.round((valB - valA) * 10) / 10;
+        const cls = diff === 0 ? 'delta-zero' : (lowerIsBetter ? (diff < 0 ? 'delta-down' : 'delta-up') : (diff > 0 ? 'delta-down' : 'delta-up'));
+        const sign = diff > 0 ? '+' : '';
+        return `<div class="compare-delta-row">
+          <span class="compare-delta-label">${labelText}</span>
+          <span class="compare-delta-val ${cls}">${sign}${diff}</span>
+        </div>`;
+      }
+
+      const bwDelta = deltaHtml(`Bodyweight (${unitLabel})`, convBW(bwA && bwA.weight), convBW(bwB && bwB.weight), true);
+      const waistD  = mA && mB ? deltaHtml(`Waist (${cmLabel})`,   convCm(mA.waist),  convCm(mB.waist),  true) : '';
+      const hipD    = mA && mB ? deltaHtml(`Hip (${cmLabel})`,     convCm(mA.hip),    convCm(mB.hip),    true) : '';
+      const chestD  = mA && mB ? deltaHtml(`Chest (${cmLabel})`,   convCm(mA.chest),  convCm(mB.chest),  false) : '';
+      const armD    = mA && mB ? deltaHtml(`L Arm (${cmLabel})`,   convCm(mA.larm),   convCm(mB.larm),   false) : '';
+
+      const hasDelta = bwDelta || waistD || hipD || chestD || armD;
+
+      // Build select options
+      function optionsHtml(selectedIdx) {
+        return checkinDates.map((d, i) => `<option value="${i}" ${i === selectedIdx ? 'selected' : ''}>${fmtDateLong(d)}</option>`).join('');
+      }
+
+      // Photo slot helper
+      function photoSlotHtml(ph, date, label) {
+        if (ph && ph.photoUrl) {
+          return `<div class="compare-photo-slot">
+            <img src="${ph.photoUrl}" alt="Progress photo ${label}" loading="lazy">
+            <div class="compare-photo-date-badge">${fmtDate(date)}</div>
+          </div>`;
+        }
+        return `<div class="compare-photo-slot">
+          <div class="compare-photo-empty">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+            <div class="compare-photo-empty-text">${fmtDate(date)}<br>No photo</div>
+          </div>
+        </div>`;
+      }
+
+      container.innerHTML = `
+        <div class="section-label">Photo Comparison</div>
+        <div class="compare-section">
+          <div class="compare-header">
+            <div>
+              <div class="compare-title">Side by Side</div>
+              <div class="compare-sub">Select two dates to compare</div>
+            </div>
+          </div>
+          <div class="compare-pickers">
+            <div class="compare-picker-wrap">
+              <div class="compare-picker-label">Before</div>
+              <select class="compare-date-select" onchange="setCompareA(parseInt(this.value))">
+                ${optionsHtml(compareA)}
+              </select>
+            </div>
+            <div class="compare-picker-wrap">
+              <div class="compare-picker-label">After</div>
+              <select class="compare-date-select" onchange="setCompareB(parseInt(this.value))">
+                ${optionsHtml(compareB)}
+              </select>
+            </div>
+          </div>
+          <div class="compare-photos">
+            ${photoSlotHtml(phA, dateA, 'before')}
+            ${photoSlotHtml(phB, dateB, 'after')}
+          </div>
+          ${hasDelta ? `<div class="compare-deltas">${bwDelta}${waistD}${hipD}${chestD}${armD}</div>` : ''}
+        </div>
+      `;
+    }
+
+    window.setCompareA = function(idx) {
+      compareA = idx;
+      renderCompare();
+    };
+
+    window.setCompareB = function(idx) {
+      compareB = idx;
+      renderCompare();
+    };
+
+    // ── INIT ─────────────────────────────────────────────────────
+    renderCalendar();
+    renderCompare();
+    renderCharts();
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    }
+
+  })();
+  </script>
+</body>
+</html>
