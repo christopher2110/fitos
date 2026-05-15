@@ -1,0 +1,166 @@
+{
+  "id": "greyskull-lp",
+  "slug": "greyskull-lp",
+  "name": "Greyskull LP",
+  "author": "John Sheaffer (JP)",
+  "source": "Greyskull LP, 2nd ed. (John Sheaffer, 2012) — public programming methodology",
+  "goal": "strength",
+  "difficulty": "beginner",
+  "daysPerWeek": 3,
+  "durationWeeks": 12,
+  "description": "Greyskull takes Starting Strength's linear progression and adds AMRAP sets, chin-ups, and optional plug-ins for size. Sets 1-2 are prescribed weight, the third set is AMRAP — driving accumulation beyond just adding weight. Excellent for athletes who want to gain strength and size simultaneously.",
+  "equipment": ["barbell", "rack", "bench", "pull-up bar"],
+  "tags": ["strength", "beginner", "linear-progression", "amrap"],
+  "weeks": [
+    {
+      "week": 1,
+      "label": "Week 1 — Learn the AMRAP",
+      "phase": "Linear Progression",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Workout A",
+          "exercises": [
+            { "name": "Bench Press", "sets": "2+1 AMRAP", "reps": "5/5/AMRAP", "load": "Start light", "rest": "180", "notes": "First two sets of 5, last set AMRAP. Stop 1 rep before true failure." },
+            { "name": "Overhead Press", "sets": "2+1 AMRAP", "reps": "5/5/AMRAP", "load": "Start light", "rest": "180", "notes": "Alternates with bench each workout." },
+            { "name": "Deadlift", "sets": "1", "reps": "5", "load": "Start moderate", "rest": "300", "notes": "Greyskull keeps DL lighter than SS — focus on perfect reps." },
+            { "name": "Chin-Up", "sets": "3", "reps": "AMRAP", "load": "BW or assisted", "rest": "90", "notes": "3 sets of as many as possible." }
+          ]
+        },
+        {
+          "day": "Wednesday",
+          "focus": "Workout B",
+          "exercises": [
+            { "name": "Back Squat", "sets": "2+1 AMRAP", "reps": "5/5/AMRAP", "load": "Start light", "rest": "210", "notes": "The AMRAP set is what drives Greyskull's size gains." },
+            { "name": "Bench Press", "sets": "2+1 AMRAP", "reps": "5/5/AMRAP", "load": "+5 lb from Monday", "rest": "180", "notes": "" },
+            { "name": "Deadlift", "sets": "1", "reps": "5", "load": "+10 lb from Monday", "rest": "300", "notes": "" },
+            { "name": "Chin-Up", "sets": "3", "reps": "AMRAP", "load": "BW", "rest": "90", "notes": "" }
+          ]
+        },
+        {
+          "day": "Friday",
+          "focus": "Workout A",
+          "exercises": [
+            { "name": "Bench Press", "sets": "2+1 AMRAP", "reps": "5/5/AMRAP", "load": "+5 lb from Wednesday", "rest": "180", "notes": "" },
+            { "name": "Overhead Press", "sets": "2+1 AMRAP", "reps": "5/5/AMRAP", "load": "+5 lb from Monday", "rest": "180", "notes": "" },
+            { "name": "Deadlift", "sets": "1", "reps": "5", "load": "+10 lb from Wednesday", "rest": "300", "notes": "" },
+            { "name": "Chin-Up", "sets": "3", "reps": "AMRAP", "load": "BW", "rest": "90", "notes": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 2,
+      "label": "Week 2 — Linear Progress",
+      "phase": "Linear Progression",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Workout B",
+          "exercises": [
+            { "name": "Back Squat", "sets": "2+1 AMRAP", "reps": "5/5/AMRAP", "load": "+10 lb from Friday", "rest": "210", "notes": "" },
+            { "name": "Bench Press", "sets": "2+1 AMRAP", "reps": "5/5/AMRAP", "load": "+5 lb", "rest": "180", "notes": "" },
+            { "name": "Deadlift", "sets": "1", "reps": "5", "load": "+10 lb", "rest": "300", "notes": "" },
+            { "name": "Chin-Up", "sets": "3", "reps": "AMRAP", "load": "BW", "rest": "90", "notes": "" }
+          ]
+        },
+        {
+          "day": "Wednesday",
+          "focus": "Workout A",
+          "exercises": [
+            { "name": "Bench Press", "sets": "2+1 AMRAP", "reps": "5/5/AMRAP", "load": "+5 lb", "rest": "180", "notes": "" },
+            { "name": "Overhead Press", "sets": "2+1 AMRAP", "reps": "5/5/AMRAP", "load": "+5 lb", "rest": "180", "notes": "" },
+            { "name": "Deadlift", "sets": "1", "reps": "5", "load": "+10 lb", "rest": "300", "notes": "" },
+            { "name": "Chin-Up", "sets": "3", "reps": "AMRAP", "load": "BW", "rest": "90", "notes": "" }
+          ]
+        },
+        {
+          "day": "Friday",
+          "focus": "Workout B",
+          "exercises": [
+            { "name": "Back Squat", "sets": "2+1 AMRAP", "reps": "5/5/AMRAP", "load": "+10 lb", "rest": "210", "notes": "" },
+            { "name": "Bench Press", "sets": "2+1 AMRAP", "reps": "5/5/AMRAP", "load": "+5 lb", "rest": "180", "notes": "" },
+            { "name": "Deadlift", "sets": "1", "reps": "5", "load": "+10 lb", "rest": "300", "notes": "" },
+            { "name": "Chin-Up", "sets": "3", "reps": "AMRAP", "load": "BW", "rest": "90", "notes": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 3,
+      "label": "Week 3 — Continue Progress",
+      "phase": "Linear Progression",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Workout A",
+          "exercises": [
+            { "name": "Bench Press", "sets": "2+1 AMRAP", "reps": "5/5/AMRAP", "load": "+5 lb", "rest": "180", "notes": "" },
+            { "name": "Overhead Press", "sets": "2+1 AMRAP", "reps": "5/5/AMRAP", "load": "+5 lb", "rest": "180", "notes": "" },
+            { "name": "Deadlift", "sets": "1", "reps": "5", "load": "+10 lb", "rest": "300", "notes": "" },
+            { "name": "Chin-Up", "sets": "3", "reps": "AMRAP", "load": "BW + small weight if easy", "rest": "90", "notes": "" }
+          ]
+        },
+        {
+          "day": "Wednesday",
+          "focus": "Workout B",
+          "exercises": [
+            { "name": "Back Squat", "sets": "2+1 AMRAP", "reps": "5/5/AMRAP", "load": "+10 lb", "rest": "210", "notes": "" },
+            { "name": "Bench Press", "sets": "2+1 AMRAP", "reps": "5/5/AMRAP", "load": "+5 lb", "rest": "180", "notes": "" },
+            { "name": "Deadlift", "sets": "1", "reps": "5", "load": "+10 lb", "rest": "300", "notes": "" },
+            { "name": "Chin-Up", "sets": "3", "reps": "AMRAP", "load": "BW", "rest": "90", "notes": "" }
+          ]
+        },
+        {
+          "day": "Friday",
+          "focus": "Workout A",
+          "exercises": [
+            { "name": "Bench Press", "sets": "2+1 AMRAP", "reps": "5/5/AMRAP", "load": "+5 lb", "rest": "180", "notes": "" },
+            { "name": "Overhead Press", "sets": "2+1 AMRAP", "reps": "5/5/AMRAP", "load": "+5 lb", "rest": "180", "notes": "" },
+            { "name": "Deadlift", "sets": "1", "reps": "5", "load": "+10 lb", "rest": "300", "notes": "" },
+            { "name": "Chin-Up", "sets": "3", "reps": "AMRAP", "load": "BW", "rest": "90", "notes": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 4,
+      "label": "Week 4 — First Resets if Needed",
+      "phase": "Linear Progression",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Workout B",
+          "exercises": [
+            { "name": "Back Squat", "sets": "2+1 AMRAP", "reps": "5/5/AMRAP", "load": "+10 lb or reset 10% if failed last session", "rest": "210", "notes": "Greyskull reset: if AMRAP <5 reps twice in a row, drop 10% and rebuild." },
+            { "name": "Bench Press", "sets": "2+1 AMRAP", "reps": "5/5/AMRAP", "load": "+5 lb", "rest": "180", "notes": "" },
+            { "name": "Deadlift", "sets": "1", "reps": "5", "load": "+10 lb", "rest": "300", "notes": "" },
+            { "name": "Chin-Up", "sets": "3", "reps": "AMRAP", "load": "BW", "rest": "90", "notes": "" }
+          ]
+        },
+        {
+          "day": "Wednesday",
+          "focus": "Workout A",
+          "exercises": [
+            { "name": "Bench Press", "sets": "2+1 AMRAP", "reps": "5/5/AMRAP", "load": "Continue progression", "rest": "180", "notes": "" },
+            { "name": "Overhead Press", "sets": "2+1 AMRAP", "reps": "5/5/AMRAP", "load": "Continue progression", "rest": "180", "notes": "" },
+            { "name": "Deadlift", "sets": "1", "reps": "5", "load": "Continue progression", "rest": "300", "notes": "" },
+            { "name": "Chin-Up", "sets": "3", "reps": "AMRAP", "load": "BW", "rest": "90", "notes": "" }
+          ]
+        },
+        {
+          "day": "Friday",
+          "focus": "Workout B",
+          "exercises": [
+            { "name": "Back Squat", "sets": "2+1 AMRAP", "reps": "5/5/AMRAP", "load": "Continue progression", "rest": "210", "notes": "" },
+            { "name": "Bench Press", "sets": "2+1 AMRAP", "reps": "5/5/AMRAP", "load": "Continue progression", "rest": "180", "notes": "" },
+            { "name": "Deadlift", "sets": "1", "reps": "5", "load": "Continue progression", "rest": "300", "notes": "" },
+            { "name": "Chin-Up", "sets": "3", "reps": "AMRAP", "load": "BW", "rest": "90", "notes": "" }
+          ]
+        }
+      ]
+    }
+  ],
+  "progression": "Add 5 lb per session to bench/press, 10 lb per session to squat/deadlift. AMRAP set triggers reset: if AMRAP is <5 reps for two consecutive sessions on same lift, drop the weight 10% and rebuild.",
+  "notes": "Squat alternates A/B — Workout A has bench+OHP, Workout B has bench. Squat is every session in both. Chin-ups are non-negotiable — they are the program's back work."
+}
