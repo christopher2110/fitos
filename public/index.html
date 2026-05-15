@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitOS — Coaching Software You Own. $497, Lifetime.</title>
+  <meta name="description" content="FitOS is a coaching management system for personal trainers. Google Sheets as your database, PWA for clients, AI Program Builder included. $497 once — no subscriptions." />
+  <link rel="canonical" href="https://fitos-zc11.polsia.app/" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="FitOS — Coaching Software You Own. $497, Lifetime." />
+  <meta property="og:description" content="The coaching platform that runs on Google Sheets. No per-client fees, no lock-in, no subscriptions. Buy once, own forever." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://fitos-zc11.polsia.app/" />
+  <meta property="og:image" content="https://fitos-zc11.polsia.app/og/home.svg" />
+  <meta property="og:site_name" content="FitOS" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="FitOS — Coaching Software You Own. $497, Lifetime." />
+  <meta name="twitter:description" content="The coaching platform that runs on Google Sheets. No per-client fees, no lock-in, no subscriptions. Buy once, own forever." />
+  <meta name="twitter:image" content="https://fitos-zc11.polsia.app/og/home.svg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── STICKY HEADER ──────────────────────────────────── */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(245,241,232,0.92);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(221,216,202,0.6);
+      padding: 0 48px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .site-header-logo {
+      font-family: 'Fraunces', serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: #3D4A1A;
+      letter-spacing: -0.02em;
+      text-decoration: none;
+    }
+
+    .site-header-nav {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .site-header-link {
+      font-size: 13px;
+      font-weight: 500;
+      color: #7A7570;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .site-header-link:hover { color: #2C2A24; }
+
+    .site-header-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #5C6E3F;
+      color: #FDFAF5;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 9px 18px;
+      border-radius: 22px;
+      text-decoration: none;
+      transition: background 0.18s, transform 0.12s;
+      letter-spacing: 0.01em;
+    }
+
+    .site-header-cta:hover {
+      background: #3D4A1A;
+      transform: translateY(-1px);
+    }
+
+    /* ── TRIAL HERO BANNER ──────────────────────────────── */
+    .trial-hero {
+      background: #3D4A1A;
+      padding: 72px 48px 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .trial-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 15% 85%, rgba(138,150,80,0.18) 0%, transparent 55%),
+        radial-gradient(circle at 85% 15%, rgba(92,110,63,0.14) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .trial-hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      color: #8A9650;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      background: rgba(138,150,80,0.15);
+      border: 1px solid rgba(138,150,80,0.3);
+      padding: 6px 14px;
+      border-radius: 20px;
+      margin-bottom: 28px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .trial-hero-kicker .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #5CBF6A;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(92,191,106,0.5); }
+      50% { opacity: 0.8; box-shadow: 0 0 0 5px rgba(92,191,106,0); }
+    }
+
+    .trial-hero-headline {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 700;
+      line-height: 1.06;
+      letter-spacing: -0.03em;
+      color: #F5F1E8;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .trial-hero-headline em {
+      font-style: italic;
+      color: #8A9650;
+    }
+
+    .trial-hero-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 17px;
+      line-height: 1.65;
+      color: rgba(245,241,232,0.7);
+      max-width: 520px;
+      margin: 0 auto 36px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .trial-hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #5C6E3F;
+      color: #FDFAF5;
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 16px 32px;
+      border-radius: 50px;
+      text-decoration: none;
+      transition: background 0.18s, transform 0.15s, box-shadow 0.18s;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .trial-hero-cta:hover {
+      background: #4a5c32;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+
+    .trial-hero-cta .arrow {
+      transition: transform 0.18s;
+    }
+
+    .trial-hero-cta:hover .arrow { transform: translateX(4px); }
+
+    .trial-trust-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 20px;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .trial-trust-item {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      color: rgba(245,241,232,0.5);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .trial-trust-item::before { content: '·'; opacity: 0.4; display: none; }
+    .trial-trust-item + .trial-trust-item::before { display: inline; }
+
+    /* ── DEMO DIVIDER ───────────────────────────────────── */
+    .demo-divider {
+      text-align: center;
+      padding: 40px 48px 0;
+    }
+
+    .demo-divider-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      color: #7A7570;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .demo-divider-label::before,
+    .demo-divider-label::after {
+      content: '';
+      display: block;
+      height: 1px;
+      width: 60px;
+      background: #DDD8CA;
+    }
+
+    @media (max-width: 768px) {
+      .site-header { padding: 0 20px; }
+      .site-header-nav .site-header-link { display: none; }
+      .trial-hero { padding: 56px 24px 64px; }
+      .trial-hero-headline { font-size: 2.2rem; }
+      .demo-divider { padding: 32px 24px 0; }
+    }
+
+    @media (max-width: 480px) {
+      .trial-hero { padding: 48px 20px 56px; }
+      .trial-hero-sub { font-size: 15px; }
+      .trial-hero-cta { font-size: 15px; padding: 14px 28px; }
+    }
+
+    :root {
+      --cream:       #F5F1E8;
+      --cream-light: #FDFAF5;
+      --cream-mid:   #EDE6D8;
+      --olive:       #5C6E3F;
+      --olive-dark:  #3D4A1A;
+      --olive-muted: #8A9650;
+      --olive-pale:  #E8EDD6;
+      --text:        #2C2A24;
+      --text-muted:  #7A7570;
+      --border:      #DDD8CA;
+      --phone-bg:    #1C1C1E;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── HEADER ─────────────────────────────────────────── */
+    .page-header {
+      padding: 40px 48px 0;
+      max-width: 1360px;
+      margin: 0 auto;
+    }
+
+    .breadcrumb {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--olive);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: var(--olive-pale);
+      border: 1px solid rgba(92, 110, 63, 0.25);
+      padding: 6px 14px;
+      border-radius: 20px;
+      margin-bottom: 28px;
+    }
+
+    .breadcrumb .dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--olive-muted);
+      flex-shrink: 0;
+    }
+
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #5CBF6A;
+      flex-shrink: 0;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(92,191,106,0.4); }
+      50% { opacity: 0.8; box-shadow: 0 0 0 4px rgba(92,191,106,0); }
+    }
+
+    .hero-headline {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 700;
+      line-height: 1.12;
+      letter-spacing: -0.025em;
+      color: var(--text);
+      max-width: 780px;
+      margin-bottom: 16px;
+    }
+
+    .hero-headline em {
+      font-style: italic;
+      color: var(--olive);
+    }
+
+    .hero-sub {
+      font-size: 16px;
+      color: var(--text-muted);
+      max-width: 680px;
+      line-height: 1.65;
+      margin-bottom: 24px;
+    }
+
+    .cta-pill {
+      display: inline-block;
+      background: var(--olive);
+      color: var(--cream-light);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: 24px;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.15s ease;
+      margin-bottom: 40px;
+      border: none;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .cta-pill:hover {
+      background: var(--olive-dark);
+      transform: translateY(-1px);
+    }
+
+    /* ── THREE-COLUMN LAYOUT ────────────────────────────── */
+    .preview-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px 1fr;
+      gap: 0 32px;
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 0 48px 80px;
+      align-items: start;
+    }
+
+    /* ── PHONE MOCKUP ───────────────────────────────────── */
+    .phone-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: sticky;
+      top: 24px;
+    }
+
+    .phone-frame {
+      width: 320px;
+      height: 680px;
+      background: var(--phone-bg);
+      border-radius: 50px;
+      padding: 14px;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.08),
+        0 60px 120px rgba(44,42,36,0.30),
+        0 20px 40px rgba(44,42,36,0.15),
+        inset 0 0 0 1px rgba(255,255,255,0.06);
+      position: relative;
+    }
+
+    /* Side buttons */
+    .phone-frame::before {
+      content: '';
+      position: absolute;
+      left: -3px;
+      top: 120px;
+      width: 3px;
+      height: 36px;
+      background: #2a2a2a;
+      border-radius: 2px 0 0 2px;
+      box-shadow: 0 48px 0 #2a2a2a, 0 90px 0 #2a2a2a;
+    }
+    .phone-frame::after {
+      content: '';
+      position: absolute;
+      right: -3px;
+      top: 150px;
+      width: 3px;
+      height: 64px;
+      background: #2a2a2a;
+      border-radius: 0 2px 2px 0;
+    }
+
+    .phone-inner {
+      width: 100%;
+      height: 100%;
+      background: #F4EFE6;
+      border-radius: 38px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Status bar */
+    .phone-status {
+      height: 44px;
+      background: #F4EFE6;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 0 20px 8px;
+      flex-shrink: 0;
+      z-index: 10;
+      position: relative;
+    }
+
+    /* Dynamic island */
+    .phone-island {
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 92px;
+      height: 26px;
+      background: var(--phone-bg);
+      border-radius: 20px;
+    }
+
+    .status-time {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      letter-spacing: 0.03em;
+    }
+
+    .status-icons {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .status-signal {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 12px;
+    }
+
+    .signal-bar {
+      width: 3px;
+      background: var(--text);
+      border-radius: 1px;
+    }
+
+    .status-wifi {
+      width: 14px;
+      height: 10px;
+      color: var(--text);
+    }
+
+    .status-battery {
+      display: flex;
+      align-items: center;
+      gap: 1px;
+    }
+
+    .battery-body {
+      width: 20px;
+      height: 10px;
+      border: 1.5px solid var(--text);
+      border-radius: 2.5px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .battery-fill {
+      position: absolute;
+      left: 1px;
+      top: 1px;
+      height: calc(100% - 2px);
+      width: 80%;
+      background: var(--text);
+      border-radius: 1.5px;
+    }
+
+    .battery-tip {
+      width: 2px;
+      height: 5px;
+      background: var(--text);
+      border-radius: 0 1px 1px 0;
+      opacity: 0.4;
+    }
+
+    /* iframe container */
+    .phone-content {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .phone-content iframe {
+      width: 390px;
+      height: 844px;
+      border: none;
+      transform: scale(0.748);
+      transform-origin: top left;
+      pointer-events: auto;
+    }
+
+    /* Tab nav in phone frame */
+    .phone-nav {
+      background: #FDFAF5;
+      border-top: 1px solid #DDD8CA;
+      display: flex;
+      padding: 0 8px;
+      height: 56px;
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    .phone-nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 6px 4px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      border-radius: 10px;
+      transition: background 0.15s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .phone-nav-item:active { background: #EDE6D8; }
+
+    .phone-nav-icon {
+      width: 20px;
+      height: 20px;
+      color: #7A7570;
+      transition: color 0.15s ease;
+    }
+
+    .phone-nav-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 9px;
+      font-weight: 600;
+      color: #7A7570;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: color 0.15s ease;
+    }
+
+    .phone-nav-item.active .phone-nav-icon { color: #5C6E3F; }
+    .phone-nav-item.active .phone-nav-label { color: #5C6E3F; }
+
+    /* Home indicator */
+    .phone-home {
+      height: 22px;
+      background: #F4EFE6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .home-bar {
+      width: 100px;
+      height: 4px;
+      background: rgba(44,42,36,0.2);
+      border-radius: 3px;
+    }
+
+    .phone-label {
+      margin-top: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    .nav-hint {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    /* ── LEFT + RIGHT COLUMNS ───────────────────────────── */
+    .info-col {
+      padding-top: 8px;
+    }
+
+    .col-heading {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--olive);
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+
+    .col-title {
+      font-family: 'Fraunces', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 14px;
+    }
+
+    .col-title em {
+      font-style: italic;
+      color: var(--olive);
+    }
+
+    .col-para {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.65;
+      margin-bottom: 10px;
+    }
+
+    .col-para strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .col-para code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      background: var(--cream-mid);
+      padding: 1px 5px;
+      border-radius: 4px;
+      color: var(--olive-dark);
+    }
+
+    /* Section blocks */
+    .info-block {
+      margin-top: 24px;
+    }
+
+    .block-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--olive);
+      background: var(--olive-pale);
+      border: 1px solid rgba(92,110,63,0.2);
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+
+    .block-title {
+      font-family: 'Fraunces', serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+
+    /* Interaction pills */
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .pill {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 12px;
+      background: var(--cream-mid);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    .pill.active {
+      background: var(--olive-pale);
+      color: var(--olive-dark);
+      border-color: rgba(92,110,63,0.2);
+    }
+
+    /* Data legend */
+    .legend-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .legend-key {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+      min-width: 72px;
+      flex-shrink: 0;
+    }
+
+    .legend-val {
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    /* "When you install" checklist-style items */
+    .install-section {
+      margin-top: 20px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      background: var(--cream-light);
+    }
+
+    .install-row {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .install-row:last-child { border-bottom: none; }
+
+    .install-row-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .install-row-label.green  { color: #4B7A4F; }
+    .install-row-label.amber  { color: #956E20; }
+    .install-row-label.gray   { color: var(--text-muted); }
+
+    .install-items {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .install-item {
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      line-height: 1.4;
+    }
+
+    .install-item::before {
+      content: '·';
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* FAQ */
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .faq-item {
+      background: var(--cream-light);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+    }
+
+    .faq-q {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+
+    .faq-a {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--olive-dark);
+    }
+
+    /* Code block */
+    .code-block {
+      background: var(--text);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-top: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #ccd0bb;
+      line-height: 1.7;
+    }
+
+    .code-block .cmd { color: #A8C373; }
+    .code-block .comment { color: #6B7558; }
+
+    /* ── MOBILE ─────────────────────────────────────────── */
+    @media (max-width: 1100px) {
+      .preview-grid {
+        grid-template-columns: 1fr;
+        padding: 0 24px 60px;
+        gap: 40px;
+      }
+
+      .page-header {
+        padding: 32px 24px 0;
+      }
+
+      .phone-col {
+        position: static;
+        order: -1;
+      }
+
+      .info-col:first-child {
+        order: 0;
+      }
+
+      .info-col:last-child {
+        order: 1;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-headline { font-size: 1.7rem; }
+      .phone-frame {
+        width: 280px;
+        height: 594px;
+      }
+      .phone-content iframe {
+        transform: scale(0.656);
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── STICKY HEADER ───────────────────────────────────── -->
+<header class="site-header">
+  <a href="/" class="site-header-logo">FitOS</a>
+  <nav class="site-header-nav">
+    <a href="/pricing" class="site-header-link">Pricing</a>
+    <a href="/vs/trainerize" class="site-header-link">Compare</a>
+    <a href="/demo" class="site-header-link">Live Demo</a>
+    <a href="/dashboard" class="site-header-link">Sign In</a>
+    <a href="/trial/signup" class="site-header-cta">
+      Start Free Trial <span style="opacity:0.7;font-size:12px">→</span>
+    </a>
+  </nav>
+</header>
+
+<!-- ── TRIAL HERO ──────────────────────────────────────── -->
+<section class="trial-hero">
+  <div class="trial-hero-kicker">
+    <span class="live-dot"></span>
+    14 days free · No credit card required
+  </div>
+
+  <h1 class="trial-hero-headline">
+    Try FitOS free<br>
+    <em>for 14 days.</em>
+  </h1>
+
+  <p class="trial-hero-sub">
+    Add your clients, run real workouts, see the AI insights.
+    Your data lives in your Google Sheet — you own it forever.
+  </p>
+
+  <div style="display:flex;flex-direction:column;align-items:center;gap:14px;position:relative;z-index:1">
+    <a href="/trial/signup" class="trial-hero-cta">
+      Start Free Trial <span class="arrow">→</span>
+    </a>
+    <a href="/demo" style="font-size:14px;font-weight:500;color:rgba(245,241,232,0.6);text-decoration:none;border-bottom:1px solid rgba(245,241,232,0.25);padding-bottom:2px;transition:color 0.15s,border-color 0.15s" onmouseover="this.style.color='rgba(245,241,232,0.9)';this.style.borderColor='rgba(245,241,232,0.5)'" onmouseout="this.style.color='rgba(245,241,232,0.6)';this.style.borderColor='rgba(245,241,232,0.25)'">
+      See a live demo first →
+    </a>
+  </div>
+
+  <div class="trial-trust-row">
+    <span class="trial-trust-item">Open source · MIT licensed</span>
+    <span class="trial-trust-item">Your data stays in your Google Sheet</span>
+    <span class="trial-trust-item">Cancel anytime</span>
+    <span class="trial-trust-item">$497 one-time if you love it</span>
+    <span class="trial-trust-item" id="deploy-counter-item" style="display:none">
+      <span id="deploy-counter-label">— coaches self-hosted</span>
+    </span>
+  </div>
+</section>
+
+<!-- ── DEMO DIVIDER ────────────────────────────────────── -->
+<div class="demo-divider">
+  <span class="demo-divider-label">Interactive PWA Demo Below</span>
+</div>
+
+<!-- ── PAGE HEADER ─────────────────────────────────────── -->
+<div class="page-header">
+  <div class="breadcrumb">
+    <span class="pulse-dot"></span>
+    FITOS
+    <span class="dot"></span>
+    RUNNING PWA
+    <span class="dot"></span>
+    LIVE PREVIEW
+  </div>
+
+  <h1 class="hero-headline">
+    This is what your client sees<br>
+    <em>when they open the app.</em>
+  </h1>
+
+  <p class="hero-sub">
+    All four screens, all interactive — same data, colors, fonts, and behavior as the app you're about to install.
+    Tap exercises, switch tabs, type a message, submit a check-in.
+  </p>
+
+  <p class="hero-sub" style="margin-top:-12px; font-size:14px;">
+    ✦&nbsp; Runs on Claude Code — bring your own Anthropic key, import any skill.
+    <a href="/docs/agents" style="color:var(--olive); font-weight:600; text-decoration:none; border-bottom:1px solid var(--olive-muted);">Learn how →</a>
+  </p>
+
+  <button class="cta-pill" onclick="document.querySelector('.phone-frame').scrollIntoView({behavior:'smooth', block:'center'})">
+    ↓ Try the live PWA demo
+  </button>
+</div>
+
+<!-- ── THREE-COLUMN LAYOUT ─────────────────────────────── -->
+<div class="preview-grid">
+
+  <!-- LEFT: WHAT YOU'RE SEEING -->
+  <div class="info-col">
+    <div class="col-heading">What you're seeing</div>
+    <div class="col-title">The PWA, <em>rendered<br>with mock data.</em></div>
+
+    <p class="col-para">
+      Every pixel here matches what the running app will produce.
+      Same colors (<strong>#5C6E3F</strong> olive accent, <strong>#F4EFE6</strong> cream background),
+      same typography (Fraunces serif headlines, Inter body, JetBrains Mono for numbers),
+      same component structure, same interactions.
+    </p>
+    <p class="col-para">
+      The only difference: data is hardcoded inline instead of fetched from <code>/api/sheet/*</code>.
+      When you run <code>npm install && npm run dev</code>, you'll see the same screens — just with live API plumbing.
+    </p>
+
+    <!-- NOW SHOWING block -->
+    <div class="info-block">
+      <div class="block-label">Now Showing · Workouts</div>
+      <div class="block-title">Today's session</div>
+      <p class="col-para">
+        The <strong>week strip</strong> shows Mon–Sun. Olive background = today. Dots beneath day numbers = workout scheduled.
+        Tap any day to jump to that session.
+      </p>
+      <p class="col-para">
+        Each <strong>exercise card</strong> is live: tap to expand, checkbox fills olive on completion, enter weight, tap a
+        different day in the strip.
+      </p>
+      <div class="pill-row">
+        <span class="pill active">Tap day strip</span>
+        <span class="pill active">Check off exercises</span>
+        <span class="pill active">Enter weight</span>
+        <span class="pill active">Progress bar updates</span>
+        <span class="pill">Offline-first</span>
+        <span class="pill">PWA installable</span>
+      </div>
+    </div>
+
+    <!-- MOCK DATA LEGEND -->
+    <div class="info-block">
+      <div class="block-label">Mock data legend</div>
+      <div class="legend-list">
+        <div class="legend-item">
+          <span class="legend-key">Client</span>
+          <span class="legend-val">Alex Rivera (demo client)</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-key">Today</span>
+          <span class="legend-val">Wednesday W3-D3 Lower Heavy</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-key">Pre-done</span>
+          <span class="legend-val">Squat (8/8), RDL (7/7) → green rows</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-key">Energy</span>
+          <span class="legend-val">8 → 7 → 6 (deload due next week)</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-key">Bodyweight</span>
+          <span class="legend-val">192.4 → 192.0 → 191.6 lb (3 weeks)</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-key">Messages</span>
+          <span class="legend-val">Coach note from this morning</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CENTER: PHONE MOCKUP -->
+  <div class="phone-col">
+    <div class="phone-frame">
+      <div class="phone-inner">
+
+        <!-- Status bar -->
+        <div class="phone-status">
+          <div class="phone-island"></div>
+          <span class="status-time">9:11</span>
+          <div class="status-icons">
+            <!-- Signal bars -->
+            <div class="status-signal">
+              <div class="signal-bar" style="height:4px"></div>
+              <div class="signal-bar" style="height:7px"></div>
+              <div class="signal-bar" style="height:10px"></div>
+              <div class="signal-bar" style="height:12px"></div>
+            </div>
+            <!-- WiFi -->
+            <svg class="status-wifi" viewBox="0 0 16 12" fill="none">
+              <path d="M1 4.5C3.8 1.8 7.2 0.5 8 0.5s4.2 1.3 7 4M3.5 7C5.2 5.4 6.6 4.5 8 4.5s2.8.9 4.5 2.5M5.8 9.5C6.5 8.9 7.2 8.5 8 8.5s1.5.4 2.2 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              <circle cx="8" cy="11.5" r="0.8" fill="currentColor"/>
+            </svg>
+            <!-- Battery -->
+            <div class="status-battery">
+              <div class="battery-body"><div class="battery-fill"></div></div>
+              <div class="battery-tip"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Iframe content -->
+        <div class="phone-content">
+          <iframe
+            id="pwa-frame"
+            src="/workouts"
+            title="FitOS Client PWA — Workouts Screen"
+            scrolling="yes"
+            loading="eager"
+          ></iframe>
+        </div>
+
+        <!-- Tab nav (lives in phone frame, not iframe) -->
+        <nav class="phone-nav" id="phone-nav">
+          <button class="phone-nav-item active" data-href="/workouts" onclick="switchTab(this)">
+            <svg class="phone-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 4v6m0 4v6M18 4v6m0 4v6M2 9h4m12 0h4M2 15h4m12 0h4"/>
+            </svg>
+            <span class="phone-nav-label">Workouts</span>
+          </button>
+          <button class="phone-nav-item" data-href="/checkin" onclick="switchTab(this)">
+            <svg class="phone-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 11l3 3L22 4"/>
+              <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+            </svg>
+            <span class="phone-nav-label">Check-in</span>
+          </button>
+          <button class="phone-nav-item" data-href="/history" onclick="switchTab(this)">
+            <svg class="phone-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
+            <span class="phone-nav-label">History</span>
+          </button>
+          <button class="phone-nav-item" data-href="/messages" onclick="switchTab(this)">
+            <svg class="phone-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+            </svg>
+            <span class="phone-nav-label">Messages</span>
+          </button>
+        </nav>
+
+        <!-- Home indicator -->
+        <div class="phone-home">
+          <div class="home-bar"></div>
+        </div>
+
+      </div>
+    </div>
+    <div class="phone-label">Interactive · Tap to try</div>
+    <div class="nav-hint">Tap a tab to switch screens</div>
+  </div>
+
+  <!-- RIGHT: WHEN YOU INSTALL -->
+  <div class="info-col">
+    <div class="col-heading">When you install</div>
+    <div class="col-title">Same screens, <em>real<br>Sheets data.</em></div>
+
+    <p class="col-para">
+      Unzip the <code>fitos-pwa/</code> directory, connect your Google credentials, and the same four screens pull live data from your client's Sheet.
+    </p>
+
+    <div class="code-block">
+      <span class="comment"># One-time setup</span><br>
+      <span class="cmd">$</span> npm install<br>
+      <span class="cmd">$</span> cp .env.example .env<br>
+      <span class="comment"># Add your Google credentials</span><br>
+      <span class="cmd">$</span> npm run dev<br>
+      <span class="comment"># Same screens. Live Sheet data.</span>
+    </div>
+
+    <div class="install-section">
+      <div class="install-row">
+        <div class="install-row-label green">What's identical — The whole UI layer</div>
+        <div class="install-items">
+          <div class="install-item">Phone frame, status bar, bottom nav, color palette, typography</div>
+          <div class="install-item">ExerciseCard, WeekStrip, CoachNote, HistoryCharts, PipSlider, MessageBubble</div>
+          <div class="install-item">Every animation, transition, and tap interaction</div>
+        </div>
+      </div>
+      <div class="install-row">
+        <div class="install-row-label amber">What's added when running — Real-app machinery</div>
+        <div class="install-items">
+          <div class="install-item">Service worker + PWA manifest (installable to home screen)</div>
+          <div class="install-item">Magic-link JWT auth (no passwords)</div>
+          <div class="install-item">Offline queue — logs sets even without signal</div>
+          <div class="install-item">SWR cache — data loads instantly on re-open</div>
+        </div>
+      </div>
+      <div class="install-row">
+        <div class="install-row-label gray">What's not here — Real backend traffic</div>
+        <div class="install-items">
+          <div class="install-item">This preview calls no APIs — data is inlined</div>
+          <div class="install-item"><code style="font-size:11px;background:rgba(0,0,0,0.06);padding:1px 4px;border-radius:3px;color:inherit">DEMO_MODE=true</code> returns the same mock data server-side</div>
+          <div class="install-item"><code style="font-size:11px;background:rgba(0,0,0,0.06);padding:1px 4px;border-radius:3px;color:inherit">DEMO_MODE=false</code> + Google credentials hits your real Sheet</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="info-block">
+      <div class="block-label">Questions before installing</div>
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="faq-q">Want different colors?</div>
+          <div class="faq-a">Edit tailwind.config.ts — two variables</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">Different brand name?</div>
+          <div class="faq-a">Stored in magic-link JWT payload</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">Sliders instead of pip selectors?</div>
+          <div class="faq-a">Swap PipSlider → RangeSlider component</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">Add a "Programs" tab?</div>
+          <div class="faq-a">One route + one nav-item + one Sheet tab</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- .preview-grid -->
+
+<!-- Tab nav switcher -->
+<script>
+function switchTab(btn) {
+  var frame = document.getElementById('pwa-frame');
+  var nav = document.getElementById('phone-nav');
+  // Update active state
+  nav.querySelectorAll('.phone-nav-item').forEach(function(el) {
+    el.classList.remove('active');
+  });
+  btn.classList.add('active');
+  // Load screen in iframe
+  frame.src = btn.getAttribute('data-href');
+  // Update the "Now Showing" hint label
+  var labels = { '/workouts': 'Workouts', '/checkin': 'Check-in', '/history': 'History', '/messages': 'Messages' };
+  var blockLabel = document.querySelector('.block-label');
+  if (blockLabel) {
+    var screen = labels[btn.getAttribute('data-href')] || 'Workouts';
+    blockLabel.textContent = 'Now Showing · ' + screen;
+  }
+}
+</script>
+
+<!-- Deploy counter — social proof for landing page -->
+<script>
+(function() {
+  fetch('/api/stats/deploys')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var count = data.count || 0;
+      if (count < 1) return;
+      var label = document.getElementById('deploy-counter-label');
+      var item = document.getElementById('deploy-counter-item');
+      if (label && item) {
+        label.textContent = count + ' coach' + (count !== 1 ? 'es' : '') + ' self-hosted';
+        item.style.display = '';
+      }
+    })
+    .catch(function() {});
+})();
+</script>
+
+<!-- Polsia Analytics -->
+<script>
+(function() {
+  var slug = 'fitos';
+  if (!slug) return;
+  var vid = localStorage.getItem('polsia_vid');
+  if (!vid) {
+    vid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16 | 0;
+      return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+    localStorage.setItem('polsia_vid', vid);
+  }
+  new Image().src = 'https://polsia.com/api/beacon/pixel?s=' + encodeURIComponent(slug) + '&v=' + encodeURIComponent(vid);
+})();
+</script>
+
+<!-- FitOS traffic tracker -->
+<script>
+(function() {
+  var PAGE = '/';
+  var sid = sessionStorage.getItem('fitos_sid');
+  if (!sid) {
+    sid = Math.random().toString(36).slice(2) + Date.now().toString(36);
+    sessionStorage.setItem('fitos_sid', sid);
+  }
+  var src = (new URLSearchParams(location.search)).get('utm_source') || document.referrer || '';
+  function track(ev, extra) {
+    fetch('/api/track', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(Object.assign({ event: ev, page: PAGE, session_id: sid, source: src }, extra)),
+      keepalive: true
+    }).catch(function(){});
+  }
+  track('page_view');
+  document.addEventListener('click', function(e) {
+    var a = e.target.closest('a[href]');
+    if (!a) return;
+    var h = a.getAttribute('href') || '';
+    if (h.includes('buy.stripe.com')) { track('checkout_start', {}); }
+    else if (h.includes('/pricing') || h.includes('/trial') || h.includes('/buy')) { track('cta_click', {}); }
+  }, true);
+})();
+</script>
+</body>
+</html>
