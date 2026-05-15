@@ -1,0 +1,1591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#F4EFE6">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="FitOS">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <title>FitOS — Workouts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:       #F4EFE6;
+      --cream-light: #FDFAF5;
+      --cream-mid:   #EDE6D8;
+      --olive:       #5C6B2A;
+      --olive-dark:  #3D4A1A;
+      --olive-muted: #8A9650;
+      --olive-pale:  #E8EDD6;
+      --text:        #2C2A24;
+      --text-muted:  #7A7570;
+      --border:      #DDD8CA;
+      --rpe-green:   #4B7A4F;
+      --rpe-green-bg:#EAF2EA;
+      --rpe-amber:   #956E20;
+      --rpe-amber-bg:#F5EDD4;
+      --rpe-red:     #A83030;
+      --rpe-red-bg:  #F5E0E0;
+      --nav-h:       72px;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--cream);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overscroll-behavior: none;
+    }
+
+    .app {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    /* ── HEADER ─────────────────────────────────────── */
+    .header {
+      background: var(--cream);
+      padding: 52px 20px 0;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .header-date {
+      font-family: 'Fraunces', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
+    .header-sub {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-top: 4px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .header-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--olive);
+      color: var(--cream-light);
+      font-weight: 700;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ── DAY STRIP ──────────────────────────────────── */
+    .day-strip {
+      display: flex;
+      gap: 4px;
+      padding: 16px 20px 4px;
+      background: var(--cream);
+    }
+
+    .day-cell {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 8px 4px;
+      border-radius: 10px;
+      min-height: 56px;
+      min-width: 44px;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.1s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .day-cell:active { transform: scale(0.95); }
+
+    .day-cell.today {
+      background: var(--olive);
+    }
+
+    .day-cell.selected {
+      background: var(--olive);
+    }
+
+    .day-letter {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .day-cell.today .day-letter,
+    .day-cell.selected .day-letter { color: rgba(253, 250, 245, 0.7); }
+
+    .day-num {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text);
+      margin-top: 3px;
+      line-height: 1;
+    }
+
+    .day-cell.today .day-num,
+    .day-cell.selected .day-num { color: var(--cream-light); }
+
+    .day-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--olive-muted);
+      margin-top: 4px;
+      opacity: 0;
+    }
+
+    .day-cell.has-workout .day-dot { opacity: 1; }
+    .day-cell.today .day-dot,
+    .day-cell.selected .day-dot { background: rgba(253, 250, 245, 0.6); }
+
+    /* ── SCROLL CONTENT ─────────────────────────────── */
+    .scroll-area {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 16px 16px calc(var(--nav-h) + var(--safe-bottom) + 16px);
+    }
+
+    .scroll-area::-webkit-scrollbar { display: none; }
+
+    /* ── DIVIDER ────────────────────────────────────── */
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 8px 4px 8px;
+    }
+
+    /* ── COACH CARD ─────────────────────────────────── */
+    .coach-card {
+      background: var(--olive-pale);
+      border: 1px solid rgba(92, 107, 42, 0.2);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .coach-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--olive);
+      color: var(--cream-light);
+      font-weight: 700;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-family: 'Fraunces', serif;
+    }
+
+    .coach-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .coach-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--olive-dark);
+      letter-spacing: 0.01em;
+    }
+
+    .coach-message {
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--text);
+    }
+
+    /* ── WORKOUT TITLE ──────────────────────────────── */
+    .workout-title {
+      font-family: 'Fraunces', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    /* ── EXERCISE CARD ──────────────────────────────── */
+    .exercise-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .exercise-card {
+      background: var(--cream-light);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      display: grid;
+      grid-template-rows: auto auto;
+      gap: 12px;
+      transition: border-color 0.2s ease, opacity 0.2s ease;
+    }
+
+    .exercise-card.done {
+      opacity: 0.55;
+      border-color: var(--border);
+    }
+
+    .exercise-card.done .ex-name { text-decoration: line-through; text-decoration-color: var(--text-muted); }
+
+    .exercise-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .exercise-info { flex: 1; min-width: 0; }
+
+    .ex-name {
+      font-family: 'Fraunces', serif;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+    }
+
+    .ex-note {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+      font-style: italic;
+    }
+
+    .ex-prescription {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .sets-reps {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      letter-spacing: -0.01em;
+    }
+
+    .rpe-badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 20px;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+    }
+
+    .rpe-badge.green { background: var(--rpe-green-bg); color: var(--rpe-green); }
+    .rpe-badge.amber { background: var(--rpe-amber-bg); color: var(--rpe-amber); }
+    .rpe-badge.red   { background: var(--rpe-red-bg);   color: var(--rpe-red); }
+
+    /* ── EXERCISE BOTTOM ROW ────────────────────────── */
+    .exercise-bottom {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .weight-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .weight-input-wrap {
+      flex: 1;
+      position: relative;
+    }
+
+    .weight-input {
+      width: 100%;
+      height: 44px;
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0 40px 0 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text);
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .weight-input::placeholder { color: var(--text-muted); font-weight: 400; }
+
+    .weight-input:focus {
+      border-color: var(--olive);
+      box-shadow: 0 0 0 3px rgba(92, 107, 42, 0.12);
+    }
+
+    .weight-unit {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    /* ── CHECKBOX ───────────────────────────────────── */
+    .checkbox-wrap {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .checkbox {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+    }
+
+    .checkbox-wrap:active .checkbox { transform: scale(0.88); }
+
+    .checkbox.checked {
+      background: var(--olive);
+      border-color: var(--olive);
+    }
+
+    .checkbox svg {
+      opacity: 0;
+      transform: scale(0.6);
+      transition: opacity 0.15s ease, transform 0.15s ease;
+    }
+
+    .checkbox.checked svg {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* ── PROGRESS BAR ───────────────────────────────── */
+    .progress-wrap {
+      margin-top: 4px;
+      padding: 4px 0 8px;
+    }
+
+    .progress-bar {
+      height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--olive);
+      border-radius: 2px;
+      transition: width 0.4s ease;
+    }
+
+    .progress-text {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-align: right;
+      margin-top: 5px;
+      letter-spacing: 0.03em;
+    }
+
+    /* ── EMPTY STATE ────────────────────────────────── */
+    .rest-day {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .rest-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    .rest-title {
+      font-family: 'Fraunces', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .rest-sub {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ── BOTTOM NAV ─────────────────────────────────── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 480px;
+      background: var(--cream-light);
+      border-top: 1px solid var(--border);
+      display: flex;
+      padding: 0 8px;
+      padding-bottom: var(--safe-bottom);
+      height: calc(var(--nav-h) + var(--safe-bottom));
+      z-index: 100;
+    }
+
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      padding: 8px 4px;
+      cursor: pointer;
+      text-decoration: none;
+      -webkit-tap-highlight-color: transparent;
+      min-height: 44px;
+      border-radius: 12px;
+      transition: background 0.15s ease;
+    }
+
+    .nav-item:active { background: var(--cream-mid); }
+
+    .nav-icon {
+      width: 24px;
+      height: 24px;
+      color: var(--text-muted);
+      transition: color 0.15s ease;
+    }
+
+    .nav-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: color 0.15s ease;
+    }
+
+    .nav-item.active .nav-icon { color: var(--olive); }
+    .nav-item.active .nav-label { color: var(--olive); }
+
+    /* ── LOADING STATE ──────────────────────────────── */
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+    }
+
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 2px solid var(--border);
+      border-top-color: var(--olive);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── COMPLETE BANNER ────────────────────────────── */
+    .complete-banner {
+      background: var(--olive);
+      border-radius: 16px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .complete-banner.visible { display: flex; }
+
+    .complete-icon { font-size: 24px; }
+
+    .complete-text {
+      font-family: 'Fraunces', serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--cream-light);
+    }
+
+    .complete-sub {
+      font-size: 12px;
+      color: rgba(253, 250, 245, 0.75);
+      margin-top: 2px;
+    }
+
+    /* ── UNIT TOGGLE ────────────────────────────────── */
+    .unit-toggle {
+      display: flex;
+      background: var(--cream-mid);
+      border-radius: 20px;
+      padding: 3px;
+      gap: 2px;
+      flex-shrink: 0;
+    }
+
+    .unit-btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 16px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease;
+      -webkit-tap-highlight-color: transparent;
+      letter-spacing: 0.03em;
+    }
+
+    .unit-btn.active {
+      background: var(--cream-light);
+      color: var(--olive-dark);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    /* ── VIDEO THUMBNAIL ────────────────────────────── */
+    .video-thumb {
+      width: 60px;
+      height: 42px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #2C2A24 0%, #3D4A1A 100%);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+      transition: opacity 0.15s ease, transform 0.1s ease;
+    }
+
+    .video-thumb:active { opacity: 0.8; transform: scale(0.97); }
+
+    .video-play-icon {
+      width: 22px;
+      height: 22px;
+      background: rgba(253, 250, 245, 0.92);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .video-play-icon svg {
+      width: 10px;
+      height: 10px;
+      color: var(--olive-dark);
+      margin-left: 2px; /* optical center for triangle */
+    }
+
+    /* ── VIDEO MODAL ────────────────────────────────── */
+    .video-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .video-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(44, 42, 36, 0.75);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+
+    .video-container {
+      position: relative;
+      width: 100%;
+      max-width: 440px;
+      background: var(--text);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.4);
+    }
+
+    .video-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+    }
+
+    .video-ex-name {
+      font-family: 'Fraunces', serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--cream-light);
+      letter-spacing: -0.01em;
+    }
+
+    .video-close {
+      width: 32px;
+      height: 32px;
+      background: rgba(253, 250, 245, 0.12);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--cream-light);
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.15s ease;
+    }
+
+    .video-close:active { background: rgba(253, 250, 245, 0.2); }
+
+    #video-player {
+      width: 100%;
+      display: block;
+      background: #000;
+      max-height: 60vh;
+    }
+
+    /* YouTube iframe embed — responsive 16:9 */
+    .yt-embed-wrap {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%; /* 16:9 */
+      background: #000;
+      display: none;
+    }
+
+    .yt-embed-wrap.active { display: block; }
+
+    .yt-embed-wrap iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* YouTube thumbnail overlay on exercise card */
+    .video-thumb.yt .yt-thumb-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .video-thumb.yt .video-play-icon {
+      position: absolute;
+      z-index: 1;
+    }
+
+    /* ── COMMENT FIELD ──────────────────────────────── */
+    .comment-section {
+      border-top: 1px solid var(--border);
+      margin-top: 2px;
+      padding-top: 10px;
+    }
+
+    .comment-toggle-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: none;
+      border: none;
+      padding: 2px 0;
+      cursor: pointer;
+      color: var(--text-muted);
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      -webkit-tap-highlight-color: transparent;
+      transition: color 0.15s ease;
+    }
+
+    .comment-toggle-btn:active { color: var(--olive); }
+
+    .comment-toggle-btn svg {
+      width: 13px;
+      height: 13px;
+      flex-shrink: 0;
+    }
+
+    .comment-field-wrap {
+      display: none;
+      margin-top: 8px;
+    }
+
+    .comment-field-wrap.open { display: block; }
+
+    .comment-field {
+      width: 100%;
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--text);
+      resize: none;
+      outline: none;
+      overflow: hidden;
+      min-height: 38px;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .comment-field::placeholder { color: var(--text-muted); }
+
+    .comment-field:focus {
+      border-color: var(--olive);
+      box-shadow: 0 0 0 3px rgba(92, 107, 42, 0.1);
+    }
+
+    /* ── TOAST ──────────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: calc(var(--nav-h) + var(--safe-bottom) + 12px);
+      left: 50%;
+      transform: translateX(-50%) translateY(8px);
+      background: var(--text);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 9px 16px;
+      border-radius: 20px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      pointer-events: none;
+      z-index: 200;
+    }
+    .toast.error { background: var(--rpe-red); }
+    .toast.show  { opacity: 1; transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+  <div class="app">
+
+    <!-- HEADER -->
+    <div class="header" id="header">
+      <div>
+        <div class="header-date" id="header-date">Today</div>
+        <div class="header-sub" id="header-sub">Loading...</div>
+      </div>
+      <div class="header-right">
+        <div class="unit-toggle">
+          <button class="unit-btn" id="btn-lb" onclick="setUnit('lb')">lb</button>
+          <button class="unit-btn" id="btn-kg" onclick="setUnit('kg')">kg</button>
+        </div>
+        <div class="header-avatar" id="header-avatar">?</div>
+      </div>
+    </div>
+
+    <!-- DAY STRIP -->
+    <div class="day-strip" id="day-strip"></div>
+
+    <!-- SCROLL CONTENT -->
+    <div class="scroll-area" id="scroll-area">
+      <div class="loading"><div class="spinner"></div></div>
+    </div>
+
+    <!-- VIDEO MODAL -->
+    <div id="video-modal" class="video-modal" role="dialog" aria-modal="true" aria-label="Exercise video" style="display:none">
+      <div class="video-backdrop" id="video-backdrop"></div>
+      <div class="video-container">
+        <div class="video-header">
+          <div class="video-ex-name" id="video-ex-name"></div>
+          <button class="video-close" id="video-close" aria-label="Close video">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        <video id="video-player" controls playsinline></video>
+        <div class="yt-embed-wrap" id="yt-embed-wrap">
+          <iframe
+            id="yt-player"
+            allowfullscreen
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            referrerpolicy="strict-origin-when-cross-origin"
+          ></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav">
+      <a class="nav-item active" href="/workouts">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 4v6m0 4v6M18 4v6m0 4v6M2 9h4m12 0h4M2 15h4m12 0h4"/>
+        </svg>
+        <span class="nav-label">Workouts</span>
+      </a>
+      <a class="nav-item" href="/checkin">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 11l3 3L22 4"/>
+          <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+        </svg>
+        <span class="nav-label">Check-in</span>
+      </a>
+      <a class="nav-item" href="/history">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
+        <span class="nav-label">History</span>
+      </a>
+      <a class="nav-item" href="/messages">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+        </svg>
+        <span class="nav-label">Messages</span>
+      </a>
+    </nav>
+
+  </div><!-- .app -->
+
+  <!-- Toast notification -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- CONFIG injected by server -->
+  <script>window.__FITOS__ = __FITOS_CONFIG__;</script>
+
+  <script>
+  (function() {
+    const cfg = window.__FITOS__ || {};
+    // cfg.workout is mutable — updated by selectDay() on day-strip taps.
+    // Do NOT shadow it with a local const; read cfg.workout inline everywhere.
+
+    // ── HELPERS ───────────────────────────────────────────
+    const DAY_LETTERS = ['S','M','T','W','T','F','S'];
+    const DAY_NAMES   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+    function rpeClass(rpe) {
+      if (rpe <= 7) return 'green';
+      if (rpe === 8) return 'amber';
+      return 'red';
+    }
+
+    function getMondayOfWeek(date) {
+      const d = new Date(date);
+      const day = d.getDay(); // 0=Sun
+      const diff = (day === 0) ? -6 : 1 - day;
+      d.setDate(d.getDate() + diff);
+      return d;
+    }
+
+    function formatDate(date) {
+      return `${MONTH_NAMES[date.getMonth()]} ${date.getDate()}`;
+    }
+
+    // ── DATE UTILS ────────────────────────────────────────
+    function toIso(date) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const d = String(date.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    // ── SELECTED DATE STATE ───────────────────────────────
+    // Tracks which date the strip is showing. Defaults to today.
+    const todayDate = new Date();
+    const todayIso  = toIso(todayDate);
+    let selectedIso = todayIso;
+
+    // ── DAY STRIP ─────────────────────────────────────────
+    function renderDayStrip() {
+      const strip  = document.getElementById('day-strip');
+      strip.innerHTML = '';
+      const monday = getMondayOfWeek(new Date(selectedIso + 'T12:00:00'));
+
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(monday);
+        d.setDate(monday.getDate() + i);
+        const iso     = toIso(d);
+        const isToday    = iso === todayIso;
+        const isSelected = iso === selectedIso;
+        // Dot: real data from cfg.workout date, or demo heuristic
+        const hasWorkout = cfg.sheetConnected
+          ? false // server sets real dots via workout presence; we'll mark after load
+          : [1, 2, 4].includes(i); // Mon, Tue, Thu demo
+
+        const cell = document.createElement('div');
+        cell.className = 'day-cell'
+          + (isToday    ? ' today'    : '')
+          + (isSelected ? ' selected' : '')
+          + (hasWorkout ? ' has-workout' : '');
+        cell.dataset.iso = iso;
+        cell.innerHTML = `
+          <span class="day-letter">${['M','T','W','T','F','S','S'][i]}</span>
+          <span class="day-num">${d.getDate()}</span>
+          <span class="day-dot"></span>
+        `;
+        // Tap handler
+        cell.addEventListener('click', () => selectDay(iso));
+        strip.appendChild(cell);
+      }
+    }
+
+    // ── SELECT DAY ────────────────────────────────────────
+    // Called when user taps a day cell. Fetches workout data and re-renders.
+    function selectDay(iso) {
+      if (iso === selectedIso) return; // already on this day — no-op
+      selectedIso = iso;
+
+      // Update strip highlight immediately (optimistic)
+      document.querySelectorAll('.day-cell').forEach(cell => {
+        const cellIso = cell.dataset.iso;
+        const isToday    = cellIso === todayIso;
+        cell.classList.toggle('selected', cellIso === selectedIso);
+        // today class stays only on the actual today cell
+        if (!isToday) cell.classList.remove('today');
+      });
+
+      // Show spinner while loading
+      const area = document.getElementById('scroll-area');
+      area.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+
+      // Update header date immediately
+      const d = new Date(iso + 'T12:00:00');
+      document.getElementById('header-date').textContent = formatDate(d);
+      document.getElementById('header-sub').textContent = DAY_NAMES[d.getDay()];
+
+      // Fetch this day's data
+      fetch(`/workouts/api/day?date=${encodeURIComponent(iso)}`)
+        .then(r => r.json())
+        .then(data => {
+          // Swap current workout + completions into cfg
+          cfg.workout      = data.workout;
+          cfg.completions  = data.completions || {};
+          cfg.sheetConnected = data.sheetConnected;
+
+          if (cfg.workout && cfg.workout.coachNote) {
+            document.getElementById('header-avatar').textContent = cfg.workout.coachNote.initial;
+          }
+
+          renderWorkout();
+          restoreCompletions();
+        })
+        .catch(() => {
+          area.innerHTML = `
+            <div class="rest-day">
+              <div class="rest-icon">📡</div>
+              <div class="rest-title">Couldn't load workout</div>
+              <div class="rest-sub">Check your connection and try again.</div>
+            </div>
+          `;
+        });
+    }
+
+    // ── HEADER ────────────────────────────────────────────
+    function renderHeader() {
+      const d = new Date(selectedIso + 'T12:00:00');
+      document.getElementById('header-date').textContent = formatDate(d);
+      document.getElementById('header-sub').textContent = DAY_NAMES[d.getDay()];
+      if (cfg.workout && cfg.workout.coachNote) {
+        document.getElementById('header-avatar').textContent = cfg.workout.coachNote.initial;
+      }
+    }
+
+    // ── UNIT STATE ────────────────────────────────────────
+    // Shared with /history via 'fitos_unit' localStorage key. Default: lb (US-first).
+    let unit = localStorage.getItem('fitos_unit') || 'lb';
+
+    const KG_TO_LB = 2.20462;
+
+    function applyUnitToggleButtons() {
+      document.getElementById('btn-lb').classList.toggle('active', unit === 'lb');
+      document.getElementById('btn-kg').classList.toggle('active', unit === 'kg');
+    }
+
+    window.setUnit = function(u) {
+      const prev = unit;
+      unit = u;
+      localStorage.setItem('fitos_unit', u);
+      applyUnitToggleButtons();
+
+      // Convert any entered weight values in the current cards
+      document.querySelectorAll('.weight-input').forEach(input => {
+        if (input.value === '' || isNaN(parseFloat(input.value))) return;
+        const v = parseFloat(input.value);
+        if (prev === 'kg' && u === 'lb') {
+          input.value = Math.round(v * KG_TO_LB * 10) / 10;
+        } else if (prev === 'lb' && u === 'kg') {
+          input.value = Math.round(v / KG_TO_LB * 10) / 10;
+        }
+      });
+
+      // Update unit suffix labels
+      document.querySelectorAll('.weight-unit').forEach(el => { el.textContent = u; });
+    };
+
+    // ── YOUTUBE URL DETECTION ─────────────────────────────
+    // Returns the video ID if the URL is a YouTube URL, otherwise null.
+    // Handles: youtube.com/watch?v=ID, youtu.be/ID, youtube.com/shorts/ID,
+    //          youtube.com/embed/ID, and www/m/music variants.
+    function getYouTubeVideoId(url) {
+      if (!url) return null;
+      try {
+        const u = new URL(url);
+        const host = u.hostname.replace(/^(www\.|m\.|music\.)/, '');
+        if (host === 'youtu.be') {
+          // https://youtu.be/<ID>
+          return u.pathname.slice(1).split(/[?#]/)[0] || null;
+        }
+        if (host === 'youtube.com' || host === 'youtube-nocookie.com') {
+          if (u.pathname.startsWith('/shorts/')) {
+            // https://youtube.com/shorts/<ID>
+            return u.pathname.slice('/shorts/'.length).split(/[?#]/)[0] || null;
+          }
+          if (u.pathname.startsWith('/embed/')) {
+            return u.pathname.slice('/embed/'.length).split(/[?#]/)[0] || null;
+          }
+          // https://youtube.com/watch?v=<ID>
+          return u.searchParams.get('v') || null;
+        }
+      } catch (_) { /* not a valid URL */ }
+      return null;
+    }
+
+    // ── VIDEO MODAL ───────────────────────────────────────
+    function openVideo(url, name) {
+      const modal    = document.getElementById('video-modal');
+      const player   = document.getElementById('video-player');
+      const ytWrap   = document.getElementById('yt-embed-wrap');
+      const ytPlayer = document.getElementById('yt-player');
+      const exLabel  = document.getElementById('video-ex-name');
+      exLabel.textContent = name;
+
+      const ytId = getYouTubeVideoId(url);
+      if (ytId) {
+        // YouTube path — use nocookie iframe embed
+        player.style.display = 'none';
+        player.src = '';
+        ytWrap.classList.add('active');
+        // autoplay=1 works because modal opens on user gesture
+        ytPlayer.src = `https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&rel=0&modestbranding=1`;
+      } else {
+        // Direct video path (Drive links, mp4, etc.)
+        ytWrap.classList.remove('active');
+        ytPlayer.src = '';
+        player.style.display = 'block';
+        player.src = url;
+        player.play().catch(() => {}); // user-gesture autoplay — ignore rejection
+      }
+
+      modal.style.display = 'flex';
+    }
+
+    function closeVideo() {
+      const modal    = document.getElementById('video-modal');
+      const player   = document.getElementById('video-player');
+      const ytWrap   = document.getElementById('yt-embed-wrap');
+      const ytPlayer = document.getElementById('yt-player');
+
+      player.pause();
+      player.src = '';
+      player.style.display = 'block'; // reset for next open
+
+      // Tear down iframe by clearing src — stops audio immediately
+      ytPlayer.src = '';
+      ytWrap.classList.remove('active');
+
+      modal.style.display = 'none';
+    }
+
+    // ── TOAST ─────────────────────────────────────────────
+    let _toastTimer = null;
+
+    function showToast(msg, isError) {
+      const el = document.getElementById('toast');
+      if (!el) return;
+      clearTimeout(_toastTimer);
+      el.textContent = msg;
+      el.className = 'toast' + (isError ? ' error' : '');
+      // Force reflow so transition fires even on repeated calls
+      void el.offsetWidth;
+      el.classList.add('show');
+      _toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+    }
+
+    // ── SHEET WRITE ───────────────────────────────────────
+    // Posts a completion record; rolls back checkbox on 5xx.
+    function postCompletion(payload, onError) {
+      if (!cfg.sheetConnected) return; // demo mode — no writes
+      fetch('/api/completions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      }).then(res => {
+        if (!res.ok) {
+          showToast('Sync failed — try again', true);
+          if (onError) onError();
+        }
+        // Success is silent (no toast noise on every checkbox)
+      }).catch(() => {
+        showToast('Offline — not synced', true);
+        if (onError) onError();
+      });
+    }
+
+    // ── BUILD EXERCISE HTML ───────────────────────────────
+    function buildExerciseCard(ex, idx) {
+      const badgeClass = rpeClass(ex.rpe);
+
+      let videoThumb = '';
+      if (ex.videoUrl) {
+        const ytId = getYouTubeVideoId(ex.videoUrl);
+        if (ytId) {
+          // YouTube: show thumbnail image behind play button
+          videoThumb = `
+            <div class="video-thumb yt" id="vthumb-${idx}" role="button" tabindex="0" aria-label="Watch ${ex.name} demo video">
+              <img class="yt-thumb-img" src="https://img.youtube.com/vi/${ytId}/mqdefault.jpg" alt="" loading="lazy" onerror="this.style.display='none'">
+              <div class="video-play-icon">
+                <svg viewBox="0 0 10 12" fill="currentColor"><polygon points="0,0 10,6 0,12"/></svg>
+              </div>
+            </div>
+          `;
+        } else {
+          // Direct video (Drive, mp4)
+          videoThumb = `
+            <div class="video-thumb" id="vthumb-${idx}" role="button" tabindex="0" aria-label="Watch ${ex.name} demo video">
+              <div class="video-play-icon">
+                <svg viewBox="0 0 10 12" fill="currentColor"><polygon points="0,0 10,6 0,12"/></svg>
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      // Comment section: open if pre-populated
+      const hasNote = ex.clientNotes && ex.clientNotes.trim().length > 0;
+      const commentSection = `
+        <div class="comment-section">
+          <button class="comment-toggle-btn" id="ctoggle-${idx}" ${hasNote ? 'style="display:none"' : ''}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+            Add a note
+          </button>
+          <div class="comment-field-wrap${hasNote ? ' open' : ''}" id="cwrap-${idx}">
+            <textarea
+              class="comment-field"
+              id="cnote-${idx}"
+              placeholder="Add a note..."
+              rows="2"
+              aria-label="Note for ${ex.name}"
+            >${ex.clientNotes ? ex.clientNotes : ''}</textarea>
+          </div>
+        </div>
+      `;
+
+      return `
+        <div class="exercise-card" id="ex-${idx}" data-idx="${idx}">
+          <div class="exercise-top">
+            <div class="exercise-info">
+              <div class="ex-name">${ex.name}</div>
+              ${ex.note ? `<div class="ex-note">${ex.note}</div>` : ''}
+            </div>
+            <div class="ex-prescription">
+              <span class="sets-reps">${ex.sets}×${ex.reps}</span>
+              <span class="rpe-badge ${badgeClass}">RPE ${ex.rpe}</span>
+              ${videoThumb}
+            </div>
+          </div>
+          <div class="exercise-bottom">
+            <span class="weight-label">Weight</span>
+            <div class="weight-input-wrap">
+              <input
+                class="weight-input"
+                type="number"
+                inputmode="decimal"
+                placeholder="—"
+                aria-label="Weight for ${ex.name}"
+                id="w-${idx}"
+              >
+              <span class="weight-unit" id="wu-${idx}">${unit}</span>
+            </div>
+            <div class="checkbox-wrap" role="checkbox" aria-checked="false" tabindex="0" data-idx="${idx}" id="cb-wrap-${idx}">
+              <div class="checkbox" id="cb-${idx}">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#FDFAF5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="2 7 6 11 12 3"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          ${commentSection}
+        </div>
+      `;
+    }
+
+    // ── COMPLETED STATE ───────────────────────────────────
+    // Cleared by renderWorkout() on each day switch.
+    let completedSet = new Set();
+
+    function updateProgress() {
+      if (!cfg.workout) return;
+      const total = cfg.workout.exercises.length;
+      const done  = completedSet.size;
+      const pct   = Math.round((done / total) * 100);
+
+      document.getElementById('progress-fill').style.width = pct + '%';
+      document.getElementById('progress-text').textContent = `${done} / ${total} completed`;
+
+      const banner = document.getElementById('complete-banner');
+      if (done === total && total > 0) {
+        banner.classList.add('visible');
+      } else {
+        banner.classList.remove('visible');
+      }
+    }
+
+    function toggleExercise(idx) {
+      const card = document.getElementById(`ex-${idx}`);
+      const cb   = document.getElementById(`cb-${idx}`);
+      const wrap = document.getElementById(`cb-wrap-${idx}`);
+
+      const nowDone = !completedSet.has(idx);
+
+      if (!nowDone) {
+        completedSet.delete(idx);
+        card.classList.remove('done');
+        cb.classList.remove('checked');
+        wrap.setAttribute('aria-checked', 'false');
+      } else {
+        completedSet.add(idx);
+        card.classList.add('done');
+        cb.classList.add('checked');
+        wrap.setAttribute('aria-checked', 'true');
+      }
+      updateProgress();
+
+      // Persist to Sheets — optimistic UI (already toggled above), roll back on 5xx
+      if (cfg.sheetConnected && cfg.workout) {
+        const ex = cfg.workout.exercises[idx];
+        const wInput = document.getElementById(`w-${idx}`);
+        const cnote  = document.getElementById(`cnote-${idx}`);
+        const enteredWeight = wInput && wInput.value !== '' ? parseFloat(wInput.value) : null;
+        // Convert to kg for storage
+        const weightKg = enteredWeight !== null
+          ? (unit === 'lb' ? Math.round(enteredWeight / KG_TO_LB * 100) / 100 : enteredWeight)
+          : null;
+
+        postCompletion({
+          exercise: ex.name,
+          sets: ex.sets,
+          reps: ex.reps,
+          weight: weightKg,
+          rpe: ex.rpe,
+          status: nowDone ? 'Completed' : 'Skipped',
+          notes: cnote ? cnote.value.trim() : '',
+          weekNum: cfg.workout.weekNum,
+          dayName: cfg.workout.dayName,
+        }, () => {
+          // Rollback UI on write failure
+          if (nowDone) {
+            completedSet.delete(idx);
+            card.classList.remove('done');
+            cb.classList.remove('checked');
+            wrap.setAttribute('aria-checked', 'false');
+          } else {
+            completedSet.add(idx);
+            card.classList.add('done');
+            cb.classList.add('checked');
+            wrap.setAttribute('aria-checked', 'true');
+          }
+          updateProgress();
+        });
+      }
+    }
+
+    // ── RENDER MAIN ───────────────────────────────────────
+    function renderWorkout() {
+      const area = document.getElementById('scroll-area');
+      // Always reset completedSet when rendering a new day
+      completedSet = new Set();
+
+      if (!cfg.workout) {
+        area.innerHTML = `
+          <div class="rest-day">
+            <div class="rest-icon">🌿</div>
+            <div class="rest-title">Rest Day</div>
+            <div class="rest-sub">No workout scheduled.<br>Recover well — tomorrow counts.</div>
+            <a href="/dashboard/templates" style="display:inline-block;margin-top:20px;background:var(--olive);color:#fff;padding:10px 20px;border-radius:8px;font-size:13.5px;font-weight:600;text-decoration:none;">Browse Template Library →</a>
+          </div>
+        `;
+        return;
+      }
+
+      const { coachNote, title, exercises } = cfg.workout;
+
+      let html = '';
+
+      // Complete banner (hidden initially)
+      html += `
+        <div class="complete-banner" id="complete-banner">
+          <span class="complete-icon">🎉</span>
+          <div>
+            <div class="complete-text">Session Complete!</div>
+            <div class="complete-sub">Great work today. Log your check-in.</div>
+          </div>
+        </div>
+      `;
+
+      // Coach note
+      if (coachNote) {
+        html += `
+          <div class="section-label">Coach Note</div>
+          <div class="coach-card">
+            <div class="coach-avatar">${coachNote.initial}</div>
+            <div class="coach-meta">
+              <div class="coach-name">${coachNote.coach}</div>
+              <div class="coach-message">${coachNote.message}</div>
+            </div>
+          </div>
+        `;
+      }
+
+      // Workout title + progress — label changes based on whether it's today
+      const workoutLabel = selectedIso === todayIso ? "Today's Workout" : cfg.workout.dayName;
+      html += `
+        <div class="section-label">${workoutLabel}</div>
+        <div class="workout-title">${title}</div>
+        <div class="progress-wrap">
+          <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+          </div>
+          <div class="progress-text" id="progress-text">0 / ${exercises.length} completed</div>
+        </div>
+      `;
+
+      // Exercise cards
+      html += `<div class="exercise-list" id="exercise-list">`;
+      exercises.forEach((ex, i) => { html += buildExerciseCard(ex, i); });
+      html += `</div>`;
+
+      area.innerHTML = html;
+
+      // Bind checkbox taps
+      exercises.forEach((ex, i) => {
+        // Checkbox
+        const wrap = document.getElementById(`cb-wrap-${i}`);
+        wrap.addEventListener('click', () => toggleExercise(i));
+        wrap.addEventListener('keydown', (e) => {
+          if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggleExercise(i); }
+        });
+
+        // Video thumbnail
+        if (ex.videoUrl) {
+          const thumb = document.getElementById(`vthumb-${i}`);
+          if (thumb) {
+            thumb.addEventListener('click', () => openVideo(ex.videoUrl, ex.name));
+            thumb.addEventListener('keydown', (e) => {
+              if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); openVideo(ex.videoUrl, ex.name); }
+            });
+          }
+        }
+
+        // Comment toggle
+        const ctoggle = document.getElementById(`ctoggle-${i}`);
+        const cwrap   = document.getElementById(`cwrap-${i}`);
+        const cnote   = document.getElementById(`cnote-${i}`);
+
+        if (ctoggle) {
+          ctoggle.addEventListener('click', () => {
+            cwrap.classList.add('open');
+            ctoggle.style.display = 'none';
+            cnote.focus();
+          });
+        }
+
+        if (cnote) {
+          // Auto-resize textarea as user types
+          cnote.addEventListener('input', () => {
+            cnote.style.height = 'auto';
+            cnote.style.height = cnote.scrollHeight + 'px';
+          });
+
+          // Collapse if empty on blur; persist non-empty note to Sheets
+          cnote.addEventListener('blur', () => {
+            if (cnote.value.trim() === '') {
+              cwrap.classList.remove('open');
+              if (ctoggle) ctoggle.style.display = '';
+            } else if (cfg.sheetConnected && cfg.workout) {
+              // Write note even if exercise not ticked (partial save)
+              const wInput = document.getElementById(`w-${i}`);
+              const enteredWeight = wInput && wInput.value !== '' ? parseFloat(wInput.value) : null;
+              const weightKg = enteredWeight !== null
+                ? (unit === 'lb' ? Math.round(enteredWeight / KG_TO_LB * 100) / 100 : enteredWeight)
+                : null;
+              postCompletion({
+                exercise: ex.name, sets: ex.sets, reps: ex.reps,
+                weight: weightKg, rpe: ex.rpe,
+                status: completedSet.has(i) ? 'Completed' : 'Modified',
+                notes: cnote.value.trim(),
+                weekNum: cfg.workout.weekNum, dayName: cfg.workout.dayName,
+              });
+            }
+          });
+        }
+
+        // Weight input: debounced POST on change (800ms)
+        const wInput = document.getElementById(`w-${i}`);
+        if (wInput) {
+          let _weightTimer = null;
+          wInput.addEventListener('input', () => {
+            clearTimeout(_weightTimer);
+            _weightTimer = setTimeout(() => {
+              if (!cfg.sheetConnected || !cfg.workout) return;
+              if (wInput.value === '' || isNaN(parseFloat(wInput.value))) return;
+              const enteredWeight = parseFloat(wInput.value);
+              const weightKg = unit === 'lb'
+                ? Math.round(enteredWeight / KG_TO_LB * 100) / 100
+                : enteredWeight;
+              postCompletion({
+                exercise: ex.name, sets: ex.sets, reps: ex.reps,
+                weight: weightKg, rpe: ex.rpe,
+                status: completedSet.has(i) ? 'Completed' : 'Modified',
+                notes: cnote ? cnote.value.trim() : '',
+                weekNum: cfg.workout.weekNum, dayName: cfg.workout.dayName,
+              });
+            }, 800);
+          });
+        }
+      });
+
+      // Bind video modal close
+      const videoClose   = document.getElementById('video-close');
+      const videoBackdrop = document.getElementById('video-backdrop');
+      if (videoClose)    videoClose.addEventListener('click', closeVideo);
+      if (videoBackdrop) videoBackdrop.addEventListener('click', closeVideo);
+    }
+
+    // ── RESTORE COMPLETIONS ───────────────────────────────
+    // Reads cfg.completions and restores checkbox/weight/note state in the DOM.
+    // Called after renderWorkout() on init and on each day switch.
+    function restoreCompletions() {
+      if (!cfg.completions || !cfg.workout || !cfg.workout.exercises) return;
+      cfg.workout.exercises.forEach((ex, i) => {
+        const c = cfg.completions[ex.name];
+        if (!c) return;
+
+        // Restore weight (stored in kg, convert to current unit)
+        const wInput = document.getElementById(`w-${i}`);
+        if (wInput && c.weight !== null && c.weight !== undefined) {
+          wInput.value = unit === 'lb'
+            ? Math.round(c.weight * KG_TO_LB * 10) / 10
+            : c.weight;
+        }
+
+        // Restore checked state
+        if (c.completed) {
+          completedSet.add(i);
+          const card = document.getElementById(`ex-${i}`);
+          const cb   = document.getElementById(`cb-${i}`);
+          const wrap = document.getElementById(`cb-wrap-${i}`);
+          if (card) card.classList.add('done');
+          if (cb)   cb.classList.add('checked');
+          if (wrap) wrap.setAttribute('aria-checked', 'true');
+        }
+
+        // Restore comment
+        if (c.notes) {
+          const cnote   = document.getElementById(`cnote-${i}`);
+          const cwrap   = document.getElementById(`cwrap-${i}`);
+          const ctoggle = document.getElementById(`ctoggle-${i}`);
+          if (cnote) {
+            cnote.value = c.notes;
+            if (cwrap)   cwrap.classList.add('open');
+            if (ctoggle) ctoggle.style.display = 'none';
+          }
+        }
+      });
+      updateProgress();
+    }
+
+    // ── INIT ──────────────────────────────────────────────
+    applyUnitToggleButtons(); // set toggle state from stored preference
+    renderHeader();
+    renderDayStrip();
+    renderWorkout();
+    restoreCompletions();
+
+    // Service Worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    }
+
+  })();
+  </script>
+</body>
+</html>
