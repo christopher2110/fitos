@@ -1,0 +1,20 @@
+{
+  "id": "exercise_video_finder",
+  "name": "Exercise Video Finder",
+  "description": "Searches your trusted YouTube channels for demo videos for exercises missing a video URL. Fills them in automatically so clients see the right form cues without manual work.",
+  "version": "1.0.0",
+  "model": null,
+  "schedule": "0 3 * * *",
+  "schedule_label": "Daily, 3am",
+  "inputs": [
+    { "tab": "Exercises", "range": "Exercises!A2:I2000" },
+    { "tab": "Profile",   "range": "Profile!A2:D200" }
+  ],
+  "outputs": [
+    { "tab": "Exercises", "action": "update", "field": "video_url" },
+    { "tab": "Activity",  "action": "append", "type": "agent_summary" }
+  ],
+  "requires_tools": ["youtube_data_api"],
+  "external_api": "YouTube Data API v3",
+  "config_keys": ["trusted_channel_ids"]
+}
