@@ -1,0 +1,268 @@
+{
+  "id": "push-pull-legs",
+  "slug": "push-pull-legs",
+  "name": "Push / Pull / Legs",
+  "author": "Classic Bodybuilding",
+  "source": "Public domain hypertrophy programming methodology",
+  "goal": "hypertrophy",
+  "difficulty": "intermediate",
+  "daysPerWeek": 6,
+  "durationWeeks": 12,
+  "description": "The classic 6-day PPL split. Hit each muscle group twice per week with high volume and moderate intensity. Push days train chest/shoulders/triceps, pull days train back/biceps, and leg days handle quads/hamstrings/glutes. RPE-based loading allows auto-regulation.",
+  "equipment": ["barbell", "dumbbell", "cables", "rack", "bench"],
+  "tags": ["hypertrophy", "bodybuilding", "split"],
+  "weeks": [
+    {
+      "week": 1,
+      "label": "Week 1 — Baseline Volume",
+      "phase": "Accumulation Phase 1",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Push A — Horizontal",
+          "exercises": [
+            { "name": "Bench Press", "sets": "4", "reps": "8", "load": "RPE 7", "rest": "150", "notes": "Controlled descent, pause 0.5s at chest." },
+            { "name": "Incline Dumbbell Press", "sets": "3", "reps": "10", "load": "RPE 7", "rest": "90", "notes": "30–45° incline." },
+            { "name": "Cable Flye", "sets": "3", "reps": "12", "load": "RPE 8", "rest": "60", "notes": "Full stretch at bottom of each rep." },
+            { "name": "DB Lateral Raise", "sets": "4", "reps": "15", "load": "RPE 8", "rest": "45", "notes": "Strict form — slight forward lean." },
+            { "name": "Overhead Tricep Extension", "sets": "3", "reps": "12", "load": "RPE 8", "rest": "60", "notes": "EZ-bar or rope." }
+          ]
+        },
+        {
+          "day": "Tuesday",
+          "focus": "Pull A — Vertical",
+          "exercises": [
+            { "name": "Barbell Row", "sets": "4", "reps": "8", "load": "RPE 7", "rest": "150", "notes": "Pronated grip, pull to lower sternum." },
+            { "name": "Lat Pulldown", "sets": "3", "reps": "10", "load": "RPE 7", "rest": "90", "notes": "Wide overhand grip, elbows to hips." },
+            { "name": "Seated Cable Row", "sets": "3", "reps": "12", "load": "RPE 8", "rest": "75", "notes": "Keep chest proud, no excessive lean." },
+            { "name": "Face Pulls", "sets": "3", "reps": "15", "load": "RPE 7", "rest": "45", "notes": "External rotation at end-range." },
+            { "name": "Barbell Curl", "sets": "3", "reps": "10", "load": "RPE 8", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Wednesday",
+          "focus": "Legs A — Quad Focus",
+          "exercises": [
+            { "name": "Back Squat", "sets": "4", "reps": "8", "load": "RPE 7", "rest": "180", "notes": "High-bar, full depth." },
+            { "name": "Leg Press", "sets": "3", "reps": "12", "load": "RPE 8", "rest": "120", "notes": "Feet shoulder-width, full ROM." },
+            { "name": "Bulgarian Split Squat", "sets": "3", "reps": "10/side", "load": "RPE 8", "rest": "90", "notes": "" },
+            { "name": "Leg Extension", "sets": "3", "reps": "15", "load": "RPE 8", "rest": "60", "notes": "" },
+            { "name": "Standing Calf Raise", "sets": "4", "reps": "15", "load": "RPE 8", "rest": "45", "notes": "Full stretch at bottom." }
+          ]
+        },
+        {
+          "day": "Thursday",
+          "focus": "Push B — Vertical",
+          "exercises": [
+            { "name": "Overhead Press", "sets": "4", "reps": "8", "load": "RPE 7", "rest": "150", "notes": "Bar starts at clavicle, pressed overhead." },
+            { "name": "DB Arnold Press", "sets": "3", "reps": "10", "load": "RPE 7", "rest": "90", "notes": "Full rotation through ROM." },
+            { "name": "Incline Cable Flye", "sets": "3", "reps": "12", "load": "RPE 8", "rest": "60", "notes": "" },
+            { "name": "DB Lateral Raise", "sets": "4", "reps": "15", "load": "RPE 8", "rest": "45", "notes": "" },
+            { "name": "Tricep Pushdown", "sets": "3", "reps": "15", "load": "RPE 8", "rest": "60", "notes": "Rope attachment for elbow comfort." }
+          ]
+        },
+        {
+          "day": "Friday",
+          "focus": "Pull B — Horizontal",
+          "exercises": [
+            { "name": "Weighted Pull-Up", "sets": "4", "reps": "6", "load": "RPE 8", "rest": "150", "notes": "Full hang at bottom." },
+            { "name": "DB Row", "sets": "3", "reps": "10/side", "load": "RPE 7", "rest": "75", "notes": "Elbow pulls back past hip." },
+            { "name": "Cable Rear Delt Flye", "sets": "3", "reps": "15", "load": "RPE 7", "rest": "45", "notes": "" },
+            { "name": "Hammer Curl", "sets": "3", "reps": "12", "load": "RPE 8", "rest": "60", "notes": "" },
+            { "name": "Incline DB Curl", "sets": "2", "reps": "12", "load": "RPE 8", "rest": "60", "notes": "Full stretch at bottom." }
+          ]
+        },
+        {
+          "day": "Saturday",
+          "focus": "Legs B — Hamstring/Glute Focus",
+          "exercises": [
+            { "name": "Romanian Deadlift", "sets": "4", "reps": "8", "load": "RPE 7", "rest": "150", "notes": "Hip hinge, feel hamstring stretch." },
+            { "name": "Hip Thrust", "sets": "3", "reps": "12", "load": "RPE 8", "rest": "90", "notes": "Full hip extension at top, pause 1s." },
+            { "name": "Leg Curl", "sets": "3", "reps": "12", "load": "RPE 8", "rest": "75", "notes": "" },
+            { "name": "Walking Lunges", "sets": "3", "reps": "12/side", "load": "RPE 7", "rest": "75", "notes": "" },
+            { "name": "Seated Calf Raise", "sets": "4", "reps": "15", "load": "RPE 8", "rest": "45", "notes": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 2,
+      "label": "Week 2 — +1 set main lifts",
+      "phase": "Accumulation Phase 1",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Push A — Horizontal",
+          "exercises": [
+            { "name": "Bench Press", "sets": "5", "reps": "8", "load": "RPE 7-8", "rest": "150", "notes": "+1 set vs week 1. Same weight or slightly heavier." },
+            { "name": "Incline Dumbbell Press", "sets": "4", "reps": "10", "load": "RPE 7-8", "rest": "90", "notes": "" },
+            { "name": "Cable Flye", "sets": "3", "reps": "12", "load": "RPE 8", "rest": "60", "notes": "" },
+            { "name": "DB Lateral Raise", "sets": "4", "reps": "15", "load": "RPE 8", "rest": "45", "notes": "" },
+            { "name": "Overhead Tricep Extension", "sets": "3", "reps": "12", "load": "RPE 8", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Tuesday",
+          "focus": "Pull A — Vertical",
+          "exercises": [
+            { "name": "Barbell Row", "sets": "5", "reps": "8", "load": "RPE 7-8", "rest": "150", "notes": "+1 set." },
+            { "name": "Lat Pulldown", "sets": "4", "reps": "10", "load": "RPE 7-8", "rest": "90", "notes": "" },
+            { "name": "Seated Cable Row", "sets": "3", "reps": "12", "load": "RPE 8", "rest": "75", "notes": "" },
+            { "name": "Face Pulls", "sets": "3", "reps": "15", "load": "RPE 7", "rest": "45", "notes": "" },
+            { "name": "Barbell Curl", "sets": "3", "reps": "10", "load": "RPE 8", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Wednesday",
+          "focus": "Legs A — Quad Focus",
+          "exercises": [
+            { "name": "Back Squat", "sets": "5", "reps": "8", "load": "RPE 7-8", "rest": "180", "notes": "+1 set." },
+            { "name": "Leg Press", "sets": "4", "reps": "12", "load": "RPE 8", "rest": "120", "notes": "" },
+            { "name": "Bulgarian Split Squat", "sets": "3", "reps": "10/side", "load": "RPE 8", "rest": "90", "notes": "" },
+            { "name": "Leg Extension", "sets": "3", "reps": "15", "load": "RPE 8", "rest": "60", "notes": "" },
+            { "name": "Standing Calf Raise", "sets": "4", "reps": "15", "load": "RPE 8", "rest": "45", "notes": "" }
+          ]
+        },
+        {
+          "day": "Thursday",
+          "focus": "Push B — Vertical",
+          "exercises": [
+            { "name": "Overhead Press", "sets": "5", "reps": "8", "load": "RPE 7-8", "rest": "150", "notes": "+1 set." },
+            { "name": "DB Arnold Press", "sets": "4", "reps": "10", "load": "RPE 7-8", "rest": "90", "notes": "" },
+            { "name": "Incline Cable Flye", "sets": "3", "reps": "12", "load": "RPE 8", "rest": "60", "notes": "" },
+            { "name": "DB Lateral Raise", "sets": "4", "reps": "15", "load": "RPE 8", "rest": "45", "notes": "" },
+            { "name": "Tricep Pushdown", "sets": "3", "reps": "15", "load": "RPE 8", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Friday",
+          "focus": "Pull B — Horizontal",
+          "exercises": [
+            { "name": "Weighted Pull-Up", "sets": "5", "reps": "6", "load": "RPE 8", "rest": "150", "notes": "+1 set." },
+            { "name": "DB Row", "sets": "4", "reps": "10/side", "load": "RPE 7-8", "rest": "75", "notes": "" },
+            { "name": "Cable Rear Delt Flye", "sets": "3", "reps": "15", "load": "RPE 7", "rest": "45", "notes": "" },
+            { "name": "Hammer Curl", "sets": "3", "reps": "12", "load": "RPE 8", "rest": "60", "notes": "" },
+            { "name": "Incline DB Curl", "sets": "3", "reps": "12", "load": "RPE 8", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Saturday",
+          "focus": "Legs B — Hamstring/Glute Focus",
+          "exercises": [
+            { "name": "Romanian Deadlift", "sets": "5", "reps": "8", "load": "RPE 7-8", "rest": "150", "notes": "+1 set." },
+            { "name": "Hip Thrust", "sets": "4", "reps": "12", "load": "RPE 8", "rest": "90", "notes": "" },
+            { "name": "Leg Curl", "sets": "3", "reps": "12", "load": "RPE 8", "rest": "75", "notes": "" },
+            { "name": "Walking Lunges", "sets": "3", "reps": "12/side", "load": "RPE 7", "rest": "75", "notes": "" },
+            { "name": "Seated Calf Raise", "sets": "4", "reps": "15", "load": "RPE 8", "rest": "45", "notes": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 3,
+      "label": "Week 3 — Peak Volume",
+      "phase": "Accumulation Phase 1",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Push A — Horizontal",
+          "exercises": [
+            { "name": "Bench Press", "sets": "5", "reps": "8", "load": "RPE 8-9", "rest": "150", "notes": "Push intensity — last set near failure." },
+            { "name": "Incline Dumbbell Press", "sets": "4", "reps": "10", "load": "RPE 8-9", "rest": "90", "notes": "" },
+            { "name": "Cable Flye", "sets": "4", "reps": "12", "load": "RPE 8", "rest": "60", "notes": "+1 set vs week 2." },
+            { "name": "DB Lateral Raise", "sets": "5", "reps": "15", "load": "RPE 8", "rest": "45", "notes": "+1 set." },
+            { "name": "Overhead Tricep Extension", "sets": "3", "reps": "12", "load": "RPE 8-9", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Tuesday",
+          "focus": "Pull A — Vertical",
+          "exercises": [
+            { "name": "Barbell Row", "sets": "5", "reps": "8", "load": "RPE 8-9", "rest": "150", "notes": "Peak intensity." },
+            { "name": "Lat Pulldown", "sets": "4", "reps": "10", "load": "RPE 8-9", "rest": "90", "notes": "" },
+            { "name": "Seated Cable Row", "sets": "4", "reps": "12", "load": "RPE 8", "rest": "75", "notes": "" },
+            { "name": "Face Pulls", "sets": "3", "reps": "15", "load": "RPE 7", "rest": "45", "notes": "" },
+            { "name": "Barbell Curl", "sets": "4", "reps": "10", "load": "RPE 8-9", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Wednesday",
+          "focus": "Legs A — Quad Focus",
+          "exercises": [
+            { "name": "Back Squat", "sets": "5", "reps": "8", "load": "RPE 8-9", "rest": "180", "notes": "Peak volume week." },
+            { "name": "Leg Press", "sets": "4", "reps": "12", "load": "RPE 8-9", "rest": "120", "notes": "" },
+            { "name": "Bulgarian Split Squat", "sets": "4", "reps": "10/side", "load": "RPE 8", "rest": "90", "notes": "" },
+            { "name": "Leg Extension", "sets": "4", "reps": "15", "load": "RPE 8", "rest": "60", "notes": "" },
+            { "name": "Standing Calf Raise", "sets": "4", "reps": "15", "load": "RPE 8", "rest": "45", "notes": "" }
+          ]
+        },
+        {
+          "day": "Thursday",
+          "focus": "Push B — Vertical",
+          "exercises": [
+            { "name": "Overhead Press", "sets": "5", "reps": "8", "load": "RPE 8-9", "rest": "150", "notes": "" },
+            { "name": "DB Arnold Press", "sets": "4", "reps": "10", "load": "RPE 8-9", "rest": "90", "notes": "" },
+            { "name": "Incline Cable Flye", "sets": "4", "reps": "12", "load": "RPE 8", "rest": "60", "notes": "" },
+            { "name": "DB Lateral Raise", "sets": "5", "reps": "15", "load": "RPE 8", "rest": "45", "notes": "" },
+            { "name": "Tricep Pushdown", "sets": "4", "reps": "15", "load": "RPE 8-9", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Friday",
+          "focus": "Pull B — Horizontal",
+          "exercises": [
+            { "name": "Weighted Pull-Up", "sets": "5", "reps": "6", "load": "RPE 8-9", "rest": "150", "notes": "" },
+            { "name": "DB Row", "sets": "4", "reps": "10/side", "load": "RPE 8-9", "rest": "75", "notes": "" },
+            { "name": "Cable Rear Delt Flye", "sets": "4", "reps": "15", "load": "RPE 7-8", "rest": "45", "notes": "" },
+            { "name": "Hammer Curl", "sets": "4", "reps": "12", "load": "RPE 8-9", "rest": "60", "notes": "" },
+            { "name": "Incline DB Curl", "sets": "3", "reps": "12", "load": "RPE 8-9", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Saturday",
+          "focus": "Legs B — Hamstring/Glute Focus",
+          "exercises": [
+            { "name": "Romanian Deadlift", "sets": "5", "reps": "8", "load": "RPE 8-9", "rest": "150", "notes": "" },
+            { "name": "Hip Thrust", "sets": "4", "reps": "12", "load": "RPE 8-9", "rest": "90", "notes": "" },
+            { "name": "Leg Curl", "sets": "4", "reps": "12", "load": "RPE 8-9", "rest": "75", "notes": "" },
+            { "name": "Walking Lunges", "sets": "4", "reps": "12/side", "load": "RPE 7-8", "rest": "75", "notes": "" },
+            { "name": "Seated Calf Raise", "sets": "4", "reps": "15", "load": "RPE 8", "rest": "45", "notes": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 4,
+      "label": "Week 4 — Deload",
+      "phase": "Deload",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Push A Deload",
+          "exercises": [
+            { "name": "Bench Press", "sets": "3", "reps": "8", "load": "RPE 5-6", "rest": "90", "notes": "Active recovery. Move well, feel good." },
+            { "name": "DB Lateral Raise", "sets": "2", "reps": "15", "load": "Light", "rest": "45", "notes": "" }
+          ]
+        },
+        {
+          "day": "Tuesday",
+          "focus": "Pull A Deload",
+          "exercises": [
+            { "name": "Lat Pulldown", "sets": "3", "reps": "10", "load": "RPE 5-6", "rest": "90", "notes": "" },
+            { "name": "Face Pulls", "sets": "3", "reps": "15", "load": "Light", "rest": "45", "notes": "" }
+          ]
+        },
+        {
+          "day": "Thursday",
+          "focus": "Legs Deload",
+          "exercises": [
+            { "name": "Goblet Squat", "sets": "3", "reps": "12", "load": "RPE 5", "rest": "90", "notes": "" },
+            { "name": "Leg Curl", "sets": "2", "reps": "12", "load": "Light", "rest": "60", "notes": "" }
+          ]
+        }
+      ]
+    }
+  ],
+  "progression": "Weeks 1-4: accumulation block. Add weight when hitting top of rep range at target RPE. Repeat 4-week cycle, adding small increments each cycle.",
+  "notes": "Sunday is always rest. Adjust the 6-day schedule to fit your week. Most important: don't skip rest day between Wednesday and Thursday — you need recovery between legs and the second push day."
+}
