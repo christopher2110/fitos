@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitOS Demo — Coach Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cream: #F4EFE6; --cream-light: #FDFAF5; --cream-mid: #EDE6D8;
+      --olive: #5C6B2A; --olive-dark: #3D4A1A; --olive-muted: #8A9650; --olive-pale: #E8EDD6;
+      --text: #2C2A24; --text-muted: #7A7570; --border: #DDD8CA;
+      --sidebar-w: 220px; --topbar-h: 60px;
+      --status-active-bg: #EAF2EA; --status-active-fg: #3A7040;
+      --status-flag-bg: #FEF3CD; --status-flag-fg: #8A6220;
+      --status-onboarding-bg: #F0EEF8; --status-onboarding-fg: #5048A0;
+    }
+    html, body { height: 100%; background: var(--cream); color: var(--text); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+    .layout { display: flex; min-height: 100vh; }
+    .sidebar { width: var(--sidebar-w); background: var(--cream-light); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 50; }
+    .sidebar-brand { padding: 22px 20px 20px; border-bottom: 1px solid var(--border); }
+    .brand-wordmark { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; color: var(--olive); letter-spacing: -0.02em; }
+    .brand-tagline { font-size: 10px; font-weight: 500; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 6px; }
+    .demo-mode-chip { margin: 0 10px 0; padding: 6px 10px; background: #FEF3CD; border: 1px solid #F0D060; border-radius: 8px; font-size: 11px; font-weight: 600; color: #8A6220; text-align: center; }
+    .sidebar-nav { flex: 1; padding: 12px 10px; display: flex; flex-direction: column; gap: 2px; overflow-y: auto; }
+    .nav-section-label { font-size: 10px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; padding: 10px 10px 4px; }
+    .nav-link { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 10px; text-decoration: none; font-size: 13.5px; font-weight: 500; color: var(--text-muted); transition: background 0.12s, color 0.12s; }
+    .nav-link:hover { background: var(--cream-mid); color: var(--text); }
+    .nav-link.active { background: var(--olive-pale); color: var(--olive-dark); font-weight: 600; }
+    .nav-badge { margin-left: auto; font-size: 10px; font-weight: 700; background: var(--olive); color: white; padding: 1px 7px; border-radius: 10px; }
+    .sidebar-footer { padding: 14px; border-top: 1px solid var(--border); }
+    .coach-chip { display: flex; align-items: center; gap: 9px; }
+    .coach-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--olive); color: var(--cream-light); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; }
+    .coach-name-small { font-size: 13px; font-weight: 600; color: var(--text); }
+    .coach-role { font-size: 11px; color: var(--text-muted); }
+    .main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+    .topbar { height: var(--topbar-h); background: var(--cream-light); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 28px; position: sticky; top: 0; z-index: 40; gap: 12px; }
+    .topbar-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; color: var(--text); }
+    .page-content { padding: 28px; flex: 1; max-width: 1100px; }
+    .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+    .kpi-card { background: var(--cream-light); border: 1px solid var(--border); border-radius: 16px; padding: 20px 24px; }
+    .kpi-label { font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
+    .kpi-value { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 600; color: var(--text); line-height: 1; }
+    .kpi-sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+    .kpi-up { color: #3A7040; }
+    .two-col { display: grid; grid-template-columns: 1fr 340px; gap: 20px; }
+    .section-card { background: var(--cream-light); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; margin-bottom: 20px; }
+    .section-card-header { padding: 16px 18px 12px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .section-card-header h3 { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 600; color: var(--text); }
+    .see-all { font-size: 12px; font-weight: 600; color: var(--olive); text-decoration: none; }
+    .see-all:hover { text-decoration: underline; }
+    .client-row { display: flex; align-items: center; gap: 14px; padding: 12px 18px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.12s; text-decoration: none; }
+    .client-row:last-child { border-bottom: none; }
+    .client-row:hover { background: var(--cream-mid); }
+    .client-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--olive); color: var(--cream-light); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; flex-shrink: 0; }
+    .client-name { font-size: 14px; font-weight: 600; color: var(--text); }
+    .client-meta { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+    .client-right { margin-left: auto; text-align: right; }
+    .badge { display: inline-block; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+    .badge-Active { background: var(--status-active-bg); color: var(--status-active-fg); }
+    .badge-Flag { background: var(--status-flag-bg); color: var(--status-flag-fg); }
+    .badge-Onboarding { background: var(--status-onboarding-bg); color: var(--status-onboarding-fg); }
+    .activity-item { display: flex; gap: 12px; padding: 12px 18px; border-bottom: 1px solid var(--border); font-size: 13px; align-items: flex-start; }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--olive-muted); flex-shrink: 0; margin-top: 5px; }
+    .activity-dot.flag { background: #D09030; }
+    .activity-dot.milestone { background: #6080C0; }
+    .activity-text strong { color: var(--text); font-weight: 600; }
+    .activity-time { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .progress-bar-wrap { height: 6px; background: var(--cream-mid); border-radius: 3px; overflow: hidden; margin-top: 4px; }
+    .progress-bar-fill { height: 100%; background: var(--olive); border-radius: 3px; }
+    /* Demo CTA bar */
+    .demo-cta-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--olive-dark); color: white; padding: 12px 28px; display: flex; align-items: center; justify-content: center; gap: 16px; z-index: 200; font-size: 14px; font-weight: 500; }
+    .demo-cta-bar a { display: inline-flex; align-items: center; gap: 6px; background: white; color: var(--olive-dark); font-size: 13px; font-weight: 700; padding: 8px 20px; border-radius: 20px; text-decoration: none; transition: background 0.15s; white-space: nowrap; }
+    .demo-cta-bar a:hover { background: var(--olive-pale); }
+    body { padding-bottom: 60px; }
+    @media (max-width: 900px) { .kpi-row { grid-template-columns: repeat(2,1fr); } .two-col { grid-template-columns: 1fr; } }
+    @media (max-width: 600px) { .sidebar { display: none; } .main { margin-left: 0; } .page-content { padding: 20px; } }
+  </style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-wordmark">FitOS</div>
+      <div class="brand-tagline">Coaching OS</div>
+    </div>
+    <div class="demo-mode-chip">&#9889; Demo Mode</div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Coach</div>
+      <a href="/demo/dashboard" class="nav-link active">
+        <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+      </a>
+      <a href="/demo/dashboard/clients" class="nav-link">
+        <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Clients
+        <span class="nav-badge">3</span>
+      </a>
+      <div class="nav-section-label">AI Tools</div>
+      <a href="/demo/dashboard/agents" class="nav-link">
+        <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+        AI Agents
+      </a>
+      <a href="/demo/dashboard/agents/builder" class="nav-link">
+        <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path stroke-linecap="round" stroke-linejoin="round" d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Program Builder &#10024;
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="coach-chip">
+        <div class="coach-avatar">CA</div>
+        <div>
+          <div class="coach-name-small">Coach Alex</div>
+          <div class="coach-role">Demo Account</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-title">Dashboard</div>
+    </div>
+    <div class="page-content">
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-label">Active Clients</div>
+          <div class="kpi-value">3</div>
+          <div class="kpi-sub">All training this week</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Avg Adherence</div>
+          <div class="kpi-value">87%</div>
+          <div class="kpi-sub kpi-up">&#8593; 4% vs last week</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Check-ins This Week</div>
+          <div class="kpi-value">2</div>
+          <div class="kpi-sub">1 pending (Jen)</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Flagged</div>
+          <div class="kpi-value">1</div>
+          <div class="kpi-sub">Marcus &#8212; fatigue spike</div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div>
+          <div class="section-card">
+            <div class="section-card-header">
+              <h3>Clients</h3>
+              <a href="/demo/dashboard/clients" class="see-all">See all &#8594;</a>
+            </div>
+            <a href="/demo/dashboard/clients/sarah" class="client-row">
+              <div class="client-avatar">SC</div>
+              <div>
+                <div class="client-name">Sarah Chen</div>
+                <div class="client-meta">Hypertrophy W4/6 &middot; Last check-in 3 days ago</div>
+                <div class="progress-bar-wrap" style="width:120px"><div class="progress-bar-fill" style="width:67%"></div></div>
+              </div>
+              <div class="client-right"><span class="badge badge-Active">Active</span></div>
+            </a>
+            <a href="/demo/dashboard/clients/marcus" class="client-row">
+              <div class="client-avatar">MR</div>
+              <div>
+                <div class="client-name">Marcus Reeves</div>
+                <div class="client-meta">Peaking W2/3 &middot; Last check-in 1 day ago</div>
+                <div class="progress-bar-wrap" style="width:120px"><div class="progress-bar-fill" style="width:67%"></div></div>
+              </div>
+              <div class="client-right"><span class="badge badge-Flag">Flag</span></div>
+            </a>
+            <a href="/demo/dashboard/clients/jen" class="client-row">
+              <div class="client-avatar">JP</div>
+              <div>
+                <div class="client-name">Jen Park</div>
+                <div class="client-meta">Onboarding W1/2 &middot; Last check-in yesterday</div>
+                <div class="progress-bar-wrap" style="width:120px"><div class="progress-bar-fill" style="width:50%"></div></div>
+              </div>
+              <div class="client-right"><span class="badge badge-Onboarding">Onboarding</span></div>
+            </a>
+          </div>
+        </div>
+        <div>
+          <div class="section-card">
+            <div class="section-card-header"><h3>Recent Activity</h3></div>
+            <div class="activity-item"><div class="activity-dot"></div><div><div class="activity-text"><strong>Sarah Chen</strong> completed Lower A workout</div><div class="activity-time">2 hours ago</div></div></div>
+            <div class="activity-item"><div class="activity-dot flag"></div><div><div class="activity-text"><strong>Marcus Reeves</strong> fatigue flag raised by AI</div><div class="activity-time">8 hours ago</div></div></div>
+            <div class="activity-item"><div class="activity-dot"></div><div><div class="activity-text"><strong>Marcus Reeves</strong> submitted weekly check-in</div><div class="activity-time">8 hours ago</div></div></div>
+            <div class="activity-item"><div class="activity-dot"></div><div><div class="activity-text"><strong>Sarah Chen</strong> replied to form cue message</div><div class="activity-time">9 hours ago</div></div></div>
+            <div class="activity-item"><div class="activity-dot milestone"></div><div><div class="activity-text"><strong>Marcus Reeves</strong> hit 192.5 kg squat PR</div><div class="activity-time">3 days ago</div></div></div>
+            <div class="activity-item"><div class="activity-dot"></div><div><div class="activity-text"><strong>Jen Park</strong> submitted first check-in</div><div class="activity-time">Yesterday</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="demo-cta-bar">
+  <span>Like what you see?</span>
+  <a href="/trial/signup" onclick="trackDemo('cta_bar_click')">Start your 14-day free trial &#8594;</a>
+</div>
+<script>
+function trackDemo(e) { try { fetch('/demo/api/analytics',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event:e,ts:Date.now()})}).catch(()=>{}); } catch(_){} }
+trackDemo('demo_dashboard_view');
+</script>
+</body>
+</html>
