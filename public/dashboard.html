@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitOS — Coach Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:        #F4EFE6;
+      --cream-light:  #FDFAF5;
+      --cream-mid:    #EDE6D8;
+      --olive:        #5C6B2A;
+      --olive-dark:   #3D4A1A;
+      --olive-muted:  #8A9650;
+      --olive-pale:   #E8EDD6;
+      --text:         #2C2A24;
+      --text-muted:   #7A7570;
+      --border:       #DDD8CA;
+      --sidebar-w:    220px;
+      --topbar-h:     60px;
+
+      /* Status colors */
+      --status-active-bg:      #EAF2EA;
+      --status-active-fg:      #3A7040;
+      --status-flag-bg:        #FEF3CD;
+      --status-flag-fg:        #8A6220;
+      --status-missed-bg:      #FCE8E8;
+      --status-missed-fg:      #A83030;
+      --status-deload-bg:      #E0EEFF;
+      --status-deload-fg:      #3060A0;
+      --status-onboarding-bg:  #F0EEF8;
+      --status-onboarding-fg:  #5048A0;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--cream);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── LAYOUT ─────────────────────────────────────────── */
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── SIDEBAR ────────────────────────────────────────── */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--cream-light);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 50;
+      flex-shrink: 0;
+    }
+
+    .sidebar-brand {
+      padding: 22px 20px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand-wordmark {
+      font-family: 'Fraunces', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--olive);
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .brand-tagline {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-top: 6px;
+      line-height: 1.3;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 12px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .nav-section-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 10px 10px 4px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--text-muted);
+      transition: background 0.12s, color 0.12s;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .nav-badge {
+      margin-left: auto;
+      background: var(--cream-mid);
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 8px;
+      min-width: 24px;
+      text-align: center;
+    }
+
+    .nav-link.active .nav-badge {
+      background: var(--olive);
+      color: var(--cream-light);
+    }
+
+    .nav-link:hover { background: var(--cream-mid); color: var(--text); }
+
+    .nav-link.active {
+      background: var(--olive-pale);
+      color: var(--olive-dark);
+      font-weight: 600;
+    }
+
+    .nav-icon {
+      width: 17px;
+      height: 17px;
+      flex-shrink: 0;
+      opacity: 0.7;
+    }
+
+    .nav-link.active .nav-icon { opacity: 1; }
+
+    .sidebar-footer {
+      padding: 14px 14px;
+      border-top: 1px solid var(--border);
+    }
+
+    .coach-chip {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .coach-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--olive);
+      color: var(--cream-light);
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-family: 'Fraunces', serif;
+    }
+
+    .coach-name-small {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .coach-role {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* ── MAIN AREA ───────────────────────────────────────── */
+    .main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ── TOPBAR ──────────────────────────────────────────── */
+    .topbar {
+      height: var(--topbar-h);
+      background: var(--cream-light);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+
+    .topbar-title {
+      font-family: 'Fraunces', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+
+    .topbar-center {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .topbar-search {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 13px;
+      color: var(--text-muted);
+      width: 280px;
+    }
+
+    .topbar-search input {
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: inherit;
+      color: var(--text);
+      flex: 1;
+    }
+
+    .topbar-search input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .share-icon-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.1s;
+    }
+
+    .share-icon-btn:hover {
+      background: var(--cream-mid);
+    }
+
+    .ask-agent-btn {
+      padding: 8px 16px;
+      background: var(--olive);
+      color: var(--cream-light);
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.1s;
+      white-space: nowrap;
+    }
+
+    .ask-agent-btn:hover {
+      background: var(--olive-dark);
+    }
+
+    .sheet-indicator {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 12px;
+      background: var(--olive-pale);
+      border: 1px solid rgba(92, 107, 42, 0.22);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--olive-dark);
+    }
+
+    .sheet-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--olive);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.45; }
+    }
+
+    .topbar-date {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* ── PAGE CONTENT ───────────────────────────────────── */
+    .page-content {
+      padding: 28px;
+      flex: 1;
+      position: relative;
+    }
+
+    /* ── GREETING HEADER ─────────────────────────────────── */
+    .greeting-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .greeting-text h1 {
+      font-family: 'Fraunces', serif;
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--text);
+      margin: 0 0 4px;
+      letter-spacing: -0.01em;
+    }
+
+    .greeting-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    .greeting-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .view-all-btn {
+      padding: 7px 14px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.1s;
+    }
+
+    .view-all-btn:hover {
+      background: var(--cream-mid);
+      color: var(--text);
+    }
+
+    .new-block-btn {
+      padding: 7px 14px;
+      background: var(--olive);
+      color: var(--cream-light);
+      border: none;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+
+    .new-block-btn:hover {
+      background: var(--olive-dark);
+    }
+
+    /* ── KPI CARDS ──────────────────────────────────────── */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .kpi-card {
+      background: var(--cream-light);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px 22px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--olive);
+      opacity: 0.2;
+      border-radius: 0 0 16px 16px;
+    }
+
+    .kpi-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .kpi-value {
+      font-family: 'Fraunces', serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+
+    .kpi-unit {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-left: 2px;
+    }
+
+    .kpi-trend {
+      display: block;
+      margin-top: 10px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      line-height: 1.3;
+    }
+
+    /* ── LOWER GRID ─────────────────────────────────────── */
+    .lower-grid {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    /* ── SECTION HEADER ─────────────────────────────────── */
+    .section-hd {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-family: 'Fraunces', serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+
+    .section-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* ── ACTIVITY FEED ──────────────────────────────────── */
+    .feed-card {
+      background: var(--cream-light);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .feed-header {
+      padding: 16px 18px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .feed-list {
+      max-height: 520px;
+      overflow-y: auto;
+    }
+
+    .feed-list::-webkit-scrollbar { width: 4px; }
+    .feed-list::-webkit-scrollbar-track { background: transparent; }
+    .feed-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    .feed-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    .feed-item:last-child { border-bottom: none; }
+
+    .feed-item::before {
+      content: '';
+      position: absolute;
+      left: 34px;
+      top: 40px;
+      bottom: -12px;
+      width: 1px;
+      background: var(--border);
+    }
+
+    .feed-item:last-child::before { display: none; }
+
+    .feed-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--olive);
+      color: var(--cream-light);
+      font-size: 10px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-family: 'Fraunces', serif;
+      position: relative;
+      z-index: 1;
+    }
+
+    .feed-icon-badge {
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 1.5px solid var(--cream-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+    }
+
+    .feed-body { flex: 1; min-width: 0; }
+
+    .feed-desc {
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .feed-desc strong { font-weight: 600; }
+
+    .feed-time {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .agent-badge {
+      display: inline-block;
+      padding: 2px 7px;
+      background: var(--olive);
+      color: var(--cream-light);
+      font-size: 10px;
+      font-weight: 600;
+      border-radius: 10px;
+      white-space: nowrap;
+    }
+
+    /* ── CLIENT TABLE ───────────────────────────────────── */
+    .table-card {
+      background: var(--cream-light);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .table-header {
+      padding: 16px 18px 12px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .table-search {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 12px;
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 13px;
+      color: var(--text-muted);
+      cursor: text;
+      min-width: 160px;
+    }
+
+    table {
+      width: 100%;
+      min-width: 680px; /* prevent ACTIONS column from being clipped at narrow viewports */
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    thead th {
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: var(--cream);
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    thead th:hover { color: var(--text); }
+
+    thead th .sort-icon {
+      display: inline-block;
+      margin-left: 4px;
+      opacity: 0.4;
+      font-size: 10px;
+    }
+
+    thead th.sorted .sort-icon { opacity: 1; color: var(--olive); }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.1s;
+      cursor: pointer;
+    }
+
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--cream); }
+
+    tbody td {
+      padding: 11px 14px;
+      vertical-align: middle;
+    }
+
+    .client-cell {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .client-init {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--olive-pale);
+      color: var(--olive-dark);
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-family: 'Fraunces', serif;
+    }
+
+    .client-name {
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    /* Status badge */
+    .badge {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+    }
+
+    .badge-Active      { background: var(--status-active-bg);     color: var(--status-active-fg); }
+    .badge-Flag        { background: var(--status-flag-bg);        color: var(--status-flag-fg); }
+    .badge-Missed      { background: var(--status-missed-bg);      color: var(--status-missed-fg); }
+    .badge-Deload      { background: var(--status-deload-bg);      color: var(--status-deload-fg); }
+    .badge-Onboarding  { background: var(--status-onboarding-bg);  color: var(--status-onboarding-fg); }
+
+    /* Block cell */
+    .block-cell { min-width: 130px; }
+
+    .block-name {
+      font-size: 12px;
+      color: var(--text);
+      font-weight: 500;
+      margin-bottom: 4px;
+      white-space: nowrap;
+    }
+
+    .thin-bar {
+      height: 4px;
+      background: var(--cream-mid);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .thin-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: var(--olive);
+      transition: width 0.3s ease;
+    }
+
+    /* Compliance bar */
+    .comp-cell { min-width: 100px; }
+
+    .comp-bar {
+      height: 6px;
+      background: var(--cream-mid);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+
+    .comp-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.3s ease;
+    }
+
+    .comp-fill.high   { background: #4B7A4F; }
+    .comp-fill.medium { background: #956E20; }
+    .comp-fill.low    { background: #A83030; }
+
+    .comp-pct {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    /* Actions */
+    .actions-cell {
+      display: flex;
+      gap: 6px;
+    }
+
+    .action-btn {
+      padding: 5px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--cream-light);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: background 0.1s, color 0.1s, border-color 0.1s;
+      white-space: nowrap;
+    }
+
+    .action-btn:hover {
+      background: var(--olive-pale);
+      color: var(--olive-dark);
+      border-color: rgba(92, 107, 42, 0.3);
+    }
+
+    .action-btn.primary {
+      background: var(--olive);
+      color: var(--cream-light);
+      border-color: var(--olive);
+    }
+
+    .action-btn.primary:hover {
+      background: var(--olive-dark);
+      border-color: var(--olive-dark);
+      color: var(--cream-light);
+    }
+
+    /* ── RESPONSIVE ──────────────────────────────────────── */
+    @media (max-width: 1100px) {
+      .lower-grid {
+        grid-template-columns: 1fr;
+      }
+      .feed-card { order: 2; }
+    }
+
+    @media (max-width: 900px) {
+      .kpi-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 720px) {
+      :root { --sidebar-w: 0px; }
+      .sidebar { display: none; }
+      .main { margin-left: 0; }
+      .page-content { padding: 16px; }
+      .kpi-row { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .kpi-value { font-size: 28px; }
+
+      /* Hide some columns on small screens */
+      .col-block, .col-compliance { display: none; }
+    }
+
+    /* ── EVENT TYPE ICON COLORS ──────────────────────────── */
+    .icon-check      { background: var(--status-active-bg);     }
+    .icon-dumbbell   { background: var(--olive-pale);            }
+    .icon-flag       { background: var(--status-flag-bg);        }
+    .icon-message    { background: var(--status-deload-bg);      }
+    .icon-trophy     { background: #FEF3CD;                      }
+    .icon-alert      { background: var(--status-missed-bg);      }
+
+    /* ── EMPTY / LOADING ─────────────────────────────────── */
+    .empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .empty-card {
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--text-muted);
+    }
+
+    .empty-card .empty-icon {
+      font-size: 36px;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .empty-card h3 {
+      font-family: 'Fraunces', serif;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text);
+      margin: 0 0 6px;
+    }
+
+    .empty-card p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    /* Skeleton shimmer */
+    .skeleton {
+      background: linear-gradient(90deg, var(--cream-mid) 25%, var(--border) 50%, var(--cream-mid) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s ease-in-out infinite;
+      border-radius: 6px;
+    }
+
+    @keyframes shimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .skeleton-line {
+      height: 14px;
+      margin-bottom: 8px;
+    }
+
+    /* Freshness indicator */
+    .freshness {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 500;
+      padding: 4px 10px;
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+
+    .freshness.live::before {
+      content: '● ';
+      color: var(--olive);
+      font-size: 9px;
+    }
+
+    /* KPI skeleton */
+    .kpi-skel { display: flex; flex-direction: column; gap: 8px; padding: 4px 0; }
+    .kpi-skel .skel-val { height: 36px; width: 70%; }
+    .kpi-skel .skel-lbl { height: 12px; width: 50%; }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- ── SIDEBAR ─────────────────────────────────────────── -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-wordmark">FitOS</div>
+      <div class="brand-tagline">Coaching Platform</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Workspace</div>
+
+      <a class="nav-link active" href="/dashboard">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        Dashboard
+      </a>
+
+      <a class="nav-link" href="/dashboard/messages" id="nav-messages-link">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+        </svg>
+        Messages
+        <span class="nav-badge" id="nav-messages-badge" style="display:none">0</span>
+      </a>
+
+      <a class="nav-link" href="/dashboard/clients">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+        </svg>
+        Clients
+      </a>
+
+      <a class="nav-link" href="/dashboard/exercises">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2z"/><path d="M8 10h8M8 14h5"/></svg>
+        Exercise Library
+      </a>
+
+      <a class="nav-link" href="/dashboard/agents">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/><path d="M12 12v9"/>
+        </svg>
+        My Agents
+      </a>
+
+      <a class="nav-link" href="/settings/agents">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+        </svg>
+        Claude Skills
+      </a>
+
+      <div class="nav-section-label" style="margin-top:6px">AI Tools</div>
+
+      <a class="nav-link" href="/dashboard/agents/builder">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+        Program Builder
+        <span style="font-size:9px;font-weight:700;background:var(--olive);color:#fff;padding:2px 6px;border-radius:10px;margin-left:auto">AI</span>
+      </a>
+
+      <div class="nav-section-label" style="margin-top:6px">Programs</div>
+
+      <a class="nav-link" href="/dashboard/agents/builder">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+        Templates
+      </a>
+
+      <a class="nav-link" href="/dashboard/clients" title="Manage client schedules">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/><path d="M19.07 4.93A10 10 0 005 17.07M5 19a10 10 0 1014.07-14.07"/>
+        </svg>
+        Schedule
+      </a>
+    </nav>
+
+    <!-- Pricing link — shown only during trial (hidden after conversion via JS) -->
+    <div id="nav-pricing-block" style="padding:12px 16px 4px;border-top:1px solid var(--cream-mid)">
+      <a href="/pricing" style="display:flex;align-items:center;gap:8px;background:#4a5c3a;color:#fdfaf5;text-decoration:none;padding:9px 14px;border-radius:8px;font-size:13px;font-weight:600;transition:background 0.15s">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        Upgrade — $497 →
+      </a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="coach-chip">
+        <div class="coach-avatar" id="coach-avatar-init">C</div>
+        <div>
+          <div class="coach-name-small" id="coach-name-display">Coach</div>
+          <div class="coach-role">FitOS</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ──────────────────────────────────────────────── -->
+  <div class="main">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="topbar-title">Dashboard</div>
+      <div class="topbar-center">
+        <div class="topbar-search">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input type="text" id="global-search" placeholder="Search clients... ⌘K" autocomplete="off">
+        </div>
+      </div>
+      <div class="topbar-right">
+        <span class="topbar-date" id="topbar-date"></span>
+        <span class="freshness" id="freshness-indicator" style="display:none"></span>
+        <button class="share-icon-btn" title="Share">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+          </svg>
+        </button>
+        <button class="ask-agent-btn" onclick="window.location='/settings/agents'">+ Ask agent</button>
+      </div>
+    </header>
+
+    <!-- PAGE CONTENT -->
+    <div class="page-content">
+
+      <!-- GREETING HEADER -->
+      <div class="greeting-header">
+        <div class="greeting-text">
+          <h1 id="greeting-headline">Good morning, Coach.</h1>
+          <p class="greeting-subtitle" id="greeting-subtitle">Your coaching dashboard</p>
+        </div>
+        <div class="greeting-actions">
+          <button class="view-all-btn" onclick="document.querySelector('.feed-card').scrollIntoView({behavior:'smooth'})">View all activity</button>
+          <button class="new-block-btn" onclick="window.location='/dashboard/agents/builder'">+ New block</button>
+        </div>
+      </div>
+
+      <!-- SETUP BANNER (shown for coaches who haven't connected a Sheet) -->
+      <div id="setup-banner" style="display:none; background:var(--olive-pale); border:1.5px solid rgba(92,107,42,0.25); border-radius:12px; padding:22px 24px; margin-bottom:20px;">
+        <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+          <span style="font-size:28px; line-height:1; flex-shrink:0;">📊</span>
+          <div style="flex:1; min-width:200px;">
+            <div style="font-family:'Fraunces',serif; font-size:17px; font-weight:700; color:var(--olive-dark); margin-bottom:4px; letter-spacing:-0.01em;">Connect your Google Sheet</div>
+            <div style="font-size:13px; color:var(--text-muted); line-height:1.5;">Your client data lives in a Sheet you own. Takes 2 minutes — we'll walk you through every step.</div>
+          </div>
+          <a href="/dashboard/connect-sheet" style="background:var(--olive); color:var(--cream-light); padding:11px 22px; border-radius:9px; font-size:13px; font-weight:600; text-decoration:none; white-space:nowrap; flex-shrink:0;">Connect Sheet →</a>
+        </div>
+      </div>
+
+      <!-- KPI CARDS -->
+      <div class="kpi-row" id="kpi-row">
+        <!-- Populated by JS -->
+      </div>
+
+      <!-- REFER & EARN CARD -->
+      <div id="referral-card" style="display:none; background:var(--cream-light); border:1px solid var(--border); border-radius:16px; padding:24px 28px; margin-bottom:20px;">
+        <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap;">
+          <div style="flex:1; min-width:200px;">
+            <div style="font-family:'Fraunces',serif; font-size:17px; font-weight:700; color:var(--olive-dark); margin-bottom:6px;">
+              Refer &amp; Earn $197
+            </div>
+            <div style="font-size:13px; color:var(--text-muted); line-height:1.6; margin-bottom:14px;">
+              Share your link. Every coach who purchases earns you $197.<br>
+              <strong style="color:var(--text)">Refer 3 → your license was free.</strong>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+              <div id="ref-link-box" style="font-family:monospace; font-size:13px; background:var(--cream); border:1px solid var(--border); border-radius:8px; padding:8px 12px; color:var(--text); word-break:break-all; flex:1; min-width:200px;">Loading…</div>
+              <button id="ref-copy-btn" onclick="copyReferralLink()" style="background:var(--olive); color:var(--cream-light); border:none; border-radius:8px; padding:9px 16px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;">Copy Link</button>
+            </div>
+            <div id="ref-copy-msg" style="font-size:12px; color:var(--olive); margin-top:6px; display:none;">✓ Copied to clipboard</div>
+          </div>
+          <div style="display:flex; gap:20px; flex-shrink:0;">
+            <div style="text-align:center;">
+              <div id="ref-stat-referrals" style="font-size:28px; font-weight:700; color:var(--olive-dark); line-height:1;">0</div>
+              <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase; letter-spacing:.5px; margin-top:4px;">Referred</div>
+            </div>
+            <div style="text-align:center;">
+              <div id="ref-stat-converted" style="font-size:28px; font-weight:700; color:var(--olive-dark); line-height:1;">0</div>
+              <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase; letter-spacing:.5px; margin-top:4px;">Converted</div>
+            </div>
+            <div style="text-align:center;">
+              <div id="ref-stat-earned" style="font-size:28px; font-weight:700; color:var(--olive-dark); line-height:1;">$0</div>
+              <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase; letter-spacing:.5px; margin-top:4px;">Earned</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOWER GRID: activity + clients -->
+      <div class="lower-grid">
+
+        <!-- ACTIVITY FEED -->
+        <div class="feed-card">
+          <div class="feed-header">
+            <div class="section-hd" style="margin-bottom:0">
+              <div class="section-title">Activity</div>
+              <div class="section-sub">Last 20 events</div>
+            </div>
+          </div>
+          <div class="feed-list" id="feed-list">
+            <div class="empty">Loading…</div>
+          </div>
+        </div>
+
+        <!-- CLIENT TABLE -->
+        <div class="table-card">
+          <div class="table-header">
+            <div class="section-title">Clients</div>
+            <div class="table-search">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <span id="search-label">Search clients…</span>
+              <input id="client-search" type="text"
+                style="border:none;outline:none;background:transparent;font:inherit;color:var(--text);width:0;flex:1"
+                placeholder="Search clients…"
+                onFocus="this.previousElementSibling.style.display='none'"
+                onBlur="this.previousElementSibling.style.display=''"
+              >
+            </div>
+          </div>
+          <div style="overflow-x:auto">
+            <table id="client-table">
+              <thead>
+                <tr>
+                  <th data-col="name">Client <span class="sort-icon">↕</span></th>
+                  <th data-col="status">Status <span class="sort-icon">↕</span></th>
+                  <th class="col-block" data-col="block">Block <span class="sort-icon">↕</span></th>
+                  <th class="col-compliance" data-col="compliance7d">7-day <span class="sort-icon">↕</span></th>
+                  <th data-col="lastCheckin">Last Check-in <span class="sort-icon">↕</span></th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="client-tbody">
+                <tr><td colspan="6" class="empty">Loading…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- .lower-grid -->
+    </div><!-- .page-content -->
+  </div><!-- .main -->
+</div><!-- .layout -->
+
+
+<script>
+(function() {
+  // ── CONFIG (injected by server) ──────────────────────────
+  const LIVE_CFG = window.__COACH_LIVE__ || {};
+  const isLive = LIVE_CFG.sheetsEnabled || false;
+  const coachName = LIVE_CFG.coachName || (window.__COACH__ && window.__COACH__.coachName) || 'Coach';
+
+  // ── COACH IDENTITY ────────────────────────────────────────
+  const coachInitial = coachName.split(' ').filter(Boolean).map(w => w[0]).join('').toUpperCase().slice(0, 2) || 'C';
+  const now = new Date();
+  const hour = now.getHours();
+  const timeGreeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  document.getElementById('greeting-headline').textContent = `${timeGreeting}, ${coachName}.`;
+  const avatarEl = document.getElementById('coach-avatar-init');
+  const nameEl   = document.getElementById('coach-name-display');
+  if (avatarEl) avatarEl.textContent = coachInitial;
+  if (nameEl)   nameEl.textContent   = coachName;
+
+  // ── DATE ────────────────────────────────────────────────
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const DAYS   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const dateEl = document.getElementById('topbar-date');
+  if (dateEl) dateEl.textContent = DAYS[now.getDay()] + ', ' + MONTHS[now.getMonth()] + ' ' + now.getDate();
+
+  // ── ICON HELPERS ─────────────────────────────────────────
+  const ICON_CLS = {
+    check:    'icon-check',
+    dumbbell: 'icon-dumbbell',
+    flag:     'icon-flag',
+    message:  'icon-message',
+    trophy:   'icon-trophy',
+    alert:    'icon-alert',
+  };
+  const ICON_LABEL = {
+    check: '✓', dumbbell: '↗', flag: '⚑', message: '✉', trophy: '★', alert: '!',
+  };
+
+  // ── TABLE STATE ───────────────────────────────────────────
+  let clients    = [];
+  let sortCol    = 'name';
+  let sortAsc    = true;
+  let filterText = '';
+
+  function complianceClass(pct) {
+    return pct >= 75 ? 'high' : pct >= 50 ? 'medium' : 'low';
+  }
+
+  // ── RENDER KPIs ──────────────────────────────────────────
+  function renderKPIs(kpis) {
+    const defs = [
+      {
+        label: 'Active Clients',
+        value: kpis.activeClients,
+        sub:   kpis.activeClientsDelta !== 0
+                 ? (kpis.activeClientsDelta > 0 ? '+' : '') + kpis.activeClientsDelta + ' this month'
+                 : 'this month',
+        format: v => v,
+      },
+      {
+        label: 'Sessions (7d)',
+        value: kpis.sessionsLast7,
+        sub:   'completed this week',
+        format: v => v,
+      },
+      {
+        label: 'Avg RPE (7d)',
+        value: kpis.avgRpe,
+        sub:   'across all sets',
+        format: v => (v && typeof v === 'number') ? v.toFixed(1) : '—',
+      },
+      {
+        label: 'Retention',
+        value: kpis.retentionPct,
+        unit:  '%',
+        sub:   'checked in (30d)',
+        format: v => v,
+      },
+    ];
+
+    const kpiRow = document.getElementById('kpi-row');
+    kpiRow.innerHTML = defs.map(k => `
+      <div class="kpi-card">
+        <div class="kpi-label">${k.label}</div>
+        <div class="kpi-value">${k.format(k.value)}<span class="kpi-unit">${k.unit || ''}</span></div>
+        <div class="kpi-trend">${k.sub}</div>
+      </div>
+    `).join('');
+  }
+
+  // ── RENDER KPI SKELETON ───────────────────────────────────
+  function renderKPISkeleton() {
+    const kpiRow = document.getElementById('kpi-row');
+    kpiRow.innerHTML = [1,2,3,4].map(() => `
+      <div class="kpi-card">
+        <div class="kpi-skel">
+          <div class="skeleton skel-lbl" style="height:11px;width:55%;margin-bottom:10px"></div>
+          <div class="skeleton skel-val" style="height:34px;width:65%"></div>
+          <div class="skeleton skel-lbl" style="height:11px;width:45%;margin-top:10px"></div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // ── RENDER FEED ───────────────────────────────────────────
+  function renderFeed(events) {
+    const feedList = document.getElementById('feed-list');
+    if (!events || events.length === 0) {
+      feedList.innerHTML = `
+        <div class="empty-card">
+          <span class="empty-icon">📋</span>
+          <h3>No activity yet</h3>
+          <p>Client check-ins and workout completions will appear here.</p>
+        </div>`;
+      return;
+    }
+
+    feedList.innerHTML = events.map(ev => {
+      // Support both full event shapes (from mock) and slim shapes (from live API)
+      const init       = ev.clientInit || (ev.type === 'checkin' ? '✓' : '↗');
+      const name       = ev.clientName || 'Client';
+      const icon       = ev.icon || (ev.type === 'checkin' ? 'check' : 'dumbbell');
+      const label      = ev.label || (ev.type === 'checkin' ? 'Submitted check-in' : 'Completed workout');
+      const relTime    = ev.relTime || '—';
+      const isAgent    = ev.isAgent || (ev.source === 'agent');
+      const cls        = ICON_CLS[icon]  || 'icon-check';
+      const lbl        = ICON_LABEL[icon] || '✓';
+      const agentBadge = isAgent ? '<span class="agent-badge">Agent</span>' : '';
+      return `
+        <div class="feed-item">
+          <div class="feed-avatar">
+            ${init}
+            <div class="feed-icon-badge ${cls}">${lbl}</div>
+          </div>
+          <div class="feed-body">
+            <div class="feed-desc"><strong>${name}</strong> ${label.toLowerCase()}</div>
+            <div class="feed-time">${relTime}${agentBadge}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // ── RENDER TABLE ──────────────────────────────────────────
+  function renderTable() {
+    const filtered = clients.filter(c =>
+      !filterText || c.name.toLowerCase().includes(filterText.toLowerCase())
+    );
+    const sorted = filtered.slice().sort((a, b) => {
+      let va = a[sortCol], vb = b[sortCol];
+      if (typeof va === 'string') va = va.toLowerCase();
+      if (typeof vb === 'string') vb = vb.toLowerCase();
+      if (va < vb) return sortAsc ? -1 : 1;
+      if (va > vb) return sortAsc ?  1 : -1;
+      return 0;
+    });
+    const tbody = document.getElementById('client-tbody');
+
+    if (sorted.length === 0 && !filterText) {
+      // Empty state — fresh sheet, no clients yet
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6" style="padding:0">
+            <div class="empty-card">
+              <span class="empty-icon">🏋️</span>
+              <h3>Add your first client</h3>
+              <p>Fill in the Profile tab of your Google Sheet to get started.</p>
+            </div>
+          </td>
+        </tr>`;
+      return;
+    }
+
+    if (sorted.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" class="empty">No clients found</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = sorted.map(c => {
+      const bp = c.blockParsed || { name: c.block || 'Program', week: 1, totalWeeks: 1, progressPct: 100 };
+      const compCls = complianceClass(c.compliance7d || 0);
+      return `
+        <tr onclick="window.location='/dashboard/clients/${c.id}'">
+          <td>
+            <div class="client-cell">
+              <div class="client-init">${c.initial || '?'}</div>
+              <div class="client-name">${c.name}</div>
+            </div>
+          </td>
+          <td><span class="badge badge-${c.status}">${c.status}</span></td>
+          <td class="col-block">
+            <div class="block-cell">
+              <div class="block-name">${bp.name} W${bp.week}/${bp.totalWeeks}</div>
+              <div class="thin-bar"><div class="thin-fill" style="width:${bp.progressPct}%"></div></div>
+            </div>
+          </td>
+          <td class="col-compliance">
+            <div class="comp-cell">
+              <div class="comp-pct">${c.compliance7d || 0}%</div>
+              <div class="comp-bar">
+                <div class="comp-fill ${compCls}" style="width:${c.compliance7d || 0}%"></div>
+              </div>
+            </div>
+          </td>
+          <td style="color:var(--text-muted);font-size:12px;white-space:nowrap">${c.lastCheckin || '—'}</td>
+          <td>
+            <div class="actions-cell">
+              <button class="action-btn" onclick="event.stopPropagation(); window.location='/dashboard/messages'">Message</button>
+              <button class="action-btn primary" onclick="event.stopPropagation(); window.location='/dashboard/clients/${c.id}'">Details</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  // Sort on header click
+  document.querySelectorAll('thead th[data-col]').forEach(th => {
+    th.addEventListener('click', () => {
+      const col = th.dataset.col;
+      sortCol = (sortCol === col) ? (sortAsc = !sortAsc, col) : (sortAsc = true, col);
+      document.querySelectorAll('thead th').forEach(t => t.classList.remove('sorted'));
+      th.classList.add('sorted');
+      th.querySelector('.sort-icon').textContent = sortAsc ? '↑' : '↓';
+      renderTable();
+    });
+  });
+
+  document.getElementById('client-search').addEventListener('input', e => {
+    filterText = e.target.value;
+    renderTable();
+  });
+
+  // ── FRESHNESS INDICATOR ───────────────────────────────────
+  let lastFetchedAt = null;
+  const freshnessEl = document.getElementById('freshness-indicator');
+
+  function updateFreshness() {
+    if (!isLive || !freshnessEl) return;
+    if (!lastFetchedAt) { freshnessEl.style.display = 'none'; return; }
+    const secs = Math.round((Date.now() - lastFetchedAt) / 1000);
+    freshnessEl.style.display = '';
+    freshnessEl.className = 'freshness live';
+    freshnessEl.textContent = secs < 10 ? 'Just updated' : `Updated ${secs}s ago`;
+  }
+  setInterval(updateFreshness, 5000);
+
+  // ── FETCH + POLL (always used — demo/mock injection removed) ──
+  async function fetchAll() {
+    try {
+      const [kpisRes, actRes, clientsRes] = await Promise.all([
+        fetch('/dashboard/api/kpis'),
+        fetch('/dashboard/api/activity'),
+        fetch('/dashboard/api/clients'),
+      ]);
+      const [kpisData, actData, clientsData] = await Promise.all([
+        kpisRes.json(), actRes.json(), clientsRes.json(),
+      ]);
+
+      if (kpisData.ok)    renderKPIs(kpisData.kpis);
+      if (actData.ok)     renderFeed(actData.events);
+      if (clientsData.ok) { clients = clientsData.clients || []; renderTable(); }
+
+      // Show setup banner for coaches who haven't connected a sheet
+      const needsSetup = kpisData.needsSetup || clientsData.needsSetup;
+      const setupBanner = document.getElementById('setup-banner');
+      if (setupBanner) setupBanner.style.display = needsSetup ? '' : 'none';
+
+      lastFetchedAt = Date.now();
+      updateFreshness();
+    } catch (err) {
+      // Network error — keep existing data visible, don't wipe it
+      console.warn('[dashboard] fetch error:', err.message);
+    }
+  }
+
+  // ── BOOT ─────────────────────────────────────────────────
+  // Always fetch from API — dashboard shows real data or empty state
+  renderKPISkeleton();
+  document.getElementById('feed-list').innerHTML =
+    '<div class="empty" style="padding:24px">Loading activity…</div>';
+  document.getElementById('client-tbody').innerHTML =
+    '<tr><td colspan="6" class="empty">Loading clients…</td></tr>';
+  if (freshnessEl) freshnessEl.style.display = 'none';
+
+  fetchAll();
+  if (isLive) {
+    setInterval(fetchAll, 30_000); // poll every 30s matching read cache TTL
+  }
+
+  // ── MESSAGES UNREAD BADGE ─────────────────────────────────
+  const msgBadge = document.getElementById('nav-messages-badge');
+
+  async function fetchUnreadCount() {
+    try {
+      const res = await fetch('/messages/api/unread');
+      if (!res.ok) return;
+      const data = await res.json();
+      const count = data.count || 0;
+      if (msgBadge) {
+        if (count > 0) {
+          msgBadge.textContent = count;
+          msgBadge.style.display = '';
+          msgBadge.style.background = 'var(--olive)';
+          msgBadge.style.color = 'var(--cream-light)';
+        } else {
+          msgBadge.style.display = 'none';
+        }
+      }
+    } catch (_) {}
+  }
+
+  fetchUnreadCount();
+  setInterval(fetchUnreadCount, 30_000);
+
+  // ── REFERRAL CARD ──────────────────────────────────────────
+  let referralLinkCache = null;
+
+  async function loadReferralCard() {
+    try {
+      const res = await fetch('/api/referrals/api/my-link');
+      if (!res.ok) return;
+      const data = await res.json();
+      if (!data.ok) return;
+
+      referralLinkCache = data.referralLink;
+
+      const card = document.getElementById('referral-card');
+      const linkBox = document.getElementById('ref-link-box');
+      const statReferrals = document.getElementById('ref-stat-referrals');
+      const statConverted = document.getElementById('ref-stat-converted');
+      const statEarned = document.getElementById('ref-stat-earned');
+
+      if (linkBox)      linkBox.textContent = data.referralLink;
+      if (statReferrals) statReferrals.textContent = data.totalReferrals || 0;
+      if (statConverted) statConverted.textContent = data.converted || 0;
+      if (statEarned)   statEarned.textContent = `$${data.totalEarned || 0}`;
+      if (card)         card.style.display = '';
+    } catch (_) {}
+  }
+
+  window.copyReferralLink = function() {
+    const link = referralLinkCache || document.getElementById('ref-link-box').textContent;
+    if (!link || link === 'Loading…') return;
+    navigator.clipboard.writeText(link).then(() => {
+      const msg = document.getElementById('ref-copy-msg');
+      if (msg) { msg.style.display = ''; setTimeout(() => { msg.style.display = 'none'; }, 2000); }
+    }).catch(() => {
+      // Fallback for non-https
+      const el = document.createElement('textarea');
+      el.value = link;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+    });
+  };
+
+  loadReferralCard();
+
+  // ── GLOBAL SEARCH (⌘K / Ctrl+K) ──────────────────────────
+  const globalSearch = document.getElementById('global-search');
+  if (globalSearch) {
+    // ⌘K / Ctrl+K focuses the search input
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        globalSearch.focus();
+        globalSearch.select();
+      }
+      if (e.key === 'Escape' && document.activeElement === globalSearch) {
+        globalSearch.blur();
+        globalSearch.value = '';
+        filterText = '';
+        renderTable();
+      }
+    });
+
+    // Typing in global search mirrors the client-search filter
+    globalSearch.addEventListener('input', (e) => {
+      const q = e.target.value;
+      // Also update the table search field to keep them in sync
+      const tableSearch = document.getElementById('client-search');
+      if (tableSearch) tableSearch.value = q;
+      filterText = q;
+      renderTable();
+      // Scroll the client table into view when typing
+      if (q.length > 0) {
+        document.querySelector('.table-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    });
+  }
+
+})();
+</script>
+
+</body>
+</html>
