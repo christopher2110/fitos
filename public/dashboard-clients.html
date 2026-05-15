@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitOS — Clients</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:        #F4EFE6;
+      --cream-light:  #FDFAF5;
+      --cream-mid:    #EDE6D8;
+      --olive:        #5C6B2A;
+      --olive-dark:   #3D4A1A;
+      --olive-muted:  #8A9650;
+      --olive-pale:   #E8EDD6;
+      --text:         #2C2A24;
+      --text-muted:   #7A7570;
+      --border:       #DDD8CA;
+      --sidebar-w:    220px;
+      --topbar-h:     60px;
+      --status-active-bg:      #EAF2EA;
+      --status-active-fg:      #3A7040;
+      --status-flag-bg:        #FEF3CD;
+      --status-flag-fg:        #8A6220;
+      --status-missed-bg:      #FCE8E8;
+      --status-missed-fg:      #A83030;
+      --status-deload-bg:      #E0EEFF;
+      --status-deload-fg:      #3060A0;
+      --status-onboarding-bg:  #F0EEF8;
+      --status-onboarding-fg:  #5048A0;
+    }
+
+    html, body { height: 100%; background: var(--cream); color: var(--text); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+    .layout { display: flex; min-height: 100vh; }
+
+    /* ── SIDEBAR ─────────────────────────────────────── */
+    .sidebar { width: var(--sidebar-w); background: var(--cream-light); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 50; }
+    .sidebar-brand { padding: 22px 20px 20px; border-bottom: 1px solid var(--border); }
+    .brand-wordmark { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; color: var(--olive); letter-spacing: -0.02em; }
+    .brand-tagline { font-size: 10px; font-weight: 500; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 6px; }
+    .sidebar-nav { flex: 1; padding: 12px 10px; display: flex; flex-direction: column; gap: 2px; }
+    .nav-section-label { font-size: 10px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; padding: 10px 10px 4px; }
+    .nav-link { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 10px; text-decoration: none; font-size: 13.5px; font-weight: 500; color: var(--text-muted); transition: background 0.12s, color 0.12s; cursor: pointer; }
+    .nav-link:hover { background: var(--cream-mid); color: var(--text); }
+    .nav-link.active { background: var(--olive-pale); color: var(--olive-dark); font-weight: 600; }
+    .nav-icon { width: 17px; height: 17px; flex-shrink: 0; opacity: 0.7; }
+    .nav-link.active .nav-icon { opacity: 1; }
+    .sidebar-footer { padding: 14px; border-top: 1px solid var(--border); }
+    .coach-chip { display: flex; align-items: center; gap: 9px; }
+    .coach-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--olive); color: var(--cream-light); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; }
+    .coach-name-small { font-size: 13px; font-weight: 600; color: var(--text); }
+    .coach-role { font-size: 11px; color: var(--text-muted); }
+
+    /* ── MAIN ────────────────────────────────────────── */
+    .main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+    .topbar { height: var(--topbar-h); background: var(--cream-light); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 28px; position: sticky; top: 0; z-index: 40; }
+    .topbar-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; color: var(--text); }
+    .page-content { padding: 28px; flex: 1; }
+
+    /* ── PAGE HEADER ─────────────────────────────────── */
+    .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+    .page-header h1 { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 600; color: var(--text); }
+    .page-header p { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+    .add-client-btn { padding: 10px 20px; background: var(--olive); color: var(--cream-light); border: none; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.12s; display: flex; align-items: center; gap: 6px; }
+    .add-client-btn:hover { background: var(--olive-dark); }
+
+    /* ── TABLE ────────────────────────────────────────── */
+    .table-card { background: var(--cream-light); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+    .table-header { padding: 16px 18px 12px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .section-title { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 600; color: var(--text); }
+    .table-search { display: flex; align-items: center; gap: 7px; padding: 7px 12px; background: var(--cream); border: 1px solid var(--border); border-radius: 10px; font-size: 13px; color: var(--text-muted); min-width: 200px; }
+    .table-search input { border: none; outline: none; background: transparent; font: inherit; color: var(--text); flex: 1; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead th { padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; background: var(--cream); border-bottom: 1px solid var(--border); cursor: pointer; white-space: nowrap; }
+    thead th:hover { color: var(--text); }
+    .sort-icon { display: inline-block; margin-left: 4px; opacity: 0.4; font-size: 10px; }
+    thead th.sorted .sort-icon { opacity: 1; color: var(--olive); }
+    tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; cursor: pointer; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--cream); }
+    tbody td { padding: 11px 14px; vertical-align: middle; }
+    .client-cell { display: flex; align-items: center; gap: 10px; }
+    .client-init { width: 32px; height: 32px; border-radius: 50%; background: var(--olive-pale); color: var(--olive-dark); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; }
+    .client-name { font-weight: 500; color: var(--text); }
+    .client-email { font-size: 11px; color: var(--text-muted); }
+    .badge { display: inline-block; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 600; letter-spacing: 0.03em; white-space: nowrap; }
+    .badge-Active { background: var(--status-active-bg); color: var(--status-active-fg); }
+    .badge-Flag { background: var(--status-flag-bg); color: var(--status-flag-fg); }
+    .badge-Missed { background: var(--status-missed-bg); color: var(--status-missed-fg); }
+    .badge-Deload { background: var(--status-deload-bg); color: var(--status-deload-fg); }
+    .badge-Onboarding { background: var(--status-onboarding-bg); color: var(--status-onboarding-fg); }
+    .action-btn { padding: 5px 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--cream-light); font-size: 11px; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: background 0.1s, color 0.1s; white-space: nowrap; }
+    .action-btn:hover { background: var(--olive-pale); color: var(--olive-dark); border-color: rgba(92,107,42,0.3); }
+    .action-btn.primary { background: var(--olive); color: var(--cream-light); border-color: var(--olive); }
+    .action-btn.primary:hover { background: var(--olive-dark); }
+    .actions-cell { display: flex; gap: 6px; }
+
+    /* Empty state */
+    .empty-card { text-align: center; padding: 48px 24px; color: var(--text-muted); }
+    .empty-card .empty-icon { font-size: 36px; margin-bottom: 12px; display: block; }
+    .empty-card h3 { font-family: 'Fraunces', serif; font-size: 17px; font-weight: 600; color: var(--text); margin: 0 0 6px; }
+    .empty-card p { font-size: 13px; color: var(--text-muted); margin: 0 0 16px; }
+
+    /* ── MODAL ────────────────────────────────────────── */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(44,42,36,0.35); z-index: 100; align-items: center; justify-content: center; }
+    .modal-overlay.open { display: flex; }
+    .modal { background: var(--cream-light); border-radius: 20px; padding: 32px; width: 440px; max-width: 95vw; box-shadow: 0 20px 60px rgba(0,0,0,0.15); }
+    .modal h2 { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; color: var(--text); margin: 0 0 8px; }
+    .modal p { font-size: 13px; color: var(--text-muted); margin: 0 0 24px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 6px; letter-spacing: 0.03em; }
+    .form-group input, .form-group textarea { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--cream); font-family: inherit; font-size: 13px; color: var(--text); outline: none; transition: border-color 0.15s; }
+    .form-group input:focus, .form-group textarea:focus { border-color: var(--olive); }
+    .form-group textarea { min-height: 60px; resize: vertical; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
+    .btn-cancel { padding: 10px 18px; border: 1px solid var(--border); border-radius: 10px; background: transparent; font-size: 13px; font-weight: 600; color: var(--text-muted); cursor: pointer; }
+    .btn-cancel:hover { background: var(--cream-mid); }
+    .btn-submit { padding: 10px 18px; border: none; border-radius: 10px; background: var(--olive); color: var(--cream-light); font-size: 13px; font-weight: 600; cursor: pointer; }
+    .btn-submit:hover { background: var(--olive-dark); }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+    .form-error { color: var(--status-missed-fg); font-size: 12px; margin-top: 4px; display: none; }
+    .form-success { background: var(--status-active-bg); color: var(--status-active-fg); font-size: 13px; padding: 10px 14px; border-radius: 10px; margin-bottom: 16px; display: none; }
+
+    /* ── TOAST ────────────────────────────────────────── */
+    .toast {
+      position: fixed; top: 20px; right: 20px; z-index: 200;
+      padding: 14px 20px; border-radius: 12px;
+      font-size: 13px; font-weight: 500; max-width: 380px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      transform: translateX(120%); transition: transform 0.3s ease;
+    }
+    .toast.show { transform: translateX(0); }
+    .toast-success { background: var(--status-active-bg); color: var(--status-active-fg); border: 1px solid rgba(58,112,64,0.2); }
+    .toast-error { background: var(--status-missed-bg); color: var(--status-missed-fg); border: 1px solid rgba(168,48,48,0.2); }
+    .toast-info { background: var(--status-deload-bg); color: var(--status-deload-fg); border: 1px solid rgba(48,96,160,0.2); }
+    .toast a { color: inherit; font-weight: 600; text-decoration: underline; }
+    .toast .pwa-link { display: block; margin-top: 8px; font-size: 12px; word-break: break-all; background: rgba(0,0,0,0.05); padding: 6px 10px; border-radius: 6px; }
+    .toast .pwa-link-copy { cursor: pointer; margin-left: 6px; opacity: 0.7; }
+    .toast .pwa-link-copy:hover { opacity: 1; }
+
+    /* ── SETUP BANNER ────────────────────────────────── */
+    .setup-banner {
+      background: var(--status-flag-bg); border: 1px solid rgba(138,98,32,0.2);
+      border-radius: 12px; padding: 16px 20px; margin-bottom: 20px;
+      display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--status-flag-fg);
+    }
+    .setup-banner a { color: var(--olive-dark); font-weight: 600; }
+    .setup-banner .setup-icon { font-size: 20px; }
+
+    /* ── RESPONSIVE ──────────────────────────────────── */
+    @media (max-width: 720px) {
+      :root { --sidebar-w: 0px; }
+      .sidebar { display: none; }
+      .main { margin-left: 0; }
+      .page-content { padding: 16px; }
+      .page-header { flex-direction: column; gap: 12px; align-items: stretch; }
+      .col-email, .col-program, .col-start { display: none; }
+      .toast { left: 16px; right: 16px; max-width: none; }
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- SIDEBAR (matches dashboard) -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-wordmark">FitOS</div>
+      <div class="brand-tagline">Coaching Platform</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Workspace</div>
+      <a class="nav-link" href="/dashboard">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a class="nav-link" href="/dashboard/messages">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Messages
+      </a>
+      <a class="nav-link active" href="/dashboard/clients">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Clients
+      </a>
+      <a class="nav-link" href="/dashboard/exercises">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2z"/><path d="M8 10h8M8 14h5"/></svg>
+        Exercise Library
+      </a>
+      <a class="nav-link" href="/dashboard/agents">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/><path d="M12 12v9"/></svg>
+        My Agents
+      </a>
+      <a class="nav-link" href="/settings/agents">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        Claude Skills
+      </a>
+      <div class="nav-section-label" style="margin-top:6px">AI Tools</div>
+      <a class="nav-link" href="/dashboard/agents/builder">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+        Program Builder
+        <span style="font-size:9px;font-weight:700;background:var(--olive);color:#fff;padding:2px 6px;border-radius:10px;margin-left:auto">AI</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="coach-chip">
+        <div class="coach-avatar" id="coach-avatar-init">C</div>
+        <div>
+          <div class="coach-name-small" id="coach-name-display">Coach</div>
+          <div class="coach-role">FitOS</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-title">Clients</div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span class="topbar-date" id="topbar-date"></span>
+      </div>
+    </header>
+
+    <div class="page-content">
+      <!-- SETUP BANNER (shown when sheets not connected) -->
+      <div class="setup-banner" id="setup-banner" style="display:none">
+        <span class="setup-icon">⚙️</span>
+        <div>
+          <strong>Google Sheet not connected.</strong>
+          Clients won't persist until you <a href="/setup">complete setup</a> and connect your coaching Sheet.
+        </div>
+      </div>
+
+      <!-- TOAST CONTAINER -->
+      <div class="toast" id="toast"></div>
+
+      <!-- PAGE HEADER -->
+      <div class="page-header">
+        <div>
+          <h1>Your Clients</h1>
+          <p id="client-count">Loading clients…</p>
+        </div>
+        <button class="add-client-btn" id="btn-add-client">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Client
+        </button>
+      </div>
+
+      <!-- CLIENT TABLE -->
+      <div class="table-card">
+        <div class="table-header">
+          <div class="section-title">All Clients</div>
+          <div class="table-search">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input id="client-search" type="text" placeholder="Search clients…">
+          </div>
+        </div>
+        <div style="overflow-x:auto">
+          <table>
+            <thead>
+              <tr>
+                <th data-col="name">Client <span class="sort-icon">↕</span></th>
+                <th data-col="status">Status <span class="sort-icon">↕</span></th>
+                <th class="col-email" data-col="email">Email <span class="sort-icon">↕</span></th>
+                <th class="col-program" data-col="program">Program <span class="sort-icon">↕</span></th>
+                <th class="col-start" data-col="startDate">Start Date <span class="sort-icon">↕</span></th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="client-tbody">
+              <tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text-muted)">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD CLIENT MODAL -->
+<div class="modal-overlay" id="add-modal">
+  <div class="modal">
+    <h2>Add New Client</h2>
+    <p>Enter your client's details. They'll appear in your Clients tab immediately.</p>
+    <div class="form-success" id="form-success">Client added successfully!</div>
+    <form id="add-client-form">
+      <div class="form-group">
+        <label for="f-name">Name *</label>
+        <input type="text" id="f-name" placeholder="e.g. Jane Doe" required>
+        <div class="form-error" id="err-name">Name is required</div>
+      </div>
+      <div class="form-group">
+        <label for="f-email">Email</label>
+        <input type="email" id="f-email" placeholder="e.g. jane@example.com">
+      </div>
+      <div class="form-group">
+        <label for="f-program">Program</label>
+        <input type="text" id="f-program" placeholder="e.g. Hypertrophy 12-Week">
+      </div>
+      <div class="form-group">
+        <label for="f-notes">Notes</label>
+        <textarea id="f-notes" placeholder="Any notes about this client…"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" id="btn-cancel">Cancel</button>
+        <button type="submit" class="btn-submit" id="btn-save">Add Client</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+(function() {
+  const LIVE_CFG = window.__COACH_LIVE__ || {};
+  const coachName = LIVE_CFG.coachName || 'Coach';
+  const coachInitial = coachName.split(' ').filter(Boolean).map(w => w[0]).join('').toUpperCase().slice(0, 2) || 'C';
+
+  // Coach identity
+  const avatarEl = document.getElementById('coach-avatar-init');
+  const nameEl = document.getElementById('coach-name-display');
+  if (avatarEl) avatarEl.textContent = coachInitial;
+  if (nameEl) nameEl.textContent = coachName;
+
+  // Date
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const now = new Date();
+  const dateEl = document.getElementById('topbar-date');
+  if (dateEl) dateEl.textContent = DAYS[now.getDay()] + ', ' + MONTHS[now.getMonth()] + ' ' + now.getDate();
+
+  // ── TOAST SYSTEM ────────────────────────────────────
+  let toastTimer = null;
+  function showToast(message, type, duration) {
+    const toast = document.getElementById('toast');
+    toast.className = 'toast toast-' + (type || 'info') + ' show';
+    toast.innerHTML = message;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { toast.classList.remove('show'); }, duration || 5000);
+  }
+
+  // Table state
+  let clients = [];
+  let sortCol = 'name';
+  let sortAsc = true;
+  let filterText = '';
+
+  function renderTable() {
+    const filtered = clients.filter(c =>
+      !filterText || c.name.toLowerCase().includes(filterText.toLowerCase()) ||
+      (c.email && c.email.toLowerCase().includes(filterText.toLowerCase()))
+    );
+    const sorted = filtered.slice().sort((a, b) => {
+      let va = a[sortCol] || '', vb = b[sortCol] || '';
+      if (typeof va === 'string') va = va.toLowerCase();
+      if (typeof vb === 'string') vb = vb.toLowerCase();
+      if (va < vb) return sortAsc ? -1 : 1;
+      if (va > vb) return sortAsc ? 1 : -1;
+      return 0;
+    });
+
+    const tbody = document.getElementById('client-tbody');
+    const countEl = document.getElementById('client-count');
+
+    if (sorted.length === 0 && !filterText) {
+      countEl.textContent = 'No clients yet';
+      tbody.innerHTML = `
+        <tr><td colspan="6" style="padding:0">
+          <div class="empty-card">
+            <span class="empty-icon">🏋️</span>
+            <h3>Add your first client</h3>
+            <p>Click "Add Client" above to get started.</p>
+            <button class="add-client-btn" onclick="document.getElementById('add-modal').classList.add('open')" style="margin:0 auto">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add Client
+            </button>
+          </div>
+        </td></tr>`;
+      return;
+    }
+
+    countEl.textContent = `${clients.length} client${clients.length !== 1 ? 's' : ''}`;
+
+    if (sorted.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text-muted)">No clients found</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = sorted.map(c => {
+      const initial = c.initial || c.name.split(' ').filter(Boolean).map(w => w[0]).join('').toUpperCase().slice(0, 2);
+      return `
+        <tr onclick="window.location='/dashboard/clients/${c.id}'">
+          <td>
+            <div class="client-cell">
+              <div class="client-init">${initial}</div>
+              <div>
+                <div class="client-name">${c.name}</div>
+                ${c.email ? `<div class="client-email">${c.email}</div>` : ''}
+              </div>
+            </div>
+          </td>
+          <td><span class="badge badge-${c.status || 'Active'}">${c.status || 'Active'}</span></td>
+          <td class="col-email" style="color:var(--text-muted);font-size:12px">${c.email || '—'}</td>
+          <td class="col-program" style="font-size:12px">${c.program || c.block || '—'}</td>
+          <td class="col-start" style="color:var(--text-muted);font-size:12px;white-space:nowrap">${c.startDate || '—'}</td>
+          <td>
+            <div class="actions-cell">
+              <button class="action-btn" onclick="event.stopPropagation(); window.location='/dashboard/messages'">Message</button>
+              <button class="action-btn primary" onclick="event.stopPropagation(); window.location='/dashboard/clients/${c.id}'">Details</button>
+            </div>
+          </td>
+        </tr>`;
+    }).join('');
+  }
+
+  // Sort
+  document.querySelectorAll('thead th[data-col]').forEach(th => {
+    th.addEventListener('click', () => {
+      const col = th.dataset.col;
+      if (sortCol === col) { sortAsc = !sortAsc; } else { sortCol = col; sortAsc = true; }
+      document.querySelectorAll('thead th').forEach(t => t.classList.remove('sorted'));
+      th.classList.add('sorted');
+      th.querySelector('.sort-icon').textContent = sortAsc ? '↑' : '↓';
+      renderTable();
+    });
+  });
+
+  // Search
+  document.getElementById('client-search').addEventListener('input', e => {
+    filterText = e.target.value;
+    renderTable();
+  });
+
+  // Fetch clients
+  async function fetchClients() {
+    try {
+      const res = await fetch('/dashboard/clients/api/list');
+      const data = await res.json();
+      if (data.ok) {
+        clients = data.clients || [];
+        // Show setup banner if sheets not connected
+        const banner = document.getElementById('setup-banner');
+        if (data.needsSetup) {
+          banner.style.display = 'flex';
+        } else {
+          banner.style.display = 'none';
+        }
+        renderTable();
+      } else {
+        showToast(data.error || 'Failed to load clients', 'error');
+      }
+    } catch (err) {
+      console.warn('[clients] fetch error:', err.message);
+      showToast('Network error loading clients', 'error');
+    }
+  }
+
+  fetchClients();
+
+  // ── ADD CLIENT MODAL ──────────────────────────────
+  const modal = document.getElementById('add-modal');
+  const form = document.getElementById('add-client-form');
+  const btnAdd = document.getElementById('btn-add-client');
+  const btnCancel = document.getElementById('btn-cancel');
+  const btnSave = document.getElementById('btn-save');
+  const successMsg = document.getElementById('form-success');
+  const errName = document.getElementById('err-name');
+
+  btnAdd.addEventListener('click', () => {
+    modal.classList.add('open');
+    successMsg.style.display = 'none';
+    errName.style.display = 'none';
+    form.reset();
+  });
+
+  btnCancel.addEventListener('click', () => {
+    modal.classList.remove('open');
+  });
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) modal.classList.remove('open');
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errName.style.display = 'none';
+    successMsg.style.display = 'none';
+
+    const name = document.getElementById('f-name').value.trim();
+    if (!name) {
+      errName.textContent = 'Name is required';
+      errName.style.display = 'block';
+      return;
+    }
+
+    btnSave.disabled = true;
+    btnSave.textContent = 'Adding…';
+
+    try {
+      const res = await fetch('/dashboard/clients/api/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          email: document.getElementById('f-email').value.trim(),
+          program: document.getElementById('f-program').value.trim(),
+          notes: document.getElementById('f-notes').value.trim(),
+        }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        // Close modal immediately
+        modal.classList.remove('open');
+        form.reset();
+        // Show success toast with PWA link
+        let toastMsg = '<strong>✓ Client "' + name + '" added!</strong>';
+        if (data.pwaUrl) {
+          toastMsg += '<span class="pwa-link" id="pwa-link-text">' + data.pwaUrl + ' <span class="pwa-link-copy" onclick="navigator.clipboard.writeText(\'' + data.pwaUrl + '\'); this.textContent=\'✓ Copied!\'">📋 Copy</span></span>';
+        }
+        showToast(toastMsg, 'success', 8000);
+        // Refresh the client list
+        fetchClients();
+      } else {
+        // Show error in the modal form
+        errName.textContent = data.error || 'Failed to add client';
+        errName.style.display = 'block';
+        // Also show toast for visibility
+        showToast(data.error || 'Failed to add client', 'error');
+      }
+    } catch (err) {
+      errName.textContent = 'Network error — try again';
+      errName.style.display = 'block';
+      showToast('Network error — please try again', 'error');
+    } finally {
+      btnSave.disabled = false;
+      btnSave.textContent = 'Add Client';
+    }
+  });
+})();
+</script>
+</body>
+</html>
