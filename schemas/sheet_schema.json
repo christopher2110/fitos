@@ -1,0 +1,396 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "_version": "1.0.0",
+  "_description": "FitOS declarative schema for Google Sheets. Single-tenant. Sheet is canonical state. Add tabs or columns here; the builder reads this file.",
+
+  "palette": {
+    "cream":       "#FAF6EE",
+    "olive":       "#5C6833",
+    "olive_light": "#8A9A5B",
+    "sage":        "#B2BFA4",
+    "charcoal":    "#2E2E2E",
+    "white":       "#FFFFFF",
+    "red_soft":    "#E74C3C",
+    "amber":       "#F39C12",
+    "green_soft":  "#27AE60",
+    "blue_soft":   "#2980B9"
+  },
+
+  "tabs": [
+    {
+      "name": "Profile",
+      "position": 0,
+      "freeze_rows": 1,
+      "tab_color": "#5C6833",
+      "description": "Canonical client bio, goals, and physical baselines. One row per client (single-sheet model).",
+      "columns": [
+        { "name": "Field",         "type": "string",  "width": 200, "note": "Field label" },
+        { "name": "Value",         "type": "string",  "width": 280, "note": "Editable value" },
+        { "name": "Last Updated",  "type": "date",    "width": 140, "note": "ISO 8601 date" },
+        { "name": "Notes",         "type": "string",  "width": 320, "note": "Coach annotation" }
+      ],
+      "rows": [
+        { "Field": "Client Name",         "Value": "Jane Doe",              "Last Updated": "2026-05-07", "Notes": "" },
+        { "Field": "Email",               "Value": "jane@example.com",      "Last Updated": "2026-05-07", "Notes": "" },
+        { "Field": "Date of Birth",       "Value": "1990-03-14",            "Last Updated": "2026-05-07", "Notes": "YYYY-MM-DD" },
+        { "Field": "Gender",              "Value": "Female",                "Last Updated": "2026-05-07", "Notes": "" },
+        { "Field": "Height (cm)",         "Value": "167",                   "Last Updated": "2026-05-07", "Notes": "" },
+        { "Field": "Start Weight (kg)",   "Value": "72",                    "Last Updated": "2026-05-07", "Notes": "" },
+        { "Field": "Goal Weight (kg)",    "Value": "65",                    "Last Updated": "2026-05-07", "Notes": "" },
+        { "Field": "Start Body Fat %",    "Value": "28",                    "Last Updated": "2026-05-07", "Notes": "" },
+        { "Field": "Goal Body Fat %",     "Value": "22",                    "Last Updated": "2026-05-07", "Notes": "" },
+        { "Field": "Primary Goal",        "Value": "Fat loss",              "Last Updated": "2026-05-07", "Notes": "fat_loss | muscle_gain | performance | maintenance" },
+        { "Field": "Secondary Goal",      "Value": "Build strength",        "Last Updated": "2026-05-07", "Notes": "" },
+        { "Field": "Training Days/Week",  "Value": "4",                     "Last Updated": "2026-05-07", "Notes": "" },
+        { "Field": "Preferred Equipment", "Value": "Gym (full)",            "Last Updated": "2026-05-07", "Notes": "home | gym_basic | gym_full | bodyweight" },
+        { "Field": "Program Start Date",  "Value": "2026-05-12",            "Last Updated": "2026-05-07", "Notes": "YYYY-MM-DD" },
+        { "Field": "Program Duration",    "Value": "12 weeks",              "Last Updated": "2026-05-07", "Notes": "" },
+        { "Field": "Injuries / Limits",   "Value": "Left knee — no impact", "Last Updated": "2026-05-07", "Notes": "" },
+        { "Field": "Training History",    "Value": "2 years recreational",  "Last Updated": "2026-05-07", "Notes": "" },
+        { "Field": "Coach Name",          "Value": "Coach Alex",            "Last Updated": "2026-05-07", "Notes": "" },
+        { "Field": "Sheet Created",       "Value": "2026-05-07",            "Last Updated": "2026-05-07", "Notes": "Auto-set by fitos_sheet_builder.py" }
+      ],
+      "named_ranges": [
+        { "name": "PROFILE_CLIENT_NAME",  "row": 1, "col": 1 },
+        { "name": "PROFILE_COACH_NAME",   "row": 17, "col": 1 }
+      ]
+    },
+
+    {
+      "name": "Program",
+      "position": 1,
+      "freeze_rows": 1,
+      "tab_color": "#8A9A5B",
+      "description": "Week-by-week phase + session blueprint. One row per training day per week.",
+      "columns": [
+        { "name": "Week",             "type": "integer",  "width": 60,  "validation": { "type": "integer", "min": 1, "max": 52 } },
+        { "name": "Phase",            "type": "string",   "width": 140, "validation": { "type": "dropdown", "values": ["Intro", "Accumulation", "Intensification", "Deload", "Peak", "Maintenance"] } },
+        { "name": "Day",              "type": "string",   "width": 80,  "validation": { "type": "dropdown", "values": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] } },
+        { "name": "Focus",            "type": "string",   "width": 180, "note": "e.g. Lower Power, Upper Hypertrophy" },
+        { "name": "Exercise",         "type": "string",   "width": 220 },
+        { "name": "Sets",             "type": "integer",  "width": 60,  "validation": { "type": "integer", "min": 1, "max": 20 } },
+        { "name": "Reps / Duration",  "type": "string",   "width": 120, "note": "e.g. 8-10 or 45s" },
+        { "name": "Load",             "type": "string",   "width": 120, "note": "e.g. 70% 1RM or RPE 7" },
+        { "name": "Rest (s)",         "type": "integer",  "width": 80 },
+        { "name": "Tempo",            "type": "string",   "width": 80,  "note": "e.g. 3-1-1-0" },
+        { "name": "Cues / Notes",     "type": "string",   "width": 320 }
+      ],
+      "rows": [
+        { "Week": 1, "Phase": "Intro",         "Day": "Monday",    "Focus": "Lower Power",    "Exercise": "Back Squat",         "Sets": 4, "Reps / Duration": "6",    "Load": "RPE 6",  "Rest (s)": 180, "Tempo": "3-1-1-0", "Cues / Notes": "Warm up thoroughly. Depth focus." },
+        { "Week": 1, "Phase": "Intro",         "Day": "Monday",    "Focus": "Lower Power",    "Exercise": "Romanian Deadlift",  "Sets": 3, "Reps / Duration": "10",   "Load": "RPE 6",  "Rest (s)": 120, "Tempo": "3-1-1-0", "Cues / Notes": "Hip hinge, soft knee." },
+        { "Week": 1, "Phase": "Intro",         "Day": "Monday",    "Focus": "Lower Power",    "Exercise": "Leg Press",          "Sets": 3, "Reps / Duration": "12",   "Load": "RPE 5",  "Rest (s)": 90,  "Tempo": "2-0-1-0", "Cues / Notes": "" },
+        { "Week": 1, "Phase": "Intro",         "Day": "Wednesday", "Focus": "Upper Push",     "Exercise": "Bench Press",        "Sets": 4, "Reps / Duration": "8",    "Load": "RPE 6",  "Rest (s)": 150, "Tempo": "3-0-1-0", "Cues / Notes": "Scapular retraction." },
+        { "Week": 1, "Phase": "Intro",         "Day": "Wednesday", "Focus": "Upper Push",     "Exercise": "DB Shoulder Press",  "Sets": 3, "Reps / Duration": "12",   "Load": "RPE 6",  "Rest (s)": 90,  "Tempo": "2-0-1-0", "Cues / Notes": "" },
+        { "Week": 1, "Phase": "Intro",         "Day": "Friday",    "Focus": "Upper Pull",     "Exercise": "Lat Pulldown",       "Sets": 4, "Reps / Duration": "10",   "Load": "RPE 6",  "Rest (s)": 120, "Tempo": "2-1-1-0", "Cues / Notes": "Full stretch at top." },
+        { "Week": 1, "Phase": "Intro",         "Day": "Friday",    "Focus": "Upper Pull",     "Exercise": "Cable Row",          "Sets": 3, "Reps / Duration": "12",   "Load": "RPE 6",  "Rest (s)": 90,  "Tempo": "2-1-1-0", "Cues / Notes": "" },
+        { "Week": 1, "Phase": "Intro",         "Day": "Saturday",  "Focus": "Lower Hypertrophy","Exercise": "Leg Curl",         "Sets": 3, "Reps / Duration": "12-15","Load": "RPE 7",  "Rest (s)": 90,  "Tempo": "2-1-2-0", "Cues / Notes": "Avoid knee hyperextension." }
+      ],
+      "named_ranges": [
+        { "name": "PROGRAM_RANGE", "row_start": 2, "col_start": 1, "row_end": 500, "col_end": 11 }
+      ]
+    },
+
+    {
+      "name": "Workouts",
+      "position": 2,
+      "freeze_rows": 1,
+      "tab_color": "#2E2E2E",
+      "description": "Session-by-session training log. Primary data source for KPIs and History tabs.",
+      "columns": [
+        { "name": "Date",            "type": "date",    "width": 110, "validation": { "type": "date" } },
+        { "name": "Week",            "type": "integer", "width": 60 },
+        { "name": "Day",             "type": "string",  "width": 100 },
+        { "name": "Exercise",        "type": "string",  "width": 220 },
+        { "name": "Set #",           "type": "integer", "width": 60,  "validation": { "type": "integer", "min": 1, "max": 10 } },
+        { "name": "Reps",            "type": "integer", "width": 70,  "validation": { "type": "integer", "min": 0, "max": 100 } },
+        { "name": "Weight (kg)",     "type": "number",  "width": 100" },
+        { "name": "RPE",             "type": "number",  "width": 70,  "validation": { "type": "number", "min": 1, "max": 10 }, "conditional_format": "rpe_scale" },
+        { "name": "Volume (kg)",     "type": "formula", "width": 100, "formula": "=F{row}*G{row}", "note": "Auto-calc: reps × weight" },
+        { "name": "Status",          "type": "string",  "width": 100, "validation": { "type": "dropdown", "values": ["Completed", "Skipped", "Modified", "PR"] }, "conditional_format": "status_badge" },
+        { "name": "Notes",           "type": "string",  "width": 300 }
+      ],
+      "conditional_formats": {
+        "rpe_scale": {
+          "description": "RPE 1-10: cream→amber→red gradient",
+          "rules": [
+            { "min": 1,  "max": 5,  "background": "#FAF6EE", "text": "#2E2E2E" },
+            { "min": 5,  "max": 7,  "background": "#F5D76E", "text": "#2E2E2E" },
+            { "min": 7,  "max": 8,  "background": "#F39C12", "text": "#FFFFFF" },
+            { "min": 8,  "max": 9,  "background": "#E67E22", "text": "#FFFFFF" },
+            { "min": 9,  "max": 10, "background": "#E74C3C", "text": "#FFFFFF" }
+          ]
+        },
+        "status_badge": {
+          "description": "Status colour badges",
+          "rules": [
+            { "value": "Completed", "background": "#27AE60", "text": "#FFFFFF" },
+            { "value": "Skipped",   "background": "#E74C3C", "text": "#FFFFFF" },
+            { "value": "Modified",  "background": "#F39C12", "text": "#FFFFFF" },
+            { "value": "PR",        "background": "#2980B9", "text": "#FFFFFF" }
+          ]
+        }
+      },
+      "rows": [
+        { "Date": "2026-05-12", "Week": 1, "Day": "Monday", "Exercise": "Back Squat",        "Set #": 1, "Reps": 6, "Weight (kg)": 60,  "RPE": 6, "Status": "Completed", "Notes": "Felt good. Full depth." },
+        { "Date": "2026-05-12", "Week": 1, "Day": "Monday", "Exercise": "Back Squat",        "Set #": 2, "Reps": 6, "Weight (kg)": 62.5,"RPE": 7, "Status": "Completed", "Notes": "" },
+        { "Date": "2026-05-12", "Week": 1, "Day": "Monday", "Exercise": "Romanian Deadlift", "Set #": 1, "Reps": 10,"Weight (kg)": 45,  "RPE": 6, "Status": "Completed", "Notes": "Hip hinge solid." }
+      ],
+      "named_ranges": [
+        { "name": "WORKOUTS_RANGE", "row_start": 2, "col_start": 1, "row_end": 2000, "col_end": 11 }
+      ]
+    },
+
+    {
+      "name": "CheckIns",
+      "position": 3,
+      "freeze_rows": 1,
+      "tab_color": "#B2BFA4",
+      "description": "Weekly client check-in data. Photos linked externally (Google Drive URL).",
+      "columns": [
+        { "name": "Date",                  "type": "date",    "width": 110, "validation": { "type": "date" } },
+        { "name": "Week",                  "type": "integer", "width": 60 },
+        { "name": "Bodyweight (kg)",       "type": "number",  "width": 130 },
+        { "name": "Body Fat %",            "type": "number",  "width": 100 },
+        { "name": "Waist (cm)",            "type": "number",  "width": 100 },
+        { "name": "Hips (cm)",             "type": "number",  "width": 100 },
+        { "name": "Chest (cm)",            "type": "number",  "width": 100 },
+        { "name": "L Arm (cm)",            "type": "number",  "width": 100 },
+        { "name": "R Arm (cm)",            "type": "number",  "width": 100 },
+        { "name": "L Thigh (cm)",          "type": "number",  "width": 100 },
+        { "name": "R Thigh (cm)",          "type": "number",  "width": 100 },
+        { "name": "Photo Front URL",       "type": "string",  "width": 200, "note": "Google Drive share link" },
+        { "name": "Photo Side URL",        "type": "string",  "width": 200, "note": "Google Drive share link" },
+        { "name": "Mood (1-10)",           "type": "integer", "width": 100, "validation": { "type": "integer", "min": 1, "max": 10 }, "conditional_format": "rpe_scale" },
+        { "name": "Sleep Quality (1-10)",  "type": "integer", "width": 130, "validation": { "type": "integer", "min": 1, "max": 10 }, "conditional_format": "rpe_scale" },
+        { "name": "Energy (1-10)",         "type": "integer", "width": 100, "validation": { "type": "integer", "min": 1, "max": 10 }, "conditional_format": "rpe_scale" },
+        { "name": "Stress (1-10)",         "type": "integer", "width": 100, "validation": { "type": "integer", "min": 1, "max": 10 }, "conditional_format": "rpe_scale" },
+        { "name": "Client Notes",          "type": "string",  "width": 320 },
+        { "name": "Coach Feedback",        "type": "string",  "width": 320 },
+        { "name": "Compliance %",          "type": "number",  "width": 110, "conditional_format": "compliance_bar" }
+      ],
+      "conditional_formats": {
+        "rpe_scale": {
+          "description": "Reuses RPE colour gradient for 1-10 subjective scores",
+          "rules": [
+            { "min": 1,  "max": 5,  "background": "#FAF6EE", "text": "#2E2E2E" },
+            { "min": 5,  "max": 7,  "background": "#F5D76E", "text": "#2E2E2E" },
+            { "min": 7,  "max": 8,  "background": "#F39C12", "text": "#FFFFFF" },
+            { "min": 8,  "max": 9,  "background": "#E67E22", "text": "#FFFFFF" },
+            { "min": 9,  "max": 10, "background": "#E74C3C", "text": "#FFFFFF" }
+          ]
+        },
+        "compliance_bar": {
+          "description": "Gradient bar: red <60%, amber 60-80%, green 80-100%",
+          "rules": [
+            { "min": 0,   "max": 60,  "background": "#E74C3C", "text": "#FFFFFF" },
+            { "min": 60,  "max": 80,  "background": "#F39C12", "text": "#FFFFFF" },
+            { "min": 80,  "max": 100, "background": "#27AE60", "text": "#FFFFFF" }
+          ]
+        }
+      },
+      "rows": [
+        {
+          "Date": "2026-05-12", "Week": 1,
+          "Bodyweight (kg)": 72, "Body Fat %": 28,
+          "Waist (cm)": 82, "Hips (cm)": 98, "Chest (cm)": 88,
+          "L Arm (cm)": 29, "R Arm (cm)": 29.5,
+          "L Thigh (cm)": 55, "R Thigh (cm)": 55.5,
+          "Photo Front URL": "", "Photo Side URL": "",
+          "Mood (1-10)": 7, "Sleep Quality (1-10)": 7, "Energy (1-10)": 7, "Stress (1-10)": 5,
+          "Client Notes": "Excited to start!", "Coach Feedback": "Strong baseline. Let's go.",
+          "Compliance %": 100
+        }
+      ],
+      "named_ranges": [
+        { "name": "CHECKINS_RANGE", "row_start": 2, "col_start": 1, "row_end": 500, "col_end": 20 }
+      ]
+    },
+
+    {
+      "name": "History",
+      "position": 4,
+      "freeze_rows": 1,
+      "tab_color": "#2980B9",
+      "description": "Best-set history per exercise per date. Derived from Workouts. Apps Script or builder populates this; do not manually edit.",
+      "columns": [
+        { "name": "Date",         "type": "date",    "width": 110 },
+        { "name": "Week",         "type": "integer", "width": 60 },
+        { "name": "Exercise",     "type": "string",  "width": 220 },
+        { "name": "Best Weight (kg)", "type": "number", "width": 130 },
+        { "name": "Best Reps",    "type": "integer", "width": 100 },
+        { "name": "Est 1RM (kg)", "type": "formula", "width": 120, "formula": "=D{row}*(1+E{row}/30)", "note": "Epley formula" },
+        { "name": "Session Vol (kg)", "type": "number", "width": 130 },
+        { "name": "PR",           "type": "boolean", "width": 60, "conditional_format": "pr_flag" }
+      ],
+      "conditional_formats": {
+        "pr_flag": {
+          "description": "TRUE = blue, FALSE = none",
+          "rules": [
+            { "value": "TRUE",  "background": "#2980B9", "text": "#FFFFFF" },
+            { "value": "FALSE", "background": "#FFFFFF",  "text": "#2E2E2E" }
+          ]
+        }
+      },
+      "rows": [
+        { "Date": "2026-05-12", "Week": 1, "Exercise": "Back Squat",        "Best Weight (kg)": 62.5, "Best Reps": 6, "Session Vol (kg)": 367.5, "PR": "TRUE" },
+        { "Date": "2026-05-12", "Week": 1, "Exercise": "Romanian Deadlift", "Best Weight (kg)": 45,   "Best Reps": 10,"Session Vol (kg)": 450,   "PR": "TRUE" }
+      ],
+      "named_ranges": [
+        { "name": "HISTORY_RANGE", "row_start": 2, "col_start": 1, "row_end": 2000, "col_end": 8 }
+      ]
+    },
+
+    {
+      "name": "Wellness",
+      "position": 5,
+      "freeze_rows": 1,
+      "tab_color": "#27AE60",
+      "description": "Daily wellness log. Separate from weekly check-ins — tracks day-to-day recovery signals.",
+      "columns": [
+        { "name": "Date",                  "type": "date",    "width": 110, "validation": { "type": "date" } },
+        { "name": "Sleep Hours",           "type": "number",  "width": 110, "validation": { "type": "number", "min": 0, "max": 24 } },
+        { "name": "Sleep Quality (1-10)",  "type": "integer", "width": 150, "validation": { "type": "integer", "min": 1, "max": 10 }, "conditional_format": "rpe_scale" },
+        { "name": "Stress (1-10)",         "type": "integer", "width": 100, "validation": { "type": "integer", "min": 1, "max": 10 }, "conditional_format": "rpe_scale" },
+        { "name": "Energy (1-10)",         "type": "integer", "width": 100, "validation": { "type": "integer", "min": 1, "max": 10 }, "conditional_format": "rpe_scale" },
+        { "name": "Nutrition Adherence (1-10)", "type": "integer", "width": 190, "validation": { "type": "integer", "min": 1, "max": 10 } },
+        { "name": "Hydration (L)",         "type": "number",  "width": 110 },
+        { "name": "Steps",                 "type": "integer", "width": 90 },
+        { "name": "HRV (ms)",              "type": "number",  "width": 90 },
+        { "name": "Soreness (1-10)",       "type": "integer", "width": 120, "validation": { "type": "integer", "min": 1, "max": 10 }, "conditional_format": "rpe_scale" },
+        { "name": "Notes",                 "type": "string",  "width": 300 }
+      ],
+      "conditional_formats": {
+        "rpe_scale": {
+          "description": "RPE gradient reused for 1-10 wellness scores",
+          "rules": [
+            { "min": 1,  "max": 5,  "background": "#FAF6EE", "text": "#2E2E2E" },
+            { "min": 5,  "max": 7,  "background": "#F5D76E", "text": "#2E2E2E" },
+            { "min": 7,  "max": 8,  "background": "#F39C12", "text": "#FFFFFF" },
+            { "min": 8,  "max": 9,  "background": "#E67E22", "text": "#FFFFFF" },
+            { "min": 9,  "max": 10, "background": "#E74C3C", "text": "#FFFFFF" }
+          ]
+        }
+      },
+      "rows": [
+        { "Date": "2026-05-12", "Sleep Hours": 7.5, "Sleep Quality (1-10)": 7, "Stress (1-10)": 4, "Energy (1-10)": 7, "Nutrition Adherence (1-10)": 8, "Hydration (L)": 2.5, "Steps": 8200, "HRV (ms)": 65, "Soreness (1-10)": 3, "Notes": "Good recovery day." }
+      ],
+      "named_ranges": [
+        { "name": "WELLNESS_RANGE", "row_start": 2, "col_start": 1, "row_end": 1000, "col_end": 11 }
+      ]
+    },
+
+    {
+      "name": "Messages",
+      "position": 6,
+      "freeze_rows": 1,
+      "tab_color": "#8E44AD",
+      "description": "In-sheet async messaging thread between coach and client.",
+      "columns": [
+        { "name": "Timestamp",   "type": "datetime", "width": 160 },
+        { "name": "Sender",      "type": "string",   "width": 100, "validation": { "type": "dropdown", "values": ["Coach", "Client"] } },
+        { "name": "Message",     "type": "string",   "width": 500 },
+        { "name": "Read",        "type": "boolean",  "width": 70,  "conditional_format": "read_flag" },
+        { "name": "Thread",      "type": "string",   "width": 140, "note": "Optional thread label for grouping messages" }
+      ],
+      "conditional_formats": {
+        "read_flag": {
+          "rules": [
+            { "value": "TRUE",  "background": "#FFFFFF",  "text": "#B2BFA4" },
+            { "value": "FALSE", "background": "#FAF6EE",  "text": "#2E2E2E" }
+          ]
+        }
+      },
+      "rows": [
+        { "Timestamp": "2026-05-07 09:00", "Sender": "Coach", "Message": "Welcome to FitOS! Your program starts Monday. Any questions before we kick off?", "Read": "FALSE", "Thread": "Onboarding" },
+        { "Timestamp": "2026-05-07 09:45", "Sender": "Client","Message": "So excited! Just confirmed my gym access. Ready to go.", "Read": "TRUE",  "Thread": "Onboarding" }
+      ],
+      "named_ranges": [
+        { "name": "MESSAGES_RANGE", "row_start": 2, "col_start": 1, "row_end": 1000, "col_end": 5 }
+      ]
+    },
+
+    {
+      "name": "Activity",
+      "position": 7,
+      "freeze_rows": 1,
+      "tab_color": "#2980B9",
+      "description": "Non-strength activity log: cardio, NEAT, recreation. Keeps total energy expenditure visible.",
+      "columns": [
+        { "name": "Date",           "type": "date",    "width": 110, "validation": { "type": "date" } },
+        { "name": "Activity Type",  "type": "string",  "width": 180, "validation": { "type": "dropdown", "values": ["Walk", "Run", "Cycle", "Swim", "HIIT", "Yoga", "Sport", "Other"] } },
+        { "name": "Duration (min)", "type": "integer", "width": 130, "validation": { "type": "integer", "min": 1, "max": 600 } },
+        { "name": "Intensity",      "type": "string",  "width": 110, "validation": { "type": "dropdown", "values": ["Low", "Moderate", "High"] } },
+        { "name": "Calories (kcal)","type": "integer", "width": 130 },
+        { "name": "Heart Rate Avg", "type": "integer", "width": 130 },
+        { "name": "Distance (km)",  "type": "number",  "width": 120 },
+        { "name": "Notes",          "type": "string",  "width": 300 }
+      ],
+      "rows": [
+        { "Date": "2026-05-08", "Activity Type": "Walk", "Duration (min)": 35, "Intensity": "Low", "Calories (kcal)": 140, "Heart Rate Avg": 95, "Distance (km)": 3, "Notes": "Morning walk, fasted." }
+      ],
+      "named_ranges": [
+        { "name": "ACTIVITY_RANGE", "row_start": 2, "col_start": 1, "row_end": 1000, "col_end": 8 }
+      ]
+    },
+
+    {
+      "name": "KPIs",
+      "position": 8,
+      "freeze_rows": 1,
+      "tab_color": "#E67E22",
+      "description": "Auto-computed weekly key performance indicators. Source of truth for coach dashboard charts.",
+      "columns": [
+        { "name": "Week",                  "type": "integer",  "width": 60 },
+        { "name": "Week Start",            "type": "date",     "width": 110 },
+        { "name": "Workouts Planned",      "type": "integer",  "width": 150 },
+        { "name": "Workouts Completed",    "type": "integer",  "width": 160 },
+        { "name": "Compliance %",          "type": "formula",  "width": 120, "formula": "=IF(C{row}>0, D{row}/C{row}*100, 0)", "conditional_format": "compliance_bar" },
+        { "name": "Total Volume (kg)",     "type": "number",   "width": 140 },
+        { "name": "Avg RPE",               "type": "number",   "width": 100, "conditional_format": "rpe_scale" },
+        { "name": "Bodyweight (kg)",       "type": "number",   "width": 130 },
+        { "name": "Body Fat %",            "type": "number",   "width": 110 },
+        { "name": "PRs Hit",               "type": "integer",  "width": 90 },
+        { "name": "Avg Sleep Hours",       "type": "number",   "width": 140 },
+        { "name": "Avg Sleep Quality",     "type": "number",   "width": 140 },
+        { "name": "Avg Energy",            "type": "number",   "width": 110 },
+        { "name": "Avg Stress",            "type": "number",   "width": 110 },
+        { "name": "Avg Nutrition Adherence","type": "number",  "width": 170 },
+        { "name": "Total Activity (min)",  "type": "integer",  "width": 160 },
+        { "name": "Coach Notes",           "type": "string",   "width": 400 }
+      ],
+      "conditional_formats": {
+        "compliance_bar": {
+          "rules": [
+            { "min": 0,   "max": 60,  "background": "#E74C3C", "text": "#FFFFFF" },
+            { "min": 60,  "max": 80,  "background": "#F39C12", "text": "#FFFFFF" },
+            { "min": 80,  "max": 100, "background": "#27AE60", "text": "#FFFFFF" }
+          ]
+        },
+        "rpe_scale": {
+          "rules": [
+            { "min": 1,  "max": 5,  "background": "#FAF6EE", "text": "#2E2E2E" },
+            { "min": 5,  "max": 7,  "background": "#F5D76E", "text": "#2E2E2E" },
+            { "min": 7,  "max": 8,  "background": "#F39C12", "text": "#FFFFFF" },
+            { "min": 8,  "max": 9,  "background": "#E67E22", "text": "#FFFFFF" },
+            { "min": 9,  "max": 10, "background": "#E74C3C", "text": "#FFFFFF" }
+          ]
+        }
+      },
+      "rows": [
+        {
+          "Week": 1, "Week Start": "2026-05-12",
+          "Workouts Planned": 4, "Workouts Completed": 4,
+          "Total Volume (kg)": 4850, "Avg RPE": 6.4,
+          "Bodyweight (kg)": 72, "Body Fat %": 28,
+          "PRs Hit": 8,
+          "Avg Sleep Hours": 7.5, "Avg Sleep Quality": 7.2, "Avg Energy": 7.1, "Avg Stress": 4.5, "Avg Nutrition Adherence": 8.0,
+          "Total Activity (min)": 120,
+          "Coach Notes": "Excellent first week. Client adapted well to the volume."
+        }
+      ],
+      "named_ranges": [
+        { "name": "KPIS_RANGE", "row_start": 2, "col_start": 1, "row_end": 200, "col_end": 17 }
+      ]
+    }
+  ]
+}
