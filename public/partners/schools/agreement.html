@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>FitOS Sample Partnership Agreement</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      background: #f5f5f5;
+      color: #1a1a1a;
+      line-height: 1.7;
+    }
+    @media print {
+      .no-print { display: none !important; }
+      body { background: #fff; }
+      .doc-wrapper { box-shadow: none !important; margin: 0 !important; }
+    }
+
+    /* Header bar */
+    .header {
+      background: #1a2744;
+      color: #fff;
+      padding: 18px 48px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .header-logo { font-family: -apple-system, sans-serif; font-size: 22px; font-weight: 800; letter-spacing: -1px; }
+    .header-logo span { color: #FF6B4A; }
+    .header-sep { width: 1px; height: 24px; background: rgba(255,255,255,0.2); }
+    .header-title { font-family: -apple-system, sans-serif; font-size: 14px; opacity: 0.8; }
+
+    /* Print bar */
+    .print-bar {
+      background: #fff;
+      padding: 10px 48px;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .btn-print {
+      font-family: -apple-system, sans-serif;
+      background: #1a2744;
+      color: #fff;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-print:hover { background: #2a3a6a; }
+    .print-hint { font-family: -apple-system, sans-serif; font-size: 13px; color: #777; }
+    .nav-links { display: flex; gap: 12px; margin-left: auto; }
+    .nav-link {
+      font-family: -apple-system, sans-serif;
+      font-size: 13px;
+      color: #1a2744;
+      text-decoration: none;
+      padding: 6px 12px;
+      border: 1.5px solid #ddd;
+      border-radius: 6px;
+    }
+    .nav-link:hover { border-color: #FF6B4A; color: #FF6B4A; }
+
+    /* Document */
+    .doc-outer { padding: 40px 24px; }
+    .doc-wrapper {
+      background: #fff;
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 72px 80px;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+    }
+    @media (max-width: 600px) {
+      .doc-wrapper { padding: 32px 20px; }
+    }
+
+    /* Sample banner */
+    .sample-banner {
+      background: #fff3cd;
+      border: 1.5px solid #ffc107;
+      padding: 14px 20px;
+      border-radius: 8px;
+      text-align: center;
+      font-family: -apple-system, sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: #856404;
+      margin-bottom: 40px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Doc heading */
+    .doc-title {
+      text-align: center;
+      margin-bottom: 8px;
+      font-size: 22px;
+      font-weight: 700;
+    }
+    .doc-subtitle {
+      text-align: center;
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 40px;
+    }
+    .doc-date {
+      text-align: center;
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 40px;
+    }
+
+    /* Parties */
+    .parties {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 24px;
+      margin-bottom: 36px;
+    }
+    .party-label {
+      font-family: -apple-system, sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #888;
+      margin-bottom: 8px;
+    }
+    .party-name { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+    .party-detail { font-size: 13px; color: #555; }
+    .fill-field {
+      display: inline-block;
+      border-bottom: 1px solid #ccc;
+      min-width: 160px;
+      color: #aaa;
+      font-style: italic;
+    }
+
+    /* Section */
+    .section { margin-bottom: 32px; }
+    .section-num {
+      font-family: -apple-system, sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #FF6B4A;
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #1a2744;
+    }
+    .section p { font-size: 14px; margin-bottom: 10px; }
+
+    /* Subsection */
+    .sub { margin: 12px 0 12px 24px; }
+    .sub-label { font-weight: 700; }
+
+    /* Volume tiers table */
+    .vol-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-family: -apple-system, sans-serif;
+      font-size: 13px;
+    }
+    .vol-table th {
+      background: #1a2744;
+      color: #fff;
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 600;
+    }
+    .vol-table td { padding: 10px 14px; border-bottom: 1px solid #eee; }
+    .vol-table tr:nth-child(even) td { background: #f9f9f9; }
+
+    /* HR divider */
+    .rule { border: none; border-top: 1px solid #e0e0e0; margin: 28px 0; }
+
+    /* Signature block */
+    .sig-section {
+      margin-top: 48px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+    }
+    .sig-block { }
+    .sig-label {
+      font-family: -apple-system, sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #888;
+      margin-bottom: 48px;
+    }
+    .sig-line {
+      border-bottom: 1.5px solid #1a2744;
+      margin-bottom: 8px;
+    }
+    .sig-name {
+      font-family: -apple-system, sans-serif;
+      font-size: 12px;
+      color: #444;
+    }
+    .sig-detail {
+      font-family: -apple-system, sans-serif;
+      font-size: 12px;
+      color: #888;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header no-print">
+    <div class="header-logo">Fit<span>OS</span></div>
+    <div class="header-sep"></div>
+    <div class="header-title">Sample Partnership Agreement</div>
+  </div>
+
+  <div class="print-bar no-print">
+    <button class="btn-print" onclick="window.print()">🖨 Print / Save as PDF</button>
+    <span class="print-hint">Renders as clean multi-page PDF</span>
+    <div class="nav-links">
+      <a href="/partners/schools" class="nav-link">← One-Pager</a>
+      <a href="/partners/schools/calculator" class="nav-link">ROI Calculator →</a>
+    </div>
+  </div>
+
+  <div class="doc-outer">
+    <div class="doc-wrapper">
+
+      <div class="sample-banner">⚠ Sample Agreement — For Discussion Purposes Only — Not Legal Advice</div>
+
+      <div class="doc-title">FitOS School Partnership Agreement</div>
+      <div class="doc-subtitle">Personal Training Curriculum Software License &amp; Revenue Share</div>
+      <div class="doc-date">Effective Date: <span class="fill-field">_________________, 2026</span></div>
+
+      <!-- Parties -->
+      <div class="parties">
+        <div>
+          <div class="party-label">Provider ("FitOS")</div>
+          <div class="party-name">FitOS Software</div>
+          <div class="party-detail">A Polsia, Inc. product<br>partnerships@fitos.app</div>
+        </div>
+        <div>
+          <div class="party-label">Partner ("School")</div>
+          <div class="party-name"><span class="fill-field">School Legal Name</span></div>
+          <div class="party-detail">
+            Contact: <span class="fill-field">Name/Title</span><br>
+            Email: <span class="fill-field">email@school.com</span>
+          </div>
+        </div>
+      </div>
+
+      <hr class="rule">
+
+      <!-- Section 1: Definitions -->
+      <div class="section">
+        <div class="section-num">Section 1</div>
+        <div class="section-title">Definitions</div>
+        <p><span class="sub-label">"FitOS"</span> means the web-based personal training management software made available at fitos-zc11.polsia.app and any successor domains.</p>
+        <p><span class="sub-label">"Enrolled Student"</span> means any individual registered in a curriculum program offered by School during the Term.</p>
+        <p><span class="sub-label">"Hosting Token"</span> means a unique access credential issued to an Enrolled Student entitling them to use the FitOS hosted environment during enrollment and for thirty (30) days post-graduation.</p>
+        <p><span class="sub-label">"Graduation"</span> means the date on which an Enrolled Student completes or withdraws from School's curriculum program.</p>
+        <p><span class="sub-label">"Alumni"</span> means a graduate who chooses to continue using FitOS under a paid plan after Hosting Token expiry.</p>
+      </div>
+
+      <hr class="rule">
+
+      <!-- Section 2: Partnership Terms -->
+      <div class="section">
+        <div class="section-num">Section 2</div>
+        <div class="section-title">Partnership Terms</div>
+
+        <p><span class="sub-label">2.1 License Grant.</span> FitOS grants School a non-exclusive, non-transferable right to include FitOS in School's curriculum and to distribute Hosting Tokens to Enrolled Students for the duration of this Agreement.</p>
+
+        <p><span class="sub-label">2.2 Volume Pricing Tiers.</span> The per-student license fee is determined by School's annual enrollment:</p>
+        <table class="vol-table">
+          <thead>
+            <tr>
+              <th>Annual Enrollment</th>
+              <th>Price / Student</th>
+              <th>Approx. Net Margin / Student</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>20–39 students</td><td>$197</td><td>~$150</td></tr>
+            <tr><td>40–79 students</td><td>$187</td><td>~$160</td></tr>
+            <tr><td>80–149 students</td><td>$177</td><td>~$165</td></tr>
+            <tr><td>150+ students</td><td>$167</td><td>~$167</td></tr>
+          </tbody>
+        </table>
+
+        <p><span class="sub-label">2.3 Payment — Option A (Invoice).</span> School will be invoiced quarterly based on actual Enrolled Students in that quarter. Payment due within fifteen (15) days of invoice date.</p>
+        <p><span class="sub-label">2.4 Payment — Option B (Revenue Share).</span> At School's election, School may remit 70% of each student's FitOS fee at the time of tuition collection, retaining 30% as a distribution fee. Election must be made in writing before the start of each academic year.</p>
+        <p><span class="sub-label">2.5 Hosting Tokens.</span> FitOS will issue Hosting Tokens within two (2) business days of School providing a valid student enrollment list. Tokens activate immediately and expire automatically thirty (30) days after the student's Graduation date. School is responsible for providing accurate enrollment and graduation dates.</p>
+      </div>
+
+      <hr class="rule">
+
+      <!-- Section 3: Co-Branding -->
+      <div class="section">
+        <div class="section-num">Section 3</div>
+        <div class="section-title">Co-Branding (Optional)</div>
+        <p><span class="sub-label">3.1</span> Upon written request, FitOS may add School's logo to the student-facing FitOS PWA splash screen and login page for students enrolled through School. FitOS branding and "Powered by FitOS" attribution must remain visible at all times.</p>
+        <p><span class="sub-label">3.2</span> FitOS will implement approved co-branding within ten (10) business days of receiving approved logo assets in SVG or PNG format ≥ 300px height.</p>
+        <p><span class="sub-label">3.3</span> Co-branding is additive only. School's logo may not replace or obscure FitOS branding. White-label arrangements (removal of FitOS identity) require a separate written agreement.</p>
+      </div>
+
+      <hr class="rule">
+
+      <!-- Section 4: Alumni Program -->
+      <div class="section">
+        <div class="section-num">Section 4</div>
+        <div class="section-title">Alumni Upgrade Program</div>
+        <p><span class="sub-label">4.1</span> Upon Hosting Token expiry, Enrolled Students (now Alumni) will receive an in-app offer to continue using FitOS at retail pricing: $497 lifetime license or $7/month subscription.</p>
+        <p><span class="sub-label">4.2 Alumni Revenue Share.</span> If School elects Option B (Revenue Share) under Section 2.4, FitOS will also share twenty percent (20%) of any Alumni upgrade revenue attributable to School's graduates for a period of twenty-four (24) months from each Alumni's Graduation date. Attribution is tracked by enrollment token origin. Alumni revenue share is paid quarterly alongside school fees.</p>
+        <p><span class="sub-label">4.3</span> Schools electing Option A (Invoice) do not receive Alumni revenue share unless separately negotiated.</p>
+      </div>
+
+      <hr class="rule">
+
+      <!-- Section 5: Data & Privacy -->
+      <div class="section">
+        <div class="section-num">Section 5</div>
+        <div class="section-title">Student Data &amp; Privacy</div>
+        <p><span class="sub-label">5.1</span> FitOS software is licensed under the MIT License. Students own all data they enter into their FitOS instance. FitOS does not sell or share student data with third parties.</p>
+        <p><span class="sub-label">5.2</span> Upon Hosting Token expiry, student data is archived for ninety (90) days, after which it is deleted from FitOS servers. Students retain a data export option during this period.</p>
+        <p><span class="sub-label">5.3</span> School agrees to inform Enrolled Students, prior to enrollment, that their FitOS usage data (login frequency, feature usage metrics) may be aggregated anonymously by FitOS for product improvement purposes.</p>
+      </div>
+
+      <hr class="rule">
+
+      <!-- Section 6: IP -->
+      <div class="section">
+        <div class="section-num">Section 6</div>
+        <div class="section-title">Intellectual Property</div>
+        <p><span class="sub-label">6.1</span> The FitOS codebase is licensed under the MIT License. Students receive this license at enrollment and retain it after Graduation. School receives no ownership rights in FitOS software.</p>
+        <p><span class="sub-label">6.2</span> School may not resell, sublicense, or white-label FitOS without prior written consent from FitOS.</p>
+        <p><span class="sub-label">6.3</span> Any curriculum materials School creates referencing FitOS (guides, tutorials, assessments) remain School's property. School grants FitOS a non-exclusive license to reference the partnership in marketing materials.</p>
+      </div>
+
+      <hr class="rule">
+
+      <!-- Section 7: Term & Termination -->
+      <div class="section">
+        <div class="section-num">Section 7</div>
+        <div class="section-title">Term &amp; Termination</div>
+        <p><span class="sub-label">7.1</span> This Agreement commences on the Effective Date and continues for twelve (12) months, auto-renewing annually unless either party provides sixty (60) days written notice of non-renewal.</p>
+        <p><span class="sub-label">7.2</span> Either party may terminate for material breach upon thirty (30) days written notice if the breach is not cured within that period.</p>
+        <p><span class="sub-label">7.3</span> Upon termination, all active Hosting Tokens remain valid until their scheduled expiry date. No new tokens will be issued after the termination effective date.</p>
+      </div>
+
+      <hr class="rule">
+
+      <!-- Section 8: Warranties -->
+      <div class="section">
+        <div class="section-num">Section 8</div>
+        <div class="section-title">Representations &amp; Warranties</div>
+        <p><span class="sub-label">8.1 FitOS represents:</span> (a) FitOS will maintain 99% uptime measured monthly, excluding scheduled maintenance windows notified 48 hours in advance; (b) FitOS has full authority to enter into this Agreement.</p>
+        <p><span class="sub-label">8.2 School represents:</span> (a) School has full legal authority to enter into this Agreement; (b) School will accurately report enrollment numbers; (c) School will not represent to students that FitOS is School's proprietary software.</p>
+      </div>
+
+      <hr class="rule">
+
+      <!-- Section 9: Limitation of Liability -->
+      <div class="section">
+        <div class="section-num">Section 9</div>
+        <div class="section-title">Limitation of Liability</div>
+        <p>Neither party shall be liable for indirect, incidental, consequential, or punitive damages arising from this Agreement. FitOS's total liability for any claim shall not exceed the fees paid by School in the three (3) months preceding the claim.</p>
+      </div>
+
+      <hr class="rule">
+
+      <!-- Section 10: General -->
+      <div class="section">
+        <div class="section-num">Section 10</div>
+        <div class="section-title">General</div>
+        <p><span class="sub-label">10.1 Governing Law.</span> This Agreement is governed by the laws of the State of Delaware, without regard to conflict of law principles.</p>
+        <p><span class="sub-label">10.2 Entire Agreement.</span> This Agreement constitutes the entire understanding between the parties regarding its subject matter and supersedes all prior discussions.</p>
+        <p><span class="sub-label">10.3 Amendments.</span> Amendments must be in writing and signed by authorized representatives of both parties.</p>
+        <p><span class="sub-label">10.4 Severability.</span> If any provision is found unenforceable, the remaining provisions continue in full force.</p>
+      </div>
+
+      <hr class="rule">
+
+      <!-- Signature blocks -->
+      <div class="sig-section">
+        <div class="sig-block">
+          <div class="sig-label">FitOS Software (Provider)</div>
+          <div class="sig-line"></div>
+          <div class="sig-name">Authorized Representative</div>
+          <div class="sig-detail">Title: ________________________</div>
+          <div class="sig-detail">Date: _________________________</div>
+        </div>
+        <div class="sig-block">
+          <div class="sig-label">School (Partner)</div>
+          <div class="sig-line"></div>
+          <div class="sig-name">Authorized Representative</div>
+          <div class="sig-detail">Title: ________________________</div>
+          <div class="sig-detail">Date: _________________________</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>
