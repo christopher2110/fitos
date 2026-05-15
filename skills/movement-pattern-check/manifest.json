@@ -1,0 +1,15 @@
+{
+  "id": "movement-pattern-check",
+  "name": "Movement Pattern Check",
+  "description": "Reviews workout logs for the past 2 weeks and flags muscle group imbalances or missing movement patterns (e.g. no hinge work, overdone pushing). Posts a note to Activity feed.",
+  "version": "1.0.0",
+  "model": "claude-haiku-4-5",
+  "inputs": [
+    { "tab": "Workouts", "range": "Workouts!A1:K500" },
+    { "tab": "Profile",  "range": "Profile!A2:D50" }
+  ],
+  "outputs": [
+    { "tab": "Activity", "action": "append" }
+  ],
+  "requires_tools": []
+}
