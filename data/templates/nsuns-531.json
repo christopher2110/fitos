@@ -1,0 +1,226 @@
+{
+  "id": "nsuns-531",
+  "slug": "nsuns-531",
+  "name": "nSuns 5/3/1 LP",
+  "author": "nSuns (Reddit community adaptation)",
+  "source": "Reddit /r/nSuns public programming — community adaptation of 5/3/1 methodology",
+  "goal": "powerbuilding",
+  "difficulty": "intermediate",
+  "daysPerWeek": 5,
+  "durationWeeks": 12,
+  "description": "A high-frequency, high-volume adaptation of Wendler's 5/3/1. Trains squat and deadlift each once per week plus a second frequency day, with upper body twice weekly. Uses a linear progression model — calculated training maxes increase by a fixed amount every week. One of the most popular intermediate programs in recent years.",
+  "equipment": ["barbell", "rack", "bench"],
+  "tags": ["powerbuilding", "strength", "5/3/1", "linear-progression"],
+  "weeks": [
+    {
+      "week": 1,
+      "label": "Week 1 — Establish Training Maxes",
+      "phase": "Linear Progression Cycle 1",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Bench Press + Close Grip",
+          "exercises": [
+            { "name": "Bench Press", "sets": "9", "reps": "3/3/3/5/5/3/3/3/1+", "load": "65/75/85/75/65/65/55/55/75% TM", "rest": "180", "notes": "Follow the percentage ladder exactly. Last set AMRAP." },
+            { "name": "Close-Grip Bench Press", "sets": "6", "reps": "6/6/6/6/6/6", "load": "48/48/48/44/44/44% TM", "rest": "120", "notes": "Supplemental press." },
+            { "name": "DB Row", "sets": "3-5", "reps": "8-12", "load": "RPE 7-8", "rest": "90", "notes": "Assistance work." },
+            { "name": "Pull-Up", "sets": "3", "reps": "AMRAP", "load": "BW", "rest": "90", "notes": "" },
+            { "name": "Tricep Pushdown", "sets": "3", "reps": "10-15", "load": "Moderate", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Tuesday",
+          "focus": "Squat + SSB/Front Squat",
+          "exercises": [
+            { "name": "Back Squat", "sets": "9", "reps": "3/3/3/5/5/3/3/3/1+", "load": "65/75/85/75/65/65/55/55/75% TM", "rest": "240", "notes": "Heavy leg day." },
+            { "name": "Front Squat", "sets": "6", "reps": "6/6/6/6/6/6", "load": "50/50/50/45/45/45% of Squat TM", "rest": "180", "notes": "SSB is fine too." },
+            { "name": "Leg Press", "sets": "3-5", "reps": "8-15", "load": "RPE 7", "rest": "120", "notes": "" },
+            { "name": "Leg Curl", "sets": "3", "reps": "10-15", "load": "RPE 7", "rest": "75", "notes": "" }
+          ]
+        },
+        {
+          "day": "Wednesday",
+          "focus": "Overhead Press + Incline",
+          "exercises": [
+            { "name": "Overhead Press", "sets": "9", "reps": "3/3/3/5/5/3/3/3/1+", "load": "65/75/85/75/65/65/55/55/75% TM", "rest": "180", "notes": "" },
+            { "name": "Incline DB Press", "sets": "6", "reps": "6/6/6/6/6/6", "load": "Moderate", "rest": "90", "notes": "Use 55% of bench TM as a starting guide." },
+            { "name": "Lat Pulldown", "sets": "3-5", "reps": "8-12", "load": "RPE 7", "rest": "90", "notes": "" },
+            { "name": "Cable Row", "sets": "3", "reps": "10-12", "load": "RPE 7", "rest": "75", "notes": "" },
+            { "name": "Face Pulls", "sets": "3", "reps": "15", "load": "RPE 7", "rest": "45", "notes": "" }
+          ]
+        },
+        {
+          "day": "Thursday",
+          "focus": "Deadlift + Sumo/Romanian",
+          "exercises": [
+            { "name": "Deadlift", "sets": "9", "reps": "3/3/3/5/5/3/3/3/1+", "load": "65/75/85/75/65/65/55/55/75% TM", "rest": "300", "notes": "Heaviest day. Take your time." },
+            { "name": "Romanian Deadlift", "sets": "6", "reps": "6/6/6/6/6/6", "load": "50% DL TM", "rest": "180", "notes": "" },
+            { "name": "Leg Press", "sets": "3-5", "reps": "8-15", "load": "RPE 7", "rest": "120", "notes": "" },
+            { "name": "Hanging Leg Raise", "sets": "3", "reps": "12", "load": "BW", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Friday",
+          "focus": "Bench Press (2nd Frequency)",
+          "exercises": [
+            { "name": "Bench Press", "sets": "6", "reps": "5/5/5/3/3/1+", "load": "75/80/85/80/75/70% TM", "rest": "150", "notes": "Second touch of bench this week." },
+            { "name": "Overhead Press", "sets": "3-5", "reps": "5-8", "load": "Moderate", "rest": "90", "notes": "Assistance only." },
+            { "name": "Chin-Up", "sets": "3", "reps": "AMRAP", "load": "BW", "rest": "90", "notes": "" },
+            { "name": "Dumbbell Lateral Raise", "sets": "3", "reps": "15", "load": "Moderate", "rest": "45", "notes": "" },
+            { "name": "EZ Bar Curl", "sets": "3", "reps": "10", "load": "Moderate", "rest": "60", "notes": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 2,
+      "label": "Week 2 — Add to Training Max",
+      "phase": "Linear Progression Cycle 1",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Bench Press + Close Grip",
+          "exercises": [
+            { "name": "Bench Press", "sets": "9", "reps": "3/3/3/5/5/3/3/3/1+", "load": "65/75/85/75/65/65/55/55/75% of new TM", "rest": "180", "notes": "TM increases: +5 lb bench/press, +10 lb squat/deadlift each week." },
+            { "name": "Close-Grip Bench Press", "sets": "6", "reps": "6x6", "load": "50% TM", "rest": "120", "notes": "" },
+            { "name": "DB Row", "sets": "3-5", "reps": "8-12", "load": "RPE 7-8", "rest": "90", "notes": "" },
+            { "name": "Pull-Up", "sets": "3", "reps": "AMRAP", "load": "BW", "rest": "90", "notes": "" },
+            { "name": "Tricep Pushdown", "sets": "3", "reps": "10-15", "load": "Moderate", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Tuesday",
+          "focus": "Squat + Front Squat",
+          "exercises": [
+            { "name": "Back Squat", "sets": "9", "reps": "3/3/3/5/5/3/3/3/1+", "load": "65/75/85/75/65/65/55/55/75% TM", "rest": "240", "notes": "" },
+            { "name": "Front Squat", "sets": "6", "reps": "6x6", "load": "50% Squat TM", "rest": "180", "notes": "" },
+            { "name": "Leg Press", "sets": "3-5", "reps": "8-15", "load": "RPE 7", "rest": "120", "notes": "" },
+            { "name": "Leg Curl", "sets": "3", "reps": "10-15", "load": "RPE 7", "rest": "75", "notes": "" }
+          ]
+        },
+        {
+          "day": "Wednesday",
+          "focus": "Overhead Press + Incline",
+          "exercises": [
+            { "name": "Overhead Press", "sets": "9", "reps": "3/3/3/5/5/3/3/3/1+", "load": "65/75/85/75/65/65/55/55/75% TM", "rest": "180", "notes": "" },
+            { "name": "Incline DB Press", "sets": "6", "reps": "6x6", "load": "Moderate", "rest": "90", "notes": "" },
+            { "name": "Lat Pulldown", "sets": "3-5", "reps": "8-12", "load": "RPE 7", "rest": "90", "notes": "" },
+            { "name": "Cable Row", "sets": "3", "reps": "10-12", "load": "RPE 7", "rest": "75", "notes": "" },
+            { "name": "Face Pulls", "sets": "3", "reps": "15", "load": "RPE 7", "rest": "45", "notes": "" }
+          ]
+        },
+        {
+          "day": "Thursday",
+          "focus": "Deadlift + Romanian",
+          "exercises": [
+            { "name": "Deadlift", "sets": "9", "reps": "3/3/3/5/5/3/3/3/1+", "load": "65/75/85/75/65/65/55/55/75% TM", "rest": "300", "notes": "" },
+            { "name": "Romanian Deadlift", "sets": "6", "reps": "6x6", "load": "50% DL TM", "rest": "180", "notes": "" },
+            { "name": "Leg Press", "sets": "3-5", "reps": "8-15", "load": "RPE 7", "rest": "120", "notes": "" },
+            { "name": "Hanging Leg Raise", "sets": "3", "reps": "12", "load": "BW", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Friday",
+          "focus": "Bench 2nd Frequency",
+          "exercises": [
+            { "name": "Bench Press", "sets": "6", "reps": "5/5/5/3/3/1+", "load": "75/80/85/80/75/70% TM", "rest": "150", "notes": "" },
+            { "name": "Overhead Press", "sets": "3-5", "reps": "5-8", "load": "Moderate", "rest": "90", "notes": "" },
+            { "name": "Chin-Up", "sets": "3", "reps": "AMRAP", "load": "BW", "rest": "90", "notes": "" },
+            { "name": "Lateral Raise", "sets": "3", "reps": "15", "load": "Moderate", "rest": "45", "notes": "" },
+            { "name": "EZ Bar Curl", "sets": "3", "reps": "10", "load": "Moderate", "rest": "60", "notes": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 3,
+      "label": "Week 3 — Continue LP",
+      "phase": "Linear Progression Cycle 1",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Bench Press + Close Grip",
+          "exercises": [
+            { "name": "Bench Press", "sets": "9", "reps": "3/3/3/5/5/3/3/3/1+", "load": "65/75/85/75/65/65/55/55/75% TM", "rest": "180", "notes": "" },
+            { "name": "Close-Grip Bench Press", "sets": "6", "reps": "6x6", "load": "50% TM", "rest": "120", "notes": "" },
+            { "name": "DB Row", "sets": "4", "reps": "10", "load": "RPE 8", "rest": "90", "notes": "" },
+            { "name": "Pull-Up", "sets": "3", "reps": "AMRAP", "load": "BW", "rest": "90", "notes": "" },
+            { "name": "Tricep Pushdown", "sets": "3", "reps": "10-15", "load": "Moderate", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Tuesday",
+          "focus": "Squat + Front Squat",
+          "exercises": [
+            { "name": "Back Squat", "sets": "9", "reps": "3/3/3/5/5/3/3/3/1+", "load": "65/75/85/75/65/65/55/55/75% TM", "rest": "240", "notes": "" },
+            { "name": "Front Squat", "sets": "6", "reps": "6x6", "load": "50% Squat TM", "rest": "180", "notes": "" },
+            { "name": "Leg Press", "sets": "4", "reps": "10", "load": "RPE 8", "rest": "120", "notes": "" },
+            { "name": "Leg Curl", "sets": "3", "reps": "12", "load": "RPE 8", "rest": "75", "notes": "" }
+          ]
+        },
+        {
+          "day": "Wednesday",
+          "focus": "Overhead Press + Incline",
+          "exercises": [
+            { "name": "Overhead Press", "sets": "9", "reps": "3/3/3/5/5/3/3/3/1+", "load": "65/75/85/75/65/65/55/55/75% TM", "rest": "180", "notes": "" },
+            { "name": "Incline DB Press", "sets": "6", "reps": "6x6", "load": "Moderate", "rest": "90", "notes": "" },
+            { "name": "Lat Pulldown", "sets": "4", "reps": "10", "load": "RPE 8", "rest": "90", "notes": "" },
+            { "name": "Cable Row", "sets": "3", "reps": "12", "load": "RPE 8", "rest": "75", "notes": "" },
+            { "name": "Face Pulls", "sets": "3", "reps": "15", "load": "RPE 7", "rest": "45", "notes": "" }
+          ]
+        },
+        {
+          "day": "Thursday",
+          "focus": "Deadlift + Romanian",
+          "exercises": [
+            { "name": "Deadlift", "sets": "9", "reps": "3/3/3/5/5/3/3/3/1+", "load": "65/75/85/75/65/65/55/55/75% TM", "rest": "300", "notes": "" },
+            { "name": "Romanian Deadlift", "sets": "6", "reps": "6x6", "load": "50% DL TM", "rest": "180", "notes": "" },
+            { "name": "Leg Press", "sets": "4", "reps": "10", "load": "RPE 8", "rest": "120", "notes": "" },
+            { "name": "Hanging Leg Raise", "sets": "3", "reps": "12", "load": "BW", "rest": "60", "notes": "" }
+          ]
+        },
+        {
+          "day": "Friday",
+          "focus": "Bench 2nd Frequency",
+          "exercises": [
+            { "name": "Bench Press", "sets": "6", "reps": "5/5/5/3/3/1+", "load": "75/80/85/80/75/70% TM", "rest": "150", "notes": "" },
+            { "name": "Overhead Press", "sets": "4", "reps": "6", "load": "Moderate", "rest": "90", "notes": "" },
+            { "name": "Chin-Up", "sets": "3", "reps": "AMRAP", "load": "BW", "rest": "90", "notes": "" },
+            { "name": "Lateral Raise", "sets": "3", "reps": "15", "load": "Moderate", "rest": "45", "notes": "" },
+            { "name": "EZ Bar Curl", "sets": "3", "reps": "10", "load": "Moderate", "rest": "60", "notes": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 4,
+      "label": "Week 4 — Optional Deload",
+      "phase": "Deload (Optional)",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Bench Deload",
+          "exercises": [
+            { "name": "Bench Press", "sets": "5", "reps": "5", "load": "60% TM", "rest": "120", "notes": "nSuns does not mandate a deload. Take one if fatigued." }
+          ]
+        },
+        {
+          "day": "Tuesday",
+          "focus": "Squat Deload",
+          "exercises": [
+            { "name": "Back Squat", "sets": "5", "reps": "5", "load": "60% TM", "rest": "150", "notes": "" }
+          ]
+        },
+        {
+          "day": "Thursday",
+          "focus": "Deadlift Deload",
+          "exercises": [
+            { "name": "Deadlift", "sets": "5", "reps": "5", "load": "60% TM", "rest": "180", "notes": "" }
+          ]
+        }
+      ]
+    }
+  ],
+  "progression": "Add 5 lb to bench and press TM each week, 10 lb to squat and deadlift TM each week. The TM increases EVERY week (unlike 5/3/1's monthly cycle). Deload is optional — take it when you feel beat up.",
+  "notes": "nSuns generates 9-set main lift ladders. This is high volume — expect 75–90 min sessions. The AMRAP on the last main set is the data point — chase reps, log them, compare week over week."
+}
