@@ -1,0 +1,154 @@
+{
+  "id": "starting-strength",
+  "slug": "starting-strength",
+  "name": "Starting Strength",
+  "author": "Mark Rippetoe",
+  "source": "Starting Strength: Basic Barbell Training, 3rd ed. (Rippetoe, 2011) — public programming methodology",
+  "goal": "strength",
+  "difficulty": "beginner",
+  "daysPerWeek": 3,
+  "durationWeeks": 12,
+  "description": "The definitive novice barbell program. Three days per week, alternating two workouts. Squat every session. Add weight every single workout — 5 lb on upper body, 10 lb on lower body. Simple, brutally effective, and correct for anyone who has never run a structured linear progression.",
+  "equipment": ["barbell", "rack", "bench"],
+  "tags": ["strength", "beginner", "linear-progression"],
+  "weeks": [
+    {
+      "week": 1,
+      "label": "Week 1 — Establish Weights",
+      "phase": "Novice Linear Progression",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Workout A",
+          "exercises": [
+            { "name": "Back Squat", "sets": "3", "reps": "5", "load": "Start light — add 10 lb next session", "rest": "180", "notes": "Hips below parallel. Take 3-4 warm-up sets to work weight." },
+            { "name": "Bench Press", "sets": "3", "reps": "5", "load": "Start light — add 5 lb next session", "rest": "180", "notes": "" },
+            { "name": "Deadlift", "sets": "1", "reps": "5", "load": "Start light — add 10 lb next session", "rest": "300", "notes": "One hard work set. This is the money lift." }
+          ]
+        },
+        {
+          "day": "Wednesday",
+          "focus": "Workout B",
+          "exercises": [
+            { "name": "Back Squat", "sets": "3", "reps": "5", "load": "+10 lb from Monday", "rest": "180", "notes": "Add weight every session during LP." },
+            { "name": "Overhead Press", "sets": "3", "reps": "5", "load": "Start light — add 5 lb next session", "rest": "180", "notes": "Alternates with bench each B day." },
+            { "name": "Deadlift", "sets": "1", "reps": "5", "load": "+10 lb from Monday", "rest": "300", "notes": "" }
+          ]
+        },
+        {
+          "day": "Friday",
+          "focus": "Workout A",
+          "exercises": [
+            { "name": "Back Squat", "sets": "3", "reps": "5", "load": "+10 lb from Wednesday", "rest": "180", "notes": "" },
+            { "name": "Bench Press", "sets": "3", "reps": "5", "load": "+5 lb from Monday", "rest": "180", "notes": "" },
+            { "name": "Deadlift", "sets": "1", "reps": "5", "load": "+10 lb from Wednesday", "rest": "300", "notes": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 2,
+      "label": "Week 2 — Continue Adding Weight",
+      "phase": "Novice Linear Progression",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Workout B",
+          "exercises": [
+            { "name": "Back Squat", "sets": "3", "reps": "5", "load": "+10 lb from Friday", "rest": "180", "notes": "" },
+            { "name": "Overhead Press", "sets": "3", "reps": "5", "load": "+5 lb from Wednesday", "rest": "180", "notes": "" },
+            { "name": "Deadlift", "sets": "1", "reps": "5", "load": "+10 lb from Friday", "rest": "300", "notes": "" }
+          ]
+        },
+        {
+          "day": "Wednesday",
+          "focus": "Workout A",
+          "exercises": [
+            { "name": "Back Squat", "sets": "3", "reps": "5", "load": "+10 lb from Monday", "rest": "180", "notes": "This is where most novices find the squat getting challenging." },
+            { "name": "Bench Press", "sets": "3", "reps": "5", "load": "+5 lb from last bench", "rest": "180", "notes": "" },
+            { "name": "Deadlift", "sets": "1", "reps": "5", "load": "+10 lb from Monday", "rest": "300", "notes": "" }
+          ]
+        },
+        {
+          "day": "Friday",
+          "focus": "Workout B",
+          "exercises": [
+            { "name": "Back Squat", "sets": "3", "reps": "5", "load": "+10 lb from Wednesday", "rest": "180", "notes": "" },
+            { "name": "Overhead Press", "sets": "3", "reps": "5", "load": "+5 lb from last OHP", "rest": "180", "notes": "" },
+            { "name": "Deadlift", "sets": "1", "reps": "5", "load": "+10 lb from Wednesday", "rest": "300", "notes": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 3,
+      "label": "Week 3 — Linear Progress Continues",
+      "phase": "Novice Linear Progression",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Workout A",
+          "exercises": [
+            { "name": "Back Squat", "sets": "3", "reps": "5", "load": "+10 lb from Friday", "rest": "180", "notes": "Keep adding. Trust the process." },
+            { "name": "Bench Press", "sets": "3", "reps": "5", "load": "+5 lb", "rest": "180", "notes": "" },
+            { "name": "Deadlift", "sets": "1", "reps": "5", "load": "+10 lb", "rest": "300", "notes": "" }
+          ]
+        },
+        {
+          "day": "Wednesday",
+          "focus": "Workout B",
+          "exercises": [
+            { "name": "Back Squat", "sets": "3", "reps": "5", "load": "+10 lb", "rest": "180", "notes": "" },
+            { "name": "Overhead Press", "sets": "3", "reps": "5", "load": "+5 lb", "rest": "180", "notes": "" },
+            { "name": "Deadlift", "sets": "1", "reps": "5", "load": "+10 lb", "rest": "300", "notes": "" }
+          ]
+        },
+        {
+          "day": "Friday",
+          "focus": "Workout A",
+          "exercises": [
+            { "name": "Back Squat", "sets": "3", "reps": "5", "load": "+10 lb", "rest": "180", "notes": "" },
+            { "name": "Bench Press", "sets": "3", "reps": "5", "load": "+5 lb", "rest": "180", "notes": "" },
+            { "name": "Deadlift", "sets": "1", "reps": "5", "load": "+10 lb", "rest": "300", "notes": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "week": 4,
+      "label": "Week 4 — Resets If Needed",
+      "phase": "Novice Linear Progression",
+      "days": [
+        {
+          "day": "Monday",
+          "focus": "Workout B",
+          "exercises": [
+            { "name": "Back Squat", "sets": "3", "reps": "5", "load": "+10 lb or -10% if stalled", "rest": "180", "notes": "First stall: reset 10%, retry 3 sessions." },
+            { "name": "Overhead Press", "sets": "3", "reps": "5", "load": "+5 lb or reset if stalled", "rest": "180", "notes": "" },
+            { "name": "Deadlift", "sets": "1", "reps": "5", "load": "+10 lb or reset if stalled", "rest": "300", "notes": "" }
+          ]
+        },
+        {
+          "day": "Wednesday",
+          "focus": "Workout A",
+          "exercises": [
+            { "name": "Back Squat", "sets": "3", "reps": "5", "load": "Continue progression", "rest": "180", "notes": "" },
+            { "name": "Bench Press", "sets": "3", "reps": "5", "load": "Continue progression", "rest": "180", "notes": "" },
+            { "name": "Deadlift", "sets": "1", "reps": "5", "load": "Continue progression", "rest": "300", "notes": "" }
+          ]
+        },
+        {
+          "day": "Friday",
+          "focus": "Workout B",
+          "exercises": [
+            { "name": "Back Squat", "sets": "3", "reps": "5", "load": "Continue progression", "rest": "180", "notes": "" },
+            { "name": "Overhead Press", "sets": "3", "reps": "5", "load": "Continue progression", "rest": "180", "notes": "" },
+            { "name": "Deadlift", "sets": "1", "reps": "5", "load": "Continue progression", "rest": "300", "notes": "" }
+          ]
+        }
+      ]
+    }
+  ],
+  "progression": "Add weight every single session: +10 lb (5 kg) to squat and deadlift, +5 lb (2.5 kg) to press and bench. First stall: reset 10% and retry. After 3 resets on same lift: graduate to intermediate programming.",
+  "notes": "The program has exactly 3 exercises per workout. Do not add anything. Novice gains require focus, not variety. Eat enough — 3000+ calories for most males, ~2400 for most females. Sleep 8 hours."
+}
