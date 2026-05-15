@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitOS Setup — Connect Your Sheet</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:    #F5F0E8;
+      --cream-mid:#EDE8DC;
+      --olive:    #4A5C3A;
+      --olive-dk: #3A4A2C;
+      --olive-lt: #6B7D57;
+      --ink:      #2C2A24;
+      --muted:    #7A7570;
+      --border:   #DDD8CA;
+      --red:      #8B3A2A;
+      --green:    #3A7A4C;
+      --radius:   12px;
+    }
+
+    html { font-size: 16px; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ─── HEADER ─────────────────────────────────────────── */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      height: 56px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(245,240,232,0.92);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      font-family: 'Fraunces', serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--olive);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .header-link {
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+    }
+    .header-link:hover { color: var(--ink); }
+
+    /* ─── MAIN CONTAINER ─────────────────────────────────── */
+    .container {
+      max-width: 520px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+      flex: 1;
+    }
+
+    /* ─── STEP INDICATOR ─────────────────────────────────── */
+    .steps {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 40px;
+    }
+
+    .step-item {
+      display: flex;
+      align-items: center;
+      flex: 1;
+    }
+
+    .step-bubble {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--cream-mid);
+      border: 2px solid var(--border);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+    }
+
+    .step-bubble.active {
+      background: var(--olive);
+      border-color: var(--olive);
+      color: var(--cream);
+    }
+
+    .step-bubble.done {
+      background: var(--green);
+      border-color: var(--green);
+      color: #fff;
+    }
+
+    .step-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-left: 8px;
+      white-space: nowrap;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .step-item.active .step-label { color: var(--ink); font-weight: 600; }
+    .step-item.done .step-label { color: var(--green); }
+
+    .step-line {
+      flex: 1;
+      height: 2px;
+      background: var(--border);
+      margin: 0 8px;
+      transition: background 0.3s;
+    }
+
+    .step-line.done { background: var(--green); }
+
+    /* ─── STEP PANELS ────────────────────────────────────── */
+    .step-panel {
+      display: none;
+    }
+    .step-panel.active { display: block; }
+
+    /* ─── HEADINGS ───────────────────────────────────────── */
+    .step-heading {
+      font-family: 'Fraunces', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--olive);
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+
+    .step-sub {
+      font-size: 15px;
+      color: var(--muted);
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    /* ─── INSTRUCTION CARDS ──────────────────────────────── */
+    .info-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .info-card-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .service-account-email {
+      font-family: 'Inter', monospace;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--olive);
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      word-break: break-all;
+    }
+
+    .copy-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 12px;
+      color: var(--muted);
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: background 0.15s, color 0.15s;
+    }
+    .copy-btn:hover { background: var(--cream-mid); color: var(--ink); }
+    .copy-btn.copied { color: var(--green); border-color: var(--green); }
+
+    .step-list {
+      list-style: none;
+      counter-reset: step-counter;
+    }
+
+    .step-list li {
+      counter-increment: step-counter;
+      display: flex;
+      gap: 12px;
+      font-size: 14px;
+      color: var(--ink);
+      line-height: 1.5;
+      padding: 6px 0;
+    }
+
+    .step-list li::before {
+      content: counter(step-counter);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--olive);
+      color: var(--cream);
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .step-list a {
+      color: var(--olive);
+      font-weight: 600;
+    }
+
+    /* ─── FORM FIELDS ────────────────────────────────────── */
+    .field {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+
+    label .optional {
+      font-weight: 400;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    input[type="text"],
+    input[type="email"] {
+      width: 100%;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 15px;
+      font-family: 'Inter', sans-serif;
+      color: var(--ink);
+      background: #fff;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      -webkit-appearance: none;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus {
+      border-color: var(--olive);
+      box-shadow: 0 0 0 3px rgba(74,92,58,0.1);
+    }
+
+    input[type="text"]::placeholder,
+    input[type="email"]::placeholder {
+      color: #B0AAA0;
+    }
+
+    .field-hint {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    /* ─── BUTTONS ────────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s, opacity 0.15s;
+      padding: 13px 24px;
+      text-decoration: none;
+    }
+
+    .btn:active { transform: scale(0.98); }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .btn-primary {
+      background: var(--olive);
+      color: var(--cream);
+      width: 100%;
+    }
+    .btn-primary:hover:not(:disabled) { background: var(--olive-dk); }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--olive);
+      border: 1.5px solid var(--border);
+      width: 100%;
+    }
+    .btn-secondary:hover { background: var(--cream-mid); }
+
+    .btn-verify {
+      background: var(--olive-lt);
+      color: var(--cream);
+      padding: 11px 22px;
+      font-size: 14px;
+      width: 100%;
+      margin-top: 4px;
+    }
+    .btn-verify:hover:not(:disabled) { background: var(--olive); }
+
+    /* ─── STATUS MESSAGES ────────────────────────────────── */
+    .status-box {
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 14px;
+      display: none;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .status-box.visible { display: flex; }
+    .status-box.success { background: #EBF5EE; color: var(--green); border: 1px solid #BDE0C8; }
+    .status-box.error   { background: #FAF0EE; color: var(--red);   border: 1px solid #F0C8C0; }
+    .status-box.loading { background: var(--cream-mid); color: var(--muted); border: 1px solid var(--border); }
+
+    .status-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .status-text { line-height: 1.5; }
+
+    /* ─── VERIFY SUCCESS DETAIL ──────────────────────────── */
+    .verify-success-detail {
+      display: none;
+      margin-top: 20px;
+    }
+    .verify-success-detail.visible { display: block; }
+
+    /* ─── SUMMARY (STEP 3) ───────────────────────────────── */
+    .summary-card {
+      background: var(--olive);
+      color: var(--cream);
+      border-radius: 16px;
+      padding: 32px 28px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .summary-check {
+      font-size: 48px;
+      margin-bottom: 16px;
+      line-height: 1;
+    }
+
+    .summary-headline {
+      font-family: 'Fraunces', serif;
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .summary-sub {
+      font-size: 14px;
+      opacity: 0.8;
+      line-height: 1.6;
+    }
+
+    .link-row {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .link-row-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .link-row-url {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--olive);
+      word-break: break-all;
+    }
+
+    .link-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .icon-btn {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: background 0.15s;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .icon-btn:hover { background: var(--cream-mid); color: var(--ink); }
+    .icon-btn.copied { color: var(--green); border-color: var(--green); }
+
+    .final-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    /* ─── SPINNER ────────────────────────────────────────── */
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .spinner-dark {
+      border-color: rgba(74,92,58,0.3);
+      border-top-color: var(--olive);
+    }
+
+    /* ─── RESPONSIVE ─────────────────────────────────────── */
+    @media (max-width: 480px) {
+      .container { padding: 28px 16px 80px; }
+      .step-heading { font-size: 24px; }
+      .step-label { display: none; }
+      .summary-card { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <a href="/" class="logo">FitOS</a>
+    <a href="/dashboard" class="header-link">Skip to Dashboard →</a>
+  </header>
+
+  <div class="container">
+
+    <!-- STEP INDICATOR -->
+    <div class="steps" id="stepIndicator">
+      <div class="step-item active" id="stepItem1">
+        <div class="step-bubble" id="stepBubble1">1</div>
+        <span class="step-label">Connect Sheet</span>
+      </div>
+      <div class="step-line" id="stepLine1"></div>
+      <div class="step-item" id="stepItem2">
+        <div class="step-bubble" id="stepBubble2">2</div>
+        <span class="step-label">First Client</span>
+      </div>
+      <div class="step-line" id="stepLine2"></div>
+      <div class="step-item" id="stepItem3">
+        <div class="step-bubble" id="stepBubble3">3</div>
+        <span class="step-label">You're Live</span>
+      </div>
+    </div>
+
+    <!-- ── STEP 1: CONNECT SHEET ─────────────────────── -->
+    <div class="step-panel active" id="step1">
+
+      <h1 class="step-heading">Connect your Google Sheet</h1>
+      <p class="step-sub">FitOS reads and writes your client data through a Google Sheet you own. Share it with FitOS once — that's it.</p>
+
+      <div class="info-card">
+        <div class="info-card-label">Share your Sheet with this email</div>
+        <div class="service-account-email">
+          <span id="serviceAccountEmail">Loading…</span>
+          <button class="copy-btn" id="copyEmailBtn" onclick="copyServiceEmail()">Copy</button>
+        </div>
+        <div style="margin-top: 14px;">
+          <ol class="step-list">
+            <li>Open your Google Sheet → Share → paste that email → set role to <strong>Editor</strong></li>
+            <li>Don't have a Sheet yet? <a href="https://github.com/Polsia-Inc/fitos/blob/main/docs/sheets-setup.md" target="_blank" rel="noopener">Run the setup script →</a></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="sheetIdInput">Your Sheet ID or URL</label>
+        <input
+          type="text"
+          id="sheetIdInput"
+          placeholder="Paste the Sheet ID or full Google Sheets URL"
+          autocomplete="off"
+          spellcheck="false"
+        >
+        <div class="field-hint">The ID is the long string in your Sheet's URL: docs.google.com/spreadsheets/d/<strong>THIS_PART</strong>/edit</div>
+      </div>
+
+      <button class="btn btn-verify" id="verifyBtn" onclick="verifySheet()">
+        Verify Connection
+      </button>
+
+      <div class="status-box loading" id="verifyLoading">
+        <div class="status-icon"><span class="spinner spinner-dark"></span></div>
+        <div class="status-text">Checking Sheet access…</div>
+      </div>
+      <div class="status-box success" id="verifySuccess">
+        <div class="status-icon">✓</div>
+        <div class="status-text" id="verifySuccessText">Sheet connected successfully!</div>
+      </div>
+      <div class="status-box error" id="verifyError">
+        <div class="status-icon">✗</div>
+        <div class="status-text" id="verifyErrorText">Something went wrong.</div>
+      </div>
+
+      <div class="verify-success-detail" id="verifySuccessDetail">
+        <button class="btn btn-primary" onclick="goToStep(2)">
+          Next: Add Your First Client →
+        </button>
+      </div>
+
+    </div>
+
+    <!-- ── STEP 2: FIRST CLIENT ───────────────────────── -->
+    <div class="step-panel" id="step2">
+
+      <h1 class="step-heading">Add your first client</h1>
+      <p class="step-sub">This creates a row in your Clients tab and generates a PWA link you can share directly with your client.</p>
+
+      <div class="field">
+        <label for="clientName">Client name</label>
+        <input type="text" id="clientName" placeholder="e.g. Sarah Chen" autocomplete="off">
+      </div>
+
+      <div class="field">
+        <label for="clientEmail">Client email <span class="optional">(optional)</span></label>
+        <input type="email" id="clientEmail" placeholder="e.g. sarah@example.com" autocomplete="off">
+      </div>
+
+      <button class="btn btn-primary" id="addClientBtn" onclick="addClient()">
+        Add Client &amp; Get Their Link →
+      </button>
+
+      <div class="status-box loading" id="clientLoading" style="margin-top:16px;">
+        <div class="status-icon"><span class="spinner spinner-dark"></span></div>
+        <div class="status-text">Adding to your Sheet…</div>
+      </div>
+      <div class="status-box error" id="clientError" style="margin-top:16px;">
+        <div class="status-icon">✗</div>
+        <div class="status-text" id="clientErrorText">Something went wrong.</div>
+      </div>
+
+      <div style="margin-top: 20px;">
+        <button class="btn btn-secondary" onclick="goToStep(3, true)">Skip this step →</button>
+      </div>
+
+    </div>
+
+    <!-- ── STEP 3: YOU'RE LIVE ────────────────────────── -->
+    <div class="step-panel" id="step3">
+
+      <div class="summary-card">
+        <div class="summary-check">🎉</div>
+        <div class="summary-headline">You're live, coach.</div>
+        <p class="summary-sub">FitOS is connected to your Sheet. Every workout, check-in, and message flows through data you own.</p>
+      </div>
+
+      <div class="link-row" id="dashboardLinkRow">
+        <div>
+          <div class="link-row-label">Your Coach Dashboard</div>
+          <div class="link-row-url" id="dashboardUrl"></div>
+        </div>
+        <div class="link-actions">
+          <a class="icon-btn" id="dashboardOpenBtn" href="/dashboard" target="_blank">Open →</a>
+          <button class="icon-btn" onclick="copyLink('dashboardUrl', this)">Copy</button>
+        </div>
+      </div>
+
+      <div class="link-row" id="pwaLinkRow" style="display:none;">
+        <div>
+          <div class="link-row-label">Client PWA Link — <span id="finalClientName"></span></div>
+          <div class="link-row-url" id="pwaUrl"></div>
+        </div>
+        <div class="link-actions">
+          <a class="icon-btn" id="pwaOpenBtn" href="#" target="_blank">Open →</a>
+          <button class="icon-btn" onclick="copyLink('pwaUrl', this)">📋 Copy</button>
+        </div>
+      </div>
+
+      <div class="final-actions">
+        <a href="/dashboard" class="btn btn-primary">Open Coach Dashboard →</a>
+        <a href="/settings/agents" class="btn btn-secondary">Set Up AI Skills →</a>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    // ── STATE ──────────────────────────────────────────────
+    const LS_KEY = 'fitos_setup';
+
+    function loadState() {
+      try { return JSON.parse(localStorage.getItem(LS_KEY) || '{}'); } catch(_) { return {}; }
+    }
+
+    function saveState(patch) {
+      const state = { ...loadState(), ...patch };
+      localStorage.setItem(LS_KEY, JSON.stringify(state));
+      return state;
+    }
+
+    // ── INIT ───────────────────────────────────────────────
+    window.addEventListener('DOMContentLoaded', async () => {
+      // Set dashboard URL in step 3
+      document.getElementById('dashboardUrl').textContent = window.location.origin + '/dashboard';
+
+      // Load service account email
+      try {
+        const res = await fetch('/api/setup/service-account');
+        const data = await res.json();
+        document.getElementById('serviceAccountEmail').textContent = data.email || 'Not configured';
+      } catch(_) {
+        document.getElementById('serviceAccountEmail').textContent = 'Not available';
+      }
+
+      // Restore saved state
+      const state = loadState();
+      if (state.sheetId) {
+        document.getElementById('sheetIdInput').value = state.sheetId;
+      }
+      if (state.step) {
+        goToStep(state.step, false, true);  // restore = true, skip save
+      }
+      if (state.pwaUrl) {
+        showPwaLink(state.pwaUrl, state.clientName || 'Client');
+      }
+    });
+
+    // ── NAVIGATION ─────────────────────────────────────────
+    let currentStep = 1;
+
+    function goToStep(n, skipClient = false, restore = false) {
+      currentStep = n;
+
+      // Update panels
+      document.querySelectorAll('.step-panel').forEach((p, i) => {
+        p.classList.toggle('active', i + 1 === n);
+      });
+
+      // Update step indicator
+      for (let i = 1; i <= 3; i++) {
+        const item    = document.getElementById(`stepItem${i}`);
+        const bubble  = document.getElementById(`stepBubble${i}`);
+        const line    = i < 3 ? document.getElementById(`stepLine${i}`) : null;
+
+        item.classList.remove('active', 'done');
+        bubble.classList.remove('active', 'done');
+
+        if (i < n) {
+          item.classList.add('done');
+          bubble.classList.add('done');
+          bubble.textContent = '✓';
+          if (line) line.classList.add('done');
+        } else if (i === n) {
+          item.classList.add('active');
+          bubble.classList.add('active');
+          bubble.textContent = i;
+          if (line) line.classList.remove('done');
+        } else {
+          bubble.textContent = i;
+          if (line) line.classList.remove('done');
+        }
+      }
+
+      if (!restore) {
+        saveState({ step: n });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    // ── COPY UTILITIES ─────────────────────────────────────
+    function copyServiceEmail() {
+      const email = document.getElementById('serviceAccountEmail').textContent;
+      copyText(email, document.getElementById('copyEmailBtn'), 'Copied!', 'Copy');
+    }
+
+    function copyLink(elementId, btn) {
+      const url = document.getElementById(elementId).textContent;
+      copyText(url, btn, '✓ Copied', '📋 Copy');
+    }
+
+    function copyText(text, btn, successLabel, resetLabel) {
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = successLabel;
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = resetLabel;
+          btn.classList.remove('copied');
+        }, 2000);
+      }).catch(() => {
+        // Fallback for browsers without clipboard API
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        btn.textContent = successLabel;
+        setTimeout(() => { btn.textContent = resetLabel; }, 2000);
+      });
+    }
+
+    // ── SHEET ID EXTRACTION ────────────────────────────────
+    // Accepts either a raw ID or a full Google Sheets URL
+    function extractSheetId(input) {
+      const raw = input.trim();
+      // Full URL pattern: /spreadsheets/d/<id>/
+      const match = raw.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]{20,})/);
+      if (match) return match[1];
+      // Already a raw ID (no slashes, reasonable length)
+      if (/^[a-zA-Z0-9_-]{20,}$/.test(raw)) return raw;
+      return null;
+    }
+
+    // ── STEP 1: VERIFY ─────────────────────────────────────
+    async function verifySheet() {
+      const raw = document.getElementById('sheetIdInput').value;
+      const sheetId = extractSheetId(raw);
+
+      hideAll(['verifyLoading','verifySuccess','verifyError','verifySuccessDetail']);
+
+      if (!sheetId) {
+        showStatus('verifyError', 'Please paste a valid Sheet ID or Google Sheets URL.');
+        return;
+      }
+
+      showStatus('verifyLoading');
+      const btn = document.getElementById('verifyBtn');
+      btn.disabled = true;
+
+      try {
+        const res  = await fetch(`/api/setup/verify?sheetId=${encodeURIComponent(sheetId)}`);
+        const data = await res.json();
+
+        hideAll(['verifyLoading']);
+        btn.disabled = false;
+
+        if (data.ok) {
+          saveState({ sheetId });
+          const msg = data.profileName
+            ? `Connected! Found profile: <strong>${data.profileName}</strong>`
+            : 'Sheet connected and readable. Ready to go!';
+          if (data.devMode) {
+            document.getElementById('verifySuccessText').innerHTML = '✓ Dev mode — Sheet verification skipped';
+          } else {
+            document.getElementById('verifySuccessText').innerHTML = msg;
+          }
+          showStatus('verifySuccess');
+          document.getElementById('verifySuccessDetail').classList.add('visible');
+        } else {
+          document.getElementById('verifyErrorText').textContent = data.error || 'Verification failed.';
+          showStatus('verifyError');
+        }
+      } catch(err) {
+        hideAll(['verifyLoading']);
+        btn.disabled = false;
+        document.getElementById('verifyErrorText').textContent = 'Network error — please try again.';
+        showStatus('verifyError');
+      }
+    }
+
+    // ── STEP 2: ADD CLIENT ─────────────────────────────────
+    async function addClient() {
+      const name  = document.getElementById('clientName').value.trim();
+      const email = document.getElementById('clientEmail').value.trim();
+      const state = loadState();
+      const sheetId = state.sheetId;
+
+      hideAll(['clientLoading','clientError']);
+
+      if (!name) {
+        showStatus('clientError', 'Please enter the client\'s name.');
+        document.getElementById('clientErrorText').textContent = 'Please enter the client\'s name.';
+        document.getElementById('clientError').classList.add('visible');
+        return;
+      }
+
+      if (!sheetId) {
+        document.getElementById('clientErrorText').textContent = 'Missing Sheet ID — go back to Step 1 and verify your Sheet.';
+        document.getElementById('clientError').classList.add('visible');
+        return;
+      }
+
+      document.getElementById('clientLoading').classList.add('visible');
+      const btn = document.getElementById('addClientBtn');
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/setup/add-client', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sheetId, name, email }),
+        });
+        const data = await res.json();
+
+        document.getElementById('clientLoading').classList.remove('visible');
+        btn.disabled = false;
+
+        if (data.ok) {
+          saveState({ pwaUrl: data.pwaUrl, clientName: data.name });
+          showPwaLink(data.pwaUrl, data.name);
+          goToStep(3);
+        } else {
+          document.getElementById('clientErrorText').textContent = data.error || 'Failed to add client.';
+          document.getElementById('clientError').classList.add('visible');
+        }
+      } catch(err) {
+        document.getElementById('clientLoading').classList.remove('visible');
+        btn.disabled = false;
+        document.getElementById('clientErrorText').textContent = 'Network error — please try again.';
+        document.getElementById('clientError').classList.add('visible');
+      }
+    }
+
+    // ── STEP 3: SUMMARY ────────────────────────────────────
+    function showPwaLink(url, clientName) {
+      document.getElementById('finalClientName').textContent = clientName || 'Client';
+      document.getElementById('pwaUrl').textContent = url;
+      const openBtn = document.getElementById('pwaOpenBtn');
+      if (openBtn) openBtn.href = url;
+      document.getElementById('pwaLinkRow').style.display = 'flex';
+    }
+
+    // ── HELPERS ────────────────────────────────────────────
+    function showStatus(id, msg) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (msg) {
+        const textEl = el.querySelector('.status-text');
+        if (textEl) textEl.textContent = msg;
+      }
+      el.classList.add('visible');
+    }
+
+    function hideAll(ids) {
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('visible');
+      });
+    }
+
+    // Allow pressing Enter in the sheet input to trigger verify
+    document.addEventListener('DOMContentLoaded', () => {
+      const sheetInput = document.getElementById('sheetIdInput');
+      if (sheetInput) {
+        sheetInput.addEventListener('keydown', e => {
+          if (e.key === 'Enter') verifySheet();
+        });
+      }
+      const nameInput = document.getElementById('clientName');
+      if (nameInput) {
+        nameInput.addEventListener('keydown', e => {
+          if (e.key === 'Enter') addClient();
+        });
+      }
+    });
+  </script>
+</body>
+</html>
