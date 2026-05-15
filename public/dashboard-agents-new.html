@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitOS — Import Agent</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:        #F4EFE6;
+      --cream-light:  #FDFAF5;
+      --cream-mid:    #EDE6D8;
+      --olive:        #5C6B2A;
+      --olive-dark:   #3D4A1A;
+      --olive-muted:  #8A9650;
+      --olive-pale:   #E8EDD6;
+      --text:         #2C2A24;
+      --text-muted:   #7A7570;
+      --border:       #DDD8CA;
+      --sidebar-w:    220px;
+      --topbar-h:     60px;
+      --red:          #C84B4B;
+      --red-pale:     #FEF0F0;
+      --green:        #3A7040;
+      --green-pale:   #EAF2EA;
+    }
+
+    html, body { height: 100%; background: var(--cream); color: var(--text); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+    .layout { display: flex; min-height: 100vh; }
+
+    /* SIDEBAR */
+    .sidebar { width: var(--sidebar-w); background: var(--cream-light); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 50; }
+    .sidebar-brand { padding: 22px 20px 20px; border-bottom: 1px solid var(--border); }
+    .brand-wordmark { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; color: var(--olive); letter-spacing: -0.02em; }
+    .brand-tagline { font-size: 10px; font-weight: 500; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 6px; }
+    .sidebar-nav { flex: 1; padding: 12px 10px; display: flex; flex-direction: column; gap: 2px; }
+    .nav-section-label { font-size: 10px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; padding: 10px 10px 4px; }
+    .nav-link { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 10px; text-decoration: none; font-size: 13.5px; font-weight: 500; color: var(--text-muted); transition: background 0.12s; }
+    .nav-link:hover { background: var(--cream-mid); color: var(--text); }
+    .nav-link.active { background: var(--olive-pale); color: var(--olive-dark); font-weight: 600; }
+    .nav-icon { width: 17px; height: 17px; flex-shrink: 0; opacity: 0.7; }
+    .nav-link.active .nav-icon { opacity: 1; }
+    .sidebar-footer { padding: 14px; border-top: 1px solid var(--border); }
+    .coach-chip { display: flex; align-items: center; gap: 9px; }
+    .coach-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--olive); color: var(--cream-light); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: 'Fraunces', serif; }
+    .coach-name-small { font-size: 13px; font-weight: 600; color: var(--text); }
+    .coach-role { font-size: 11px; color: var(--text-muted); }
+
+    /* MAIN */
+    .main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+    .topbar { height: var(--topbar-h); background: var(--cream-light); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 28px; position: sticky; top: 0; z-index: 40; }
+    .topbar-left { display: flex; align-items: center; gap: 10px; }
+    .topbar-back { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-muted); text-decoration: none; font-weight: 500; padding: 6px 10px; border-radius: 8px; transition: background 0.1s; }
+    .topbar-back:hover { background: var(--cream-mid); color: var(--text); }
+    .topbar-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; color: var(--text); }
+    .page-content { padding: 28px; flex: 1; }
+
+    /* WIZARD */
+    .wizard-wrap { max-width: 640px; margin: 0 auto; }
+
+    .wizard-steps { display: flex; align-items: center; gap: 0; margin-bottom: 32px; }
+    .step-item { display: flex; align-items: center; gap: 8px; }
+    .step-dot { width: 28px; height: 28px; border-radius: 50%; background: var(--cream-mid); color: var(--text-muted); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; }
+    .step-dot.active { background: var(--olive); color: #fff; }
+    .step-dot.done { background: var(--green); color: #fff; }
+    .step-label { font-size: 12px; font-weight: 500; color: var(--text-muted); white-space: nowrap; }
+    .step-label.active { color: var(--olive-dark); font-weight: 600; }
+    .step-connector { flex: 1; height: 1px; background: var(--border); margin: 0 8px; min-width: 20px; }
+
+    .step-panel { display: none; }
+    .step-panel.active { display: block; }
+
+    /* FORM CARD */
+    .form-card { background: var(--cream-light); border: 1px solid var(--border); border-radius: 20px; padding: 28px; }
+    .form-card-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; color: var(--text); margin-bottom: 6px; letter-spacing: -0.01em; }
+    .form-card-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.5; }
+
+    .field { margin-bottom: 18px; }
+    .field-label { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .field-hint { font-size: 11px; color: var(--text-muted); margin-top: 4px; line-height: 1.4; }
+    .field-input { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 10px; font-family: 'Inter', sans-serif; font-size: 13px; color: var(--text); background: var(--cream); outline: none; transition: border-color 0.12s; }
+    .field-input:focus { border-color: var(--olive-muted); }
+    .field-input.mono { font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+    .field-input.error { border-color: var(--red); }
+
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    /* ICON PICKER */
+    .icon-picker { display: flex; gap: 8px; flex-wrap: wrap; }
+    .icon-opt { width: 40px; height: 40px; border-radius: 10px; border: 2px solid transparent; background: var(--cream); font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.1s; }
+    .icon-opt:hover { border-color: var(--olive-muted); }
+    .icon-opt.selected { border-color: var(--olive); background: var(--olive-pale); }
+
+    /* VALIDATE STATUS */
+    .validate-row { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+    .validate-badge { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 8px; }
+    .validate-badge.ok { background: var(--green-pale); color: var(--green); }
+    .validate-badge.err { background: var(--red-pale); color: var(--red); }
+    .validate-badge.checking { background: var(--cream-mid); color: var(--text-muted); }
+
+    /* SCOPE CHECKLIST */
+    .scope-list { display: flex; flex-direction: column; gap: 8px; }
+    .scope-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); background: var(--cream); cursor: pointer; transition: all 0.12s; }
+    .scope-item:hover { border-color: var(--olive-muted); background: var(--cream-light); }
+    .scope-item.selected { border-color: var(--olive); background: var(--olive-pale); }
+    .scope-cb { width: 18px; height: 18px; border: 2px solid var(--border); border-radius: 5px; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: all 0.1s; }
+    .scope-item.selected .scope-cb { background: var(--olive); border-color: var(--olive); }
+    .scope-cb-check { color: #fff; font-size: 11px; display: none; }
+    .scope-item.selected .scope-cb-check { display: block; }
+    .scope-item-text { flex: 1; }
+    .scope-item-label { font-size: 13px; font-weight: 600; color: var(--text); }
+    .scope-item-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .scope-section-title { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; padding: 4px 0; }
+    .scope-warning { font-size: 11px; color: var(--text-muted); background: var(--cream-mid); border-radius: 8px; padding: 8px 12px; margin-top: 12px; line-height: 1.5; }
+
+    /* ASSISTANT PREVIEW */
+    .assistant-preview { background: var(--cream); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+    .assistant-preview-name { font-size: 14px; font-weight: 600; color: var(--text); }
+    .assistant-preview-model { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+    .assistant-preview-instructions { font-size: 12px; color: var(--text-muted); margin-top: 8px; line-height: 1.5; max-height: 80px; overflow: hidden; }
+
+    /* BUTTONS */
+    .btn { display: inline-flex; align-items: center; gap: 7px; padding: 10px 20px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.12s; border: none; font-family: inherit; }
+    .btn-primary { background: var(--olive); color: var(--cream-light); }
+    .btn-primary:hover { background: var(--olive-dark); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
+    .btn-ghost:hover { background: var(--cream-mid); color: var(--text); }
+
+    .step-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; }
+
+    /* SUCCESS */
+    .success-card { background: var(--cream-light); border: 1px solid var(--border); border-radius: 20px; padding: 48px 32px; text-align: center; }
+    .success-icon { font-size: 56px; margin-bottom: 16px; }
+    .success-title { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 600; margin-bottom: 8px; }
+    .success-sub { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+    .success-actions { display: flex; gap: 12px; justify-content: center; margin-top: 28px; }
+
+    @media (max-width: 760px) { :root { --sidebar-w: 0px; } .sidebar { display: none; } .field-row { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-wordmark">FitOS</div>
+      <div class="brand-tagline">Coaching Platform</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Workspace</div>
+      <a class="nav-link" href="/dashboard"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</a>
+      <a class="nav-link" href="/dashboard/messages"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Messages</a>
+      <a class="nav-link" href="/dashboard/clients"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Clients</a>
+      <a class="nav-link" href="/dashboard/exercises"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2z"/><path d="M8 10h8M8 14h5"/></svg>Exercise Library</a>
+      <a class="nav-link active" href="/dashboard/agents"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg>My Agents</a>
+      <div class="nav-section-label" style="margin-top:6px">AI Tools</div>
+      <a class="nav-link" href="/dashboard/agents/builder"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>Program Builder<span style="font-size:9px;font-weight:700;background:var(--olive);color:#fff;padding:2px 6px;border-radius:10px;margin-left:auto">AI</span></a>
+      <a class="nav-link" href="/settings/agents"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2"/></svg>Claude Skills</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="coach-chip">
+        <div class="coach-avatar" id="coach-avatar">C</div>
+        <div>
+          <div class="coach-name-small" id="coach-name">Coach</div>
+          <div class="coach-role">FitOS</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <a class="topbar-back" href="/dashboard/agents">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+          My Agents
+        </a>
+        <div class="topbar-title">Import Agent</div>
+      </div>
+    </header>
+
+    <div class="page-content">
+      <div class="wizard-wrap">
+
+        <!-- STEP INDICATORS -->
+        <div class="wizard-steps">
+          <div class="step-item">
+            <div class="step-dot active" id="dot-1">1</div>
+            <span class="step-label active" id="label-1">Connect</span>
+          </div>
+          <div class="step-connector"></div>
+          <div class="step-item">
+            <div class="step-dot" id="dot-2">2</div>
+            <span class="step-label" id="label-2">Configure</span>
+          </div>
+          <div class="step-connector"></div>
+          <div class="step-item">
+            <div class="step-dot" id="dot-3">3</div>
+            <span class="step-label" id="label-3">Permissions</span>
+          </div>
+          <div class="step-connector"></div>
+          <div class="step-item">
+            <div class="step-dot" id="dot-4">4</div>
+            <span class="step-label" id="label-4">Done</span>
+          </div>
+        </div>
+
+        <!-- STEP 1: Connect -->
+        <div class="step-panel active" id="step-1">
+          <div class="form-card">
+            <div class="form-card-title">Connect your OpenAI agent</div>
+            <div class="form-card-sub">Paste your OpenAI API key and your Assistant ID. Your key is encrypted with AES-256-GCM and never logged.</div>
+
+            <div class="field">
+              <label class="field-label" for="openai-key">OpenAI API Key</label>
+              <input class="field-input mono" id="openai-key" type="password" placeholder="sk-proj-..." autocomplete="off">
+              <div class="field-hint">Your personal key from <a href="https://platform.openai.com/api-keys" target="_blank" style="color:var(--olive)">platform.openai.com/api-keys</a>. Never shared, never logged.</div>
+              <div class="validate-row" id="key-validate-row" style="display:none">
+                <span class="validate-badge" id="key-validate-badge">Checking…</span>
+                <span id="key-validate-msg" style="font-size:11px;color:var(--text-muted)"></span>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field-label" for="assistant-id">Assistant ID</label>
+              <input class="field-input mono" id="assistant-id" placeholder="asst_abc123…" autocomplete="off">
+              <div class="field-hint">Found in your <a href="https://platform.openai.com/assistants" target="_blank" style="color:var(--olive)">OpenAI Assistants</a> dashboard. Starts with <code style="font-size:11px;background:var(--cream-mid);padding:1px 4px;border-radius:4px">asst_</code></div>
+              <div class="validate-row" id="asst-validate-row" style="display:none">
+                <span class="validate-badge" id="asst-validate-badge">Checking…</span>
+                <span id="asst-validate-msg" style="font-size:11px;color:var(--text-muted)"></span>
+              </div>
+            </div>
+
+            <div id="asst-preview" style="display:none" class="assistant-preview">
+              <div class="assistant-preview-name" id="asst-preview-name"></div>
+              <div class="assistant-preview-model" id="asst-preview-model"></div>
+              <div class="assistant-preview-instructions" id="asst-preview-instructions"></div>
+            </div>
+
+            <div class="step-actions">
+              <span></span>
+              <button class="btn btn-primary" id="btn-step1-next" onclick="step1Next()" disabled>Next: Configure →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2: Configure -->
+        <div class="step-panel" id="step-2">
+          <div class="form-card">
+            <div class="form-card-title">Name &amp; describe your agent</div>
+            <div class="form-card-sub">This is how it appears in your dashboard. Give it a name that makes sense to you.</div>
+
+            <div class="field">
+              <label class="field-label">Icon</label>
+              <div class="icon-picker" id="icon-picker">
+                <!-- populated by JS -->
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field-label" for="display-name">Display Name</label>
+              <input class="field-input" id="display-name" maxlength="100" placeholder="Weekly Progress Reporter">
+            </div>
+
+            <div class="field">
+              <label class="field-label" for="description">Short Description</label>
+              <input class="field-input" id="description" maxlength="300" placeholder="Summarizes weekly progress from check-ins and workouts">
+            </div>
+
+            <div class="step-actions">
+              <button class="btn btn-ghost" onclick="goStep(1)">← Back</button>
+              <button class="btn btn-primary" onclick="step2Next()">Next: Permissions →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3: Permissions -->
+        <div class="step-panel" id="step-3">
+          <div class="form-card">
+            <div class="form-card-title">What can this agent access?</div>
+            <div class="form-card-sub">Grant only what the agent needs. All data access is scoped to your Google Sheet — nothing else is ever shared with OpenAI.</div>
+
+            <div id="scopes-list" class="scope-list"></div>
+
+            <div class="scope-warning" id="no-scopes-warning" style="display:none">
+              ⚠️ No read scopes selected — the agent will run with no client data. That's fine for testing, but it won't produce useful output.
+            </div>
+
+            <div class="step-actions">
+              <button class="btn btn-ghost" onclick="goStep(2)">← Back</button>
+              <button class="btn btn-primary" id="btn-import" onclick="importAgent()">Import Agent →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 4: Done -->
+        <div class="step-panel" id="step-4">
+          <div class="success-card">
+            <div class="success-icon">🎉</div>
+            <div class="success-title">Agent imported!</div>
+            <div class="success-sub">Your agent is ready. Head back to My Agents to run it on your client data, or import another one.</div>
+            <div class="success-actions">
+              <a class="btn btn-primary" href="/dashboard/agents">Back to My Agents</a>
+              <button class="btn btn-ghost" onclick="resetWizard()">Import Another</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const ICONS = ['🤖','🏋️','💪','📊','🧠','⚡','🎯','🔍','📈','💬','⭐','🔥','🏆','🧬','🌱'];
+
+  let state = {
+    step: 1,
+    openaiKey:    '',
+    assistantId:  '',
+    assistantInfo: null,
+    selectedIcon: '🤖',
+    displayName:  '',
+    description:  '',
+    grantedScopes: [],
+    allScopes: [],
+    keyValid: false,
+    asstValid: false,
+  };
+
+  // ── Init ──
+
+  const live = window.__COACH_LIVE__ || {};
+  if (live.coachName) {
+    document.getElementById('coach-name').textContent = live.coachName;
+    document.getElementById('coach-avatar').textContent = live.coachName[0].toUpperCase();
+  }
+
+  // Pre-fill from query params (example templates)
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('exampleName')) {
+    document.getElementById('display-name').value = params.get('exampleName') || '';
+    document.getElementById('description').value = params.get('exampleDesc') || '';
+  }
+
+  buildIconPicker();
+  loadScopes();
+
+  // Key input debounce
+  let keyTimer = null;
+  document.getElementById('openai-key').addEventListener('input', () => {
+    clearTimeout(keyTimer);
+    state.keyValid = false;
+    state.asstValid = false;
+    hideAsstPreview();
+    updateStep1Btn();
+    const v = document.getElementById('openai-key').value.trim();
+    if (v.length >= 20) {
+      keyTimer = setTimeout(() => validateKey(v), 600);
+    }
+  });
+
+  let asstTimer = null;
+  document.getElementById('assistant-id').addEventListener('input', () => {
+    clearTimeout(asstTimer);
+    state.asstValid = false;
+    hideAsstPreview();
+    updateStep1Btn();
+    const v = document.getElementById('assistant-id').value.trim();
+    if (v.startsWith('asst_') && v.length > 10 && state.keyValid) {
+      asstTimer = setTimeout(() => validateAssistant(v), 600);
+    }
+  });
+
+  function buildIconPicker() {
+    const picker = document.getElementById('icon-picker');
+    for (const icon of ICONS) {
+      const btn = document.createElement('div');
+      btn.className = 'icon-opt' + (icon === state.selectedIcon ? ' selected' : '');
+      btn.textContent = icon;
+      btn.onclick = () => {
+        state.selectedIcon = icon;
+        document.querySelectorAll('.icon-opt').forEach(b => b.classList.toggle('selected', b.textContent === icon));
+      };
+      picker.appendChild(btn);
+    }
+  }
+
+  async function loadScopes() {
+    const resp = await fetch('/api/custom-agents/scopes');
+    const data = await resp.json();
+    state.allScopes = data.scopes || [];
+    buildScopesList();
+  }
+
+  function buildScopesList() {
+    const list = document.getElementById('scopes-list');
+    list.innerHTML = '';
+
+    const reads  = state.allScopes.filter(s => s.id.startsWith('read:'));
+    const writes = state.allScopes.filter(s => s.id.startsWith('write:'));
+
+    if (reads.length) {
+      const lbl = document.createElement('div');
+      lbl.className = 'scope-section-title';
+      lbl.textContent = 'Read Access';
+      list.appendChild(lbl);
+      reads.forEach(s => list.appendChild(buildScopeItem(s)));
+    }
+
+    if (writes.length) {
+      const lbl = document.createElement('div');
+      lbl.className = 'scope-section-title';
+      lbl.style.marginTop = '12px';
+      lbl.textContent = 'Write Access';
+      list.appendChild(lbl);
+      writes.forEach(s => list.appendChild(buildScopeItem(s)));
+    }
+  }
+
+  function buildScopeItem(scope) {
+    const item = document.createElement('div');
+    const isSelected = state.grantedScopes.includes(scope.id);
+    item.className = 'scope-item' + (isSelected ? ' selected' : '');
+    item.innerHTML = `
+      <div class="scope-cb"><span class="scope-cb-check">✓</span></div>
+      <div class="scope-item-text">
+        <div class="scope-item-label">${esc(scope.label)}</div>
+        <div class="scope-item-desc">${esc(scope.description)}</div>
+      </div>`;
+    item.onclick = () => toggleScope(scope.id, item);
+    return item;
+  }
+
+  function toggleScope(scopeId, el) {
+    if (state.grantedScopes.includes(scopeId)) {
+      state.grantedScopes = state.grantedScopes.filter(s => s !== scopeId);
+      el.classList.remove('selected');
+    } else {
+      state.grantedScopes.push(scopeId);
+      el.classList.add('selected');
+    }
+    const hasRead = state.grantedScopes.some(s => s.startsWith('read:'));
+    document.getElementById('no-scopes-warning').style.display = hasRead ? 'none' : 'block';
+  }
+
+  // ── Validation ──
+
+  async function validateKey(key) {
+    showValidate('key', 'checking', 'Checking key…');
+    try {
+      const resp = await fetch('/api/custom-agents/agents/validate-key', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ openaiKey: key }),
+      });
+      const data = await resp.json();
+      if (data.ok) {
+        state.keyValid = true;
+        state.openaiKey = key;
+        showValidate('key', 'ok', 'Key valid ✓');
+        // Auto-validate assistant if already typed
+        const asstVal = document.getElementById('assistant-id').value.trim();
+        if (asstVal.startsWith('asst_') && asstVal.length > 10) {
+          validateAssistant(asstVal);
+        }
+      } else {
+        state.keyValid = false;
+        showValidate('key', 'err', data.error || 'Invalid key');
+      }
+    } catch (err) {
+      showValidate('key', 'err', 'Could not reach OpenAI');
+    }
+    updateStep1Btn();
+  }
+
+  async function validateAssistant(asstId) {
+    if (!state.keyValid) return;
+    showValidate('asst', 'checking', 'Looking up assistant…');
+    try {
+      const resp = await fetch('/api/custom-agents/agents/fetch-assistant', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ openaiKey: state.openaiKey, assistantId: asstId }),
+      });
+      const data = await resp.json();
+      if (data.ok) {
+        state.asstValid = true;
+        state.assistantId = asstId;
+        state.assistantInfo = data.assistant;
+        showValidate('asst', 'ok', `Found: ${data.assistant.name}`);
+        showAsstPreview(data.assistant);
+        // Auto-fill name if blank
+        if (!document.getElementById('display-name').value && data.assistant.name) {
+          document.getElementById('display-name').value = data.assistant.name;
+        }
+      } else {
+        state.asstValid = false;
+        showValidate('asst', 'err', data.error || 'Assistant not found');
+        hideAsstPreview();
+      }
+    } catch (err) {
+      showValidate('asst', 'err', 'Error fetching assistant');
+    }
+    updateStep1Btn();
+  }
+
+  function showValidate(which, status, msg) {
+    const row    = document.getElementById(`${which}-validate-row`);
+    const badge  = document.getElementById(`${which}-validate-badge`);
+    const msgEl  = document.getElementById(`${which}-validate-msg`);
+    row.style.display = 'flex';
+    badge.className = `validate-badge ${status}`;
+    badge.textContent = status === 'checking' ? 'Checking…' : (status === 'ok' ? '✓ Valid' : '✗ Error');
+    msgEl.textContent = msg;
+  }
+
+  function showAsstPreview(info) {
+    document.getElementById('asst-preview').style.display = 'block';
+    document.getElementById('asst-preview-name').textContent = info.name || info.id;
+    document.getElementById('asst-preview-model').textContent = `Model: ${info.model || 'unknown'}`;
+    document.getElementById('asst-preview-instructions').textContent = info.instructions
+      ? info.instructions.slice(0, 200) + (info.instructions.length > 200 ? '…' : '')
+      : '(no system instructions)';
+  }
+
+  function hideAsstPreview() {
+    document.getElementById('asst-preview').style.display = 'none';
+  }
+
+  function updateStep1Btn() {
+    document.getElementById('btn-step1-next').disabled = !(state.keyValid && state.asstValid);
+  }
+
+  // ── Step navigation ──
+
+  function step1Next() {
+    if (!state.keyValid || !state.asstValid) return;
+    goStep(2);
+  }
+
+  function step2Next() {
+    const name = document.getElementById('display-name').value.trim();
+    if (!name) {
+      document.getElementById('display-name').classList.add('error');
+      document.getElementById('display-name').focus();
+      return;
+    }
+    document.getElementById('display-name').classList.remove('error');
+    state.displayName  = name;
+    state.description  = document.getElementById('description').value.trim();
+    goStep(3);
+  }
+
+  function goStep(n) {
+    document.getElementById(`step-${state.step}`).classList.remove('active');
+    document.getElementById(`dot-${state.step}`).classList.remove('active');
+    if (n > state.step) document.getElementById(`dot-${state.step}`).classList.add('done');
+    state.step = n;
+    document.getElementById(`step-${n}`).classList.add('active');
+    document.getElementById(`dot-${n}`).classList.add('active');
+    document.getElementById(`label-${n}`).classList.add('active');
+  }
+
+  // ── Import ──
+
+  async function importAgent() {
+    const btn = document.getElementById('btn-import');
+    btn.disabled = true;
+    btn.textContent = 'Importing…';
+
+    try {
+      const resp = await fetch('/api/custom-agents/agents', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          openaiKey:     state.openaiKey,
+          assistantId:   state.assistantId,
+          displayName:   state.displayName,
+          description:   state.description,
+          icon:          state.selectedIcon,
+          grantedScopes: state.grantedScopes,
+          runMode:       'on_demand',
+        }),
+      });
+      const data = await resp.json();
+      if (data.ok) {
+        goStep(4);
+      } else {
+        alert('Import failed: ' + (data.error || 'Unknown error'));
+        btn.disabled = false;
+        btn.textContent = 'Import Agent →';
+      }
+    } catch (err) {
+      alert('Import failed: ' + err.message);
+      btn.disabled = false;
+      btn.textContent = 'Import Agent →';
+    }
+  }
+
+  function resetWizard() {
+    state = { step: 1, openaiKey: '', assistantId: '', assistantInfo: null,
+      selectedIcon: '🤖', displayName: '', description: '', grantedScopes: [], allScopes: state.allScopes,
+      keyValid: false, asstValid: false };
+    document.getElementById('openai-key').value = '';
+    document.getElementById('assistant-id').value = '';
+    document.getElementById('display-name').value = '';
+    document.getElementById('description').value = '';
+    hideAsstPreview();
+    document.getElementById('key-validate-row').style.display = 'none';
+    document.getElementById('asst-validate-row').style.display = 'none';
+    document.getElementById('btn-step1-next').disabled = true;
+    // reset step indicators
+    [1,2,3,4].forEach(i => {
+      document.getElementById(`dot-${i}`).className = 'step-dot';
+      document.getElementById(`label-${i}`).className = 'step-label';
+      document.getElementById(`step-${i}`).classList.remove('active');
+    });
+    buildScopesList();
+    goStep(1);
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+</script>
+</body>
+</html>
