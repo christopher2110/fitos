@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Migration Guide — Move from Trainerize or TrueCoach to FitOS</title>
+  <meta name="description" content="Step-by-step guide to migrate your clients and workout history from Trainerize or TrueCoach to FitOS in under 10 minutes.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cream: #F5F1E8; --cream-light: #FDFAF5; --cream-mid: #EDE6D8;
+      --olive: #5C6E3F; --olive-dark: #3D4A1A; --olive-pale: #E8EDD6; --olive-muted: #8A9650;
+      --text: #2C2A24; --text-muted: #7A7570; --border: #DDD8CA;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+
+    .site-header { background: var(--olive-dark); padding: 0 48px; height: 60px; display: flex; align-items: center; justify-content: space-between; }
+    .site-header-logo { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700; color: #F5F1E8; text-decoration: none; letter-spacing: -0.02em; }
+    .site-header-nav { display: flex; align-items: center; gap: 20px; }
+    .site-header-link { font-size: 13px; font-weight: 500; color: rgba(245,241,232,0.65); text-decoration: none; transition: color 0.15s; }
+    .site-header-link:hover { color: #F5F1E8; }
+    .site-header-cta { display: inline-flex; align-items: center; gap: 6px; background: var(--olive); color: #FDFAF5; font-size: 13px; font-weight: 600; padding: 8px 16px; border-radius: 20px; text-decoration: none; transition: background 0.18s; }
+    .site-header-cta:hover { background: #4A5A32; }
+
+    .hero { background: var(--olive-dark); padding: 60px 24px 72px; text-align: center; }
+    .hero-kicker { display: inline-flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; color: var(--olive-muted); letter-spacing: 0.14em; text-transform: uppercase; background: rgba(138,150,80,0.15); border: 1px solid rgba(138,150,80,0.3); padding: 5px 12px; border-radius: 20px; margin-bottom: 22px; }
+    .hero h1 { font-family: 'Fraunces', serif; font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 700; color: #F5F1E8; line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 16px; }
+    .hero h1 em { font-style: italic; color: var(--olive-muted); }
+    .hero-sub { font-size: 16px; color: rgba(245,241,232,0.7); max-width: 540px; margin: 0 auto 32px; }
+    .hero-cta { display: inline-flex; align-items: center; gap: 8px; background: var(--olive); color: #FDFAF5; font-weight: 600; font-size: 15px; padding: 14px 28px; border-radius: 28px; text-decoration: none; transition: background 0.18s, transform 0.12s; }
+    .hero-cta:hover { background: #4A5A32; transform: translateY(-2px); }
+
+    .doc { max-width: 720px; margin: 0 auto; padding: 56px 24px 80px; }
+
+    .toc { background: var(--cream-light); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-bottom: 48px; }
+    .toc-title { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; font-family: 'JetBrains Mono', monospace; margin-bottom: 12px; }
+    .toc ol { padding-left: 18px; }
+    .toc li { margin-bottom: 4px; }
+    .toc a { font-size: 14px; color: var(--olive); text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+
+    .section { margin-bottom: 48px; }
+    .section h2 { font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 700; color: var(--olive-dark); letter-spacing: -0.02em; margin-bottom: 16px; padding-top: 8px; }
+    .section h3 { font-size: 15px; font-weight: 600; color: var(--text); margin: 20px 0 8px; }
+    .section p { font-size: 15px; color: var(--text); margin-bottom: 14px; }
+    .section a { color: var(--olive); }
+    .section a:hover { color: var(--olive-dark); }
+
+    .step-block { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-bottom: 12px; display: flex; gap: 16px; align-items: flex-start; }
+    .step-num { min-width: 32px; height: 32px; background: var(--olive); color: #fff; font-weight: 700; font-size: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+    .step-body { flex: 1; }
+    .step-body strong { display: block; font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .step-body p { font-size: 14px; color: var(--text-muted); margin: 0; }
+
+    code { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: var(--cream-mid); padding: 2px 6px; border-radius: 4px; color: var(--olive-dark); }
+
+    .info-box { background: var(--olive-pale); border: 1px solid #C5D190; border-radius: 10px; padding: 14px 18px; font-size: 14px; color: var(--olive-dark); margin: 16px 0; }
+    .info-box strong { font-weight: 600; }
+
+    .column-table { width: 100%; border-collapse: collapse; margin: 12px 0 20px; font-size: 13px; }
+    .column-table th { background: var(--cream-mid); padding: 8px 12px; text-align: left; font-weight: 600; color: var(--text-muted); }
+    .column-table td { padding: 8px 12px; border-top: 1px solid var(--border); }
+    .column-table td:first-child { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--olive-dark); }
+
+    .cta-block { background: var(--olive-dark); border-radius: 16px; padding: 32px; text-align: center; margin-top: 48px; }
+    .cta-block h3 { font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 700; color: #F5F1E8; margin-bottom: 12px; }
+    .cta-block p { font-size: 14px; color: rgba(245,241,232,0.7); margin-bottom: 20px; }
+    .cta-block a { display: inline-flex; align-items: center; gap: 8px; background: var(--olive); color: #FDFAF5; font-weight: 600; font-size: 14px; padding: 12px 24px; border-radius: 24px; text-decoration: none; transition: background 0.18s; }
+    .cta-block a:hover { background: #4A5A32; }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="/" class="site-header-logo">FitOS</a>
+  <nav class="site-header-nav">
+    <a href="/vs/trainerize" class="site-header-link">vs Trainerize</a>
+    <a href="/vs/truecoach" class="site-header-link">vs TrueCoach</a>
+    <a href="/pricing" class="site-header-link">Pricing</a>
+    <a href="/trial/signup" class="site-header-cta">Start free trial</a>
+  </nav>
+</header>
+
+<div class="hero">
+  <div class="hero-kicker">Migration Guide</div>
+  <h1>Move to FitOS in <em>under 10 minutes</em></h1>
+  <p class="hero-sub">Step-by-step: export your data from Trainerize or TrueCoach, drop the CSV, done. Your clients and workout history land in your Google Sheet.</p>
+  <a href="/dashboard/import" class="hero-cta">Open Import Tool &rarr;</a>
+</div>
+
+<div class="doc">
+
+  <div class="toc">
+    <div class="toc-title">Contents</div>
+    <ol>
+      <li><a href="#before-you-start">Before you start</a></li>
+      <li><a href="#from-trainerize">Migrating from Trainerize</a></li>
+      <li><a href="#from-truecoach">Migrating from TrueCoach</a></li>
+      <li><a href="#column-mapping">Column mapping reference</a></li>
+      <li><a href="#after-import">After the import</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ol>
+  </div>
+
+  <!-- Before you start -->
+  <div class="section" id="before-you-start">
+    <h2>Before you start</h2>
+    <p>The import tool writes directly to your connected Google Sheet. Make sure your sheet is connected before uploading files.</p>
+    <div class="info-box">
+      <strong>Prerequisites:</strong> You need a FitOS account (trial or paid) with a Google Sheet connected via the <a href="/setup">Setup wizard</a>. The import tool is available at <a href="/dashboard/import">/dashboard/import</a>.
+    </div>
+    <p>The importer is idempotent: running the same file twice will not create duplicate clients (it checks by name and email). Workout rows are always appended.</p>
+  </div>
+
+  <!-- From Trainerize -->
+  <div class="section" id="from-trainerize">
+    <h2>Migrating from Trainerize</h2>
+    <p>Trainerize lets you export two types of CSV: your client roster and your training log. Export both, then import them one at a time.</p>
+
+    <h3>Step 1: Export your clients from Trainerize</h3>
+    <div class="step-block">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <strong>Go to Settings &rarr; Business &rarr; Data</strong>
+        <p>In your Trainerize web dashboard, open the Settings panel on the left sidebar.</p>
+      </div>
+    </div>
+    <div class="step-block">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <strong>Click "Export Clients"</strong>
+        <p>Select the client group (All clients) and click Export. A CSV downloads to your computer.</p>
+      </div>
+    </div>
+
+    <h3>Step 2: Export your Training Log</h3>
+    <div class="step-block">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <strong>Go to Settings &rarr; Data &rarr; Training Log</strong>
+        <p>Select a date range (recommended: All Time) and click Export. This produces the workout history CSV.</p>
+      </div>
+    </div>
+
+    <h3>Step 3: Import into FitOS</h3>
+    <div class="step-block">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <strong>Open <a href="/dashboard/import">/dashboard/import</a></strong>
+        <p>Select Trainerize as your source. Upload the Clients CSV first (type auto-detected), then import the Training Log CSV.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- From TrueCoach -->
+  <div class="section" id="from-truecoach">
+    <h2>Migrating from TrueCoach</h2>
+    <p>TrueCoach (now owned by Xplor) supports CSV exports for your client list and your workout results.</p>
+
+    <h3>Step 1: Export your clients</h3>
+    <div class="step-block">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <strong>Go to Settings &rarr; Data Export</strong>
+        <p>Select "Clients" and click Export. A CSV with your full client roster downloads.</p>
+      </div>
+    </div>
+
+    <h3>Step 2: Export workout results</h3>
+    <div class="step-block">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <strong>Go to Settings &rarr; Data Export &rarr; Results</strong>
+        <p>Choose a date range and export. This CSV contains exercise completions with sets, reps, and weights.</p>
+      </div>
+    </div>
+
+    <h3>Step 3: Import into FitOS</h3>
+    <div class="step-block">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <strong>Open <a href="/dashboard/import">/dashboard/import</a></strong>
+        <p>Select TrueCoach as your source and upload your files one at a time.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Column mapping -->
+  <div class="section" id="column-mapping">
+    <h2>Column mapping reference</h2>
+    <p>The importer recognizes these column names automatically (case-insensitive).</p>
+
+    <h3>Clients CSV</h3>
+    <table class="column-table">
+      <thead><tr><th>Your CSV column</th><th>Maps to FitOS field</th></tr></thead>
+      <tbody>
+        <tr><td>Full Name / Name / Client Name</td><td>Client Name</td></tr>
+        <tr><td>First Name + Last Name</td><td>Client Name (composed)</td></tr>
+        <tr><td>Email / Email Address</td><td>Email</td></tr>
+        <tr><td>Program / Training Plan / Plan</td><td>Program</td></tr>
+        <tr><td>Notes / Goal / Goals / Tags</td><td>Notes</td></tr>
+        <tr><td>Start Date / Joined / Created At</td><td>Start Date</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Workouts / Results CSV</h3>
+    <table class="column-table">
+      <thead><tr><th>Your CSV column</th><th>Maps to FitOS field</th></tr></thead>
+      <tbody>
+        <tr><td>Date / Workout Date / Completed Date</td><td>Date (YYYY-MM-DD)</td></tr>
+        <tr><td>Exercise / Exercise Name / Movement</td><td>Exercise</td></tr>
+        <tr><td>Sets / Total Sets</td><td>Sets</td></tr>
+        <tr><td>Reps / Reps Completed / Repetitions</td><td>Reps</td></tr>
+        <tr><td>Weight / Load / Weight (kg) / Weight (lbs)</td><td>Weight</td></tr>
+        <tr><td>Notes / Client Notes / Comments / Results</td><td>Notes</td></tr>
+      </tbody>
+    </table>
+
+    <div class="info-box">
+      <strong>Weight units:</strong> The importer stores whatever numeric value is in the Weight column as-is. If your source uses lbs, the values will land in FitOS as lbs. You can convert later in the Sheet.
+    </div>
+
+    <h3>Using a generic CSV</h3>
+    <p>If you're exporting from another tool, make sure your CSV headers include at least:</p>
+    <ul style="padding-left:20px;font-size:15px;margin-bottom:14px;">
+      <li><strong>Clients:</strong> <code>Name</code> (or <code>Full Name</code>) and <code>Email</code></li>
+      <li><strong>Workouts:</strong> <code>Date</code>, <code>Exercise</code>, <code>Sets</code>, <code>Reps</code></li>
+    </ul>
+    <p>The importer accepts any spelling variations — it matches by substring, not exact name.</p>
+  </div>
+
+  <!-- After import -->
+  <div class="section" id="after-import">
+    <h2>After the import</h2>
+    <p>Once your data is in FitOS, here's what to do next:</p>
+
+    <div class="step-block">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <strong>Review your Clients tab in Google Sheets</strong>
+        <p>Open your connected Sheet, click the Clients tab, and verify the imported rows look correct.</p>
+      </div>
+    </div>
+    <div class="step-block">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <strong>Build or assign programs</strong>
+        <p>Use the AI Program Builder at <a href="/dashboard/agents/builder">/dashboard/agents/builder</a> to generate programs for each client.</p>
+      </div>
+    </div>
+    <div class="step-block">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <strong>Auto-fill exercise video links</strong>
+        <p>If you imported an exercise library, visit <a href="/dashboard/exercises">/dashboard/exercises</a> and use Find Videos to auto-link YouTube demos.</p>
+      </div>
+    </div>
+    <div class="step-block">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <strong>Share the client PWA link</strong>
+        <p>Your clients access their workouts at <code>/workouts</code>. Send them the link so they can log sessions from their phone.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="section" id="faq">
+    <h2>FAQ</h2>
+
+    <h3>Will importing duplicate my existing clients?</h3>
+    <p>No. The importer checks existing client names and emails before writing. A client is skipped if their name or email already exists in your Clients tab.</p>
+
+    <h3>What happens to workout history that is already in my Sheet?</h3>
+    <p>Imported workout rows are appended to the Workouts tab. They do not overwrite anything. If you import the same file twice, you will get duplicate workout rows — but client imports are idempotent.</p>
+
+    <h3>My CSV has different column names. Will it still work?</h3>
+    <p>Yes, as long as the column names are close to the recognized variants. The importer matches by substring. If a column is not recognized, that field is left blank. You can always edit your Sheet directly after import.</p>
+
+    <h3>What if the import fails?</h3>
+    <p>The error message will tell you what went wrong. Common issues: Sheet not connected (go to /setup), CSV is not UTF-8 encoded, or the file type could not be detected (manually set it to Clients or Workouts).</p>
+
+    <h3>Can I import programs and training plans?</h3>
+    <p>Not yet. The Program tab has its own schema that doesn't map directly from Trainerize/TrueCoach exports. Use the AI Program Builder to recreate programs, or edit the Program tab in Google Sheets directly.</p>
+  </div>
+
+  <div class="cta-block">
+    <h3>Ready to make the switch?</h3>
+    <p>Import takes less than 10 minutes. Your data lives in your Google Sheet forever.</p>
+    <a href="/dashboard/import">Start your import &rarr;</a>
+  </div>
+
+</div>
+</body>
+</html>
