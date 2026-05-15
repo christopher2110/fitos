@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitOS — Program Templates</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:        #F4EFE6;
+      --cream-light:  #FDFAF5;
+      --cream-mid:    #EDE6D8;
+      --olive:        #5C6B2A;
+      --olive-dark:   #3D4A1A;
+      --olive-muted:  #8A9650;
+      --olive-pale:   #E8EDD6;
+      --text:         #2C2A24;
+      --text-muted:   #7A7570;
+      --border:       #DDD8CA;
+      --sidebar-w:    220px;
+      --topbar-h:     60px;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--cream);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .layout { display: flex; min-height: 100vh; }
+
+    /* ── SIDEBAR ─────────────────────────────────────────── */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--cream-light);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 50;
+      flex-shrink: 0;
+    }
+    .sidebar-brand { padding: 22px 20px 20px; border-bottom: 1px solid var(--border); }
+    .brand-wordmark { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; color: var(--olive); letter-spacing: -0.02em; line-height: 1; }
+    .brand-tagline { font-size: 10px; font-weight: 500; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 6px; }
+    .sidebar-nav { flex: 1; padding: 12px 10px; display: flex; flex-direction: column; gap: 2px; }
+    .nav-section-label { font-size: 10px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; padding: 10px 10px 4px; }
+    .nav-link {
+      display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 10px;
+      text-decoration: none; font-size: 13.5px; font-weight: 500; color: var(--text-muted);
+      transition: background 0.12s, color 0.12s; cursor: pointer;
+    }
+    .nav-link:hover { background: var(--cream-mid); color: var(--text); }
+    .nav-link.active { background: var(--olive-pale); color: var(--olive-dark); font-weight: 600; }
+    .nav-link.active .nav-icon { opacity: 1; }
+    .nav-icon { width: 17px; height: 17px; flex-shrink: 0; opacity: 0.7; }
+    .sidebar-footer { padding: 14px; border-top: 1px solid var(--border); }
+    .coach-chip { display: flex; align-items: center; gap: 9px; }
+    .coach-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--olive); color: var(--cream-light); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: 'Fraunces', serif; }
+    .coach-name-small { font-size: 13px; font-weight: 600; color: var(--text); }
+    .coach-role { font-size: 11px; color: var(--text-muted); }
+
+    /* ── MAIN ────────────────────────────────────────────── */
+    .main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+    .topbar {
+      height: var(--topbar-h); background: var(--cream-light); border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; padding: 0 28px;
+      position: sticky; top: 0; z-index: 40;
+    }
+    .topbar-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; color: var(--text); letter-spacing: -0.01em; }
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
+    .topbar-btn {
+      background: var(--olive); color: var(--cream-light); border: none; border-radius: 8px;
+      padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+    }
+    .page-content { padding: 28px 28px 48px; max-width: 1200px; }
+
+    /* ── FILTER BAR ──────────────────────────────────────── */
+    .filter-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+    .filter-btn {
+      padding: 7px 14px; border-radius: 20px; font-size: 12.5px; font-weight: 500;
+      border: 1.5px solid var(--border); background: var(--cream-light); color: var(--text-muted);
+      cursor: pointer; font-family: inherit; transition: background 0.12s, color 0.12s, border-color 0.12s;
+    }
+    .filter-btn:hover { background: var(--cream-mid); color: var(--text); }
+    .filter-btn.active { background: var(--olive); color: #fff; border-color: var(--olive); }
+    .filter-search {
+      margin-left: auto; padding: 7px 13px; border-radius: 10px; border: 1.5px solid var(--border);
+      background: var(--cream-light); font-size: 13px; font-family: inherit; color: var(--text);
+      outline: none; min-width: 200px;
+    }
+    .filter-search:focus { border-color: var(--olive-muted); }
+    .filter-search::placeholder { color: var(--text-muted); }
+
+    /* ── TEMPLATE GRID ───────────────────────────────────── */
+    .templates-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    .template-card {
+      background: var(--cream-light);
+      border: 1.5px solid var(--border);
+      border-radius: 16px;
+      padding: 20px 22px;
+      cursor: pointer;
+      transition: border-color 0.15s, box-shadow 0.15s, transform 0.1s;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+    }
+    .template-card:hover { border-color: var(--olive-muted); box-shadow: 0 4px 14px rgba(92,107,42,0.1); transform: translateY(-1px); }
+
+    .card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+
+    .goal-badge {
+      display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;
+      letter-spacing: 0.03em; white-space: nowrap; flex-shrink: 0;
+    }
+    .goal-strength     { background: #E8EDD6; color: #3D4A1A; }
+    .goal-hypertrophy  { background: #E0EEFF; color: #3060A0; }
+    .goal-powerbuilding{ background: #FEF3CD; color: #8A6220; }
+    .goal-general      { background: #F0EEF8; color: #5048A0; }
+
+    .diff-badge {
+      display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text-muted); flex-shrink: 0;
+    }
+    .diff-dots { display: flex; gap: 3px; }
+    .diff-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cream-mid); }
+    .diff-dot.lit { background: var(--olive); }
+
+    .card-name { font-family: 'Fraunces', serif; font-size: 17px; font-weight: 700; color: var(--text); line-height: 1.2; }
+    .card-author { font-size: 12px; color: var(--text-muted); margin-top: -4px; }
+    .card-desc { font-size: 13px; color: var(--text-muted); line-height: 1.55; }
+
+    .card-meta { display: flex; gap: 14px; }
+    .meta-item { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--text-muted); }
+    .meta-item strong { color: var(--text); font-weight: 600; }
+
+    .card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tag { background: var(--cream); border: 1px solid var(--border); color: var(--text-muted); font-size: 11px; padding: 2px 8px; border-radius: 8px; }
+
+    .card-cta {
+      margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .cta-preview { font-size: 12.5px; color: var(--olive); font-weight: 600; }
+    .cta-import { background: var(--olive); color: #fff; border: none; border-radius: 8px; padding: 7px 14px; font-size: 12.5px; font-weight: 600; cursor: pointer; font-family: inherit; }
+    .cta-import:hover { background: var(--olive-dark); }
+
+    /* ── DETAIL PANEL ────────────────────────────────────── */
+    #detail-overlay {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: 200;
+      backdrop-filter: blur(2px);
+    }
+    #detail-panel {
+      position: fixed; top: 0; right: 0; bottom: 0; width: min(600px, 100vw);
+      background: var(--cream-light); border-left: 1.5px solid var(--border);
+      overflow-y: auto; z-index: 201; padding: 28px 32px 40px;
+      display: flex; flex-direction: column; gap: 20px;
+    }
+    .detail-close {
+      position: absolute; top: 18px; right: 20px; background: var(--cream-mid); border: none;
+      border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-size: 18px; color: var(--text-muted);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .detail-close:hover { background: var(--border); color: var(--text); }
+    .detail-header { padding-right: 40px; }
+    .detail-goal-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .detail-title { font-family: 'Fraunces', serif; font-size: 26px; font-weight: 700; color: var(--text); line-height: 1.2; }
+    .detail-author { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+    .detail-source { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 4px; }
+    .detail-desc { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
+    .detail-meta { display: flex; gap: 20px; flex-wrap: wrap; }
+    .detail-meta-item { text-align: center; }
+    .detail-meta-item strong { display: block; font-size: 22px; font-weight: 700; color: var(--text); font-family: 'Fraunces', serif; }
+    .detail-meta-item span { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
+    .week-preview { display: flex; flex-direction: column; gap: 10px; }
+    .week-tab-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 4px; }
+    .week-tab {
+      padding: 5px 12px; border-radius: 8px; font-size: 12px; font-weight: 500;
+      border: 1.5px solid var(--border); background: var(--cream); color: var(--text-muted);
+      cursor: pointer; font-family: inherit;
+    }
+    .week-tab.active { background: var(--olive-pale); border-color: var(--olive-muted); color: var(--olive-dark); font-weight: 600; }
+
+    .day-block { background: var(--cream); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .day-header { padding: 10px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .day-name { font-size: 13px; font-weight: 600; color: var(--text); }
+    .day-focus { font-size: 12px; color: var(--olive); font-weight: 500; }
+    .day-exercise { display: flex; gap: 10px; align-items: baseline; padding: 9px 14px; border-bottom: 1px solid var(--border); }
+    .day-exercise:last-child { border-bottom: none; }
+    .ex-num { width: 18px; flex-shrink: 0; font-size: 11px; color: var(--text-muted); font-weight: 600; }
+    .ex-name { flex: 1; font-size: 13px; font-weight: 500; color: var(--text); }
+    .ex-scheme { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+    .ex-rpe { font-size: 11px; color: var(--olive-muted); white-space: nowrap; }
+    .ex-notes { font-size: 11px; color: var(--text-muted); font-style: italic; padding: 0 14px 8px 42px; }
+
+    /* ── IMPORT FORM ─────────────────────────────────────── */
+    .import-box {
+      background: var(--olive-pale); border: 1.5px solid var(--olive-muted); border-radius: 14px;
+      padding: 20px 22px; display: flex; flex-direction: column; gap: 14px;
+    }
+    .import-title { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 700; color: var(--olive-dark); }
+    .import-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-label { font-size: 12px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.04em; text-transform: uppercase; }
+    .form-input {
+      padding: 9px 12px; border-radius: 8px; border: 1.5px solid var(--border); background: var(--cream-light);
+      font-size: 13px; font-family: inherit; color: var(--text); outline: none;
+    }
+    .form-input:focus { border-color: var(--olive-muted); }
+    .import-btn {
+      background: var(--olive); color: #fff; border: none; border-radius: 10px;
+      padding: 11px 20px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; width: 100%;
+      transition: background 0.15s;
+    }
+    .import-btn:hover { background: var(--olive-dark); }
+    .import-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .import-success { display: none; background: var(--cream-light); border: 1.5px solid var(--olive); border-radius: 10px; padding: 12px 16px; font-size: 13px; color: var(--olive-dark); font-weight: 500; }
+
+    /* ── EMPTY STATE ─────────────────────────────────────── */
+    .empty-state {
+      display: none; text-align: center; padding: 60px 40px; color: var(--text-muted);
+    }
+    .empty-state svg { margin-bottom: 16px; opacity: 0.35; }
+    .empty-state h3 { font-family: 'Fraunces', serif; font-size: 20px; color: var(--text); margin-bottom: 8px; }
+
+    /* ── PROGRESSION BOX ─────────────────────────────────── */
+    .progression-box { background: var(--cream); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+    .progression-box strong { color: var(--text); }
+
+    .detail-section-title { font-size: 12px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- ── SIDEBAR ─────────────────────────────────────────── -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-wordmark">FitOS</div>
+      <div class="brand-tagline">Coaching Platform</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Workspace</div>
+
+      <a class="nav-link" href="/dashboard">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        Dashboard
+      </a>
+
+      <a class="nav-link" href="/dashboard/clients">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+        </svg>
+        Clients
+      </a>
+
+      <a class="nav-link" href="/dashboard/exercises">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2z"/><path d="M8 10h8M8 14h5"/></svg>
+        Exercise Library
+      </a>
+
+      <a class="nav-link" href="/dashboard/agents">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/><path d="M12 12v9"/>
+        </svg>
+        My Agents
+      </a>
+
+      <div class="nav-section-label" style="margin-top:6px">AI Tools</div>
+
+      <a class="nav-link" href="/dashboard/agents/builder">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+        Program Builder
+        <span style="font-size:9px;font-weight:700;background:var(--olive);color:#fff;padding:2px 6px;border-radius:10px;margin-left:auto">AI</span>
+      </a>
+
+      <div class="nav-section-label" style="margin-top:6px">Programs</div>
+
+      <a class="nav-link active" href="/dashboard/templates">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+        Templates
+        <span class="nav-badge" style="margin-left:auto;background:var(--olive);color:#fff;font-size:11px;font-weight:600;padding:2px 6px;border-radius:8px;">10</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="coach-chip">
+        <div class="coach-avatar" id="coach-avatar-init">C</div>
+        <div>
+          <div class="coach-name-small" id="coach-name-display">Coach</div>
+          <div class="coach-role">FitOS</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ──────────────────────────────────────────────── -->
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-title">Program Templates</div>
+      <div class="topbar-right">
+        <a class="topbar-btn" href="/dashboard/agents/builder">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          Build with AI
+        </a>
+      </div>
+    </header>
+
+    <div class="page-content">
+      <div style="margin-bottom:22px;">
+        <h1 style="font-family:'Fraunces',serif;font-size:26px;font-weight:700;color:var(--text);margin-bottom:6px;">Ready-to-import programs</h1>
+        <p style="font-size:14px;color:var(--text-muted);max-width:620px;line-height:1.6;">10 real coaching programs — strength, hypertrophy, powerbuilding, and general fitness. Browse, preview full week-by-week structure, then import to any client in one click.</p>
+      </div>
+
+      <!-- FILTER BAR -->
+      <div class="filter-bar">
+        <button class="filter-btn active" onclick="setFilter('')">All <span id="filter-count-all"></span></button>
+        <button class="filter-btn" onclick="setFilter('strength')">Strength</button>
+        <button class="filter-btn" onclick="setFilter('hypertrophy')">Hypertrophy</button>
+        <button class="filter-btn" onclick="setFilter('powerbuilding')">Powerbuilding</button>
+        <button class="filter-btn" onclick="setFilter('general')">General</button>
+        <input class="filter-search" id="search-input" type="text" placeholder="Search programs…" oninput="renderGrid()">
+      </div>
+
+      <!-- GRID -->
+      <div class="templates-grid" id="templates-grid">
+        <!-- populated by JS -->
+      </div>
+      <div class="empty-state" id="empty-state">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <h3>No programs match</h3>
+        <p>Try a different filter or search term.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DETAIL OVERLAY ─────────────────────────────────── -->
+  <div id="detail-overlay" onclick="closeDetail()"></div>
+  <div id="detail-panel" style="display:none">
+    <button class="detail-close" onclick="closeDetail()">×</button>
+    <div id="detail-content"><!-- populated by JS --></div>
+  </div>
+
+</div>
+
+<script>
+  let _templates = [];
+  let _activeFilter = '';
+  let _detailTemplate = null;
+  let _previewWeek = 0;
+
+  // ── Load templates ─────────────────────────────────────────────────────────
+  fetch('/api/templates').then(r => r.json()).then(data => {
+    _templates = data.templates || [];
+    document.getElementById('filter-count-all').textContent = `(${_templates.length})`;
+    renderGrid();
+    // Auto-open detail if URL has a slug
+    const m = location.pathname.match(/\/dashboard\/templates\/([^/]+)/);
+    if (m) openDetail(m[1]);
+  });
+
+  // ── Filters ────────────────────────────────────────────────────────────────
+  function setFilter(goal) {
+    _activeFilter = goal;
+    document.querySelectorAll('.filter-btn').forEach(b => {
+      b.classList.toggle('active',
+        (goal === '' && b.textContent.trim().startsWith('All')) ||
+        b.textContent.trim().toLowerCase() === goal
+      );
+    });
+    renderGrid();
+  }
+
+  function renderGrid() {
+    const q = (document.getElementById('search-input').value || '').toLowerCase();
+    let list = _templates;
+    if (_activeFilter) list = list.filter(t => t.goal === _activeFilter);
+    if (q) list = list.filter(t =>
+      t.name.toLowerCase().includes(q) ||
+      t.author.toLowerCase().includes(q) ||
+      t.description.toLowerCase().includes(q) ||
+      (t.tags || []).some(tag => tag.includes(q))
+    );
+
+    const grid = document.getElementById('templates-grid');
+    const empty = document.getElementById('empty-state');
+    grid.innerHTML = '';
+
+    if (!list.length) {
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+
+    list.forEach(t => {
+      const card = document.createElement('div');
+      card.className = 'template-card';
+      card.innerHTML = `
+        <div class="card-header">
+          <span class="goal-badge goal-${t.goal}">${_goalLabel(t.goal)}</span>
+          ${_diffDots(t.difficulty)}
+        </div>
+        <div>
+          <div class="card-name">${t.name}</div>
+          <div class="card-author">${t.author}</div>
+        </div>
+        <div class="card-desc">${t.description.slice(0, 120)}…</div>
+        <div class="card-meta">
+          <div class="meta-item"><strong>${t.durationWeeks}</strong> weeks</div>
+          <div class="meta-item"><strong>${t.daysPerWeek}</strong> days/wk</div>
+          <div class="meta-item">${_diffLabel(t.difficulty)}</div>
+        </div>
+        <div class="card-tags">
+          ${(t.tags || []).slice(0, 3).map(tag => `<span class="tag">${tag}</span>`).join('')}
+        </div>
+        <div class="card-cta">
+          <span class="cta-preview">Preview all weeks →</span>
+          <button class="cta-import" onclick="event.stopPropagation(); quickImport('${t.slug}', '${t.name}')">Import</button>
+        </div>`;
+      card.addEventListener('click', () => openDetail(t.slug));
+      grid.appendChild(card);
+    });
+  }
+
+  // ── Detail panel ───────────────────────────────────────────────────────────
+  function openDetail(slug) {
+    fetch(`/api/templates/${slug}`).then(r => r.json()).then(data => {
+      if (!data.ok) return;
+      _detailTemplate = data.template;
+      _previewWeek = 0;
+      renderDetail();
+      document.getElementById('detail-overlay').style.display = 'block';
+      document.getElementById('detail-panel').style.display = 'flex';
+      document.getElementById('detail-panel').style.flexDirection = 'column';
+      history.replaceState({}, '', `/dashboard/templates/${slug}`);
+    });
+  }
+
+  function closeDetail() {
+    document.getElementById('detail-overlay').style.display = 'none';
+    document.getElementById('detail-panel').style.display = 'none';
+    history.replaceState({}, '', '/dashboard/templates');
+    _detailTemplate = null;
+  }
+
+  function renderDetail() {
+    const t = _detailTemplate;
+    if (!t) return;
+    const week = t.weeks[_previewWeek];
+    const weekTabs = t.weeks.map((w, i) =>
+      `<button class="week-tab ${i === _previewWeek ? 'active' : ''}" onclick="setPreviewWeek(${i})">${w.label ? w.label.replace(/^Week /, 'Wk ').split('—')[0].trim() : `Wk ${w.week}`}</button>`
+    ).join('');
+
+    const daysHtml = (week.days || []).map(day => {
+      const exRows = (day.exercises || []).map((ex, idx) => `
+        <div class="day-exercise">
+          <span class="ex-num">${idx + 1}</span>
+          <span class="ex-name">${ex.name}</span>
+          <span class="ex-scheme">${ex.sets}×${ex.reps}</span>
+          <span class="ex-rpe">${ex.load || ''}</span>
+        </div>
+        ${ex.notes ? `<div class="ex-notes">${ex.notes}</div>` : ''}
+      `).join('');
+      return `
+        <div class="day-block">
+          <div class="day-header">
+            <span class="day-name">${day.day}</span>
+            <span class="day-focus">${day.focus}</span>
+          </div>
+          ${exRows}
+        </div>`;
+    }).join('');
+
+    const eqList = (t.equipment || []).join(', ');
+
+    document.getElementById('detail-content').innerHTML = `
+      <div class="detail-header">
+        <div class="detail-goal-row">
+          <span class="goal-badge goal-${t.goal}">${_goalLabel(t.goal)}</span>
+          ${_diffDots(t.difficulty)}
+          <span style="font-size:11px;color:var(--text-muted)">${_diffLabel(t.difficulty)}</span>
+        </div>
+        <div class="detail-title">${t.name}</div>
+        <div class="detail-author">By ${t.author}</div>
+        <div class="detail-source">${t.source}</div>
+      </div>
+
+      <div class="detail-meta">
+        <div class="detail-meta-item"><strong>${t.durationWeeks}</strong><span>Weeks</span></div>
+        <div class="detail-meta-item"><strong>${t.daysPerWeek}</strong><span>Days/wk</span></div>
+        <div class="detail-meta-item"><strong>${t.weeks[0] ? t.weeks[0].days.reduce((n,d)=>n+(d.exercises||[]).length,0) : '?'}</strong><span>Ex/session</span></div>
+      </div>
+
+      <div class="detail-desc">${t.description}</div>
+
+      ${eqList ? `<div style="font-size:12px;color:var(--text-muted)"><strong style="color:var(--text)">Equipment:</strong> ${eqList}</div>` : ''}
+
+      <!-- IMPORT FORM -->
+      <div class="import-box">
+        <div class="import-title">Import to a client</div>
+        <div class="import-fields">
+          <div class="form-group">
+            <label class="form-label" for="import-client">Client name</label>
+            <input class="form-input" id="import-client" type="text" placeholder="e.g. Sarah Chen" autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="import-start">Start date</label>
+            <input class="form-input" id="import-start" type="date" value="${_todayIso()}">
+          </div>
+        </div>
+        <button class="import-btn" id="import-btn" onclick="doImport('${t.slug}')">Import Program</button>
+        <div class="import-success" id="import-success"></div>
+      </div>
+
+      <!-- WEEK PREVIEW -->
+      <div>
+        <div class="detail-section-title" style="margin-bottom:10px">Week-by-week preview</div>
+        <div class="week-tab-row" id="week-tabs">${weekTabs}</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">${week.label || ''} — ${week.phase || ''}</div>
+        <div class="week-preview" id="week-days">${daysHtml}</div>
+      </div>
+
+      <!-- PROGRESSION -->
+      ${t.progression ? `
+      <div>
+        <div class="detail-section-title" style="margin-bottom:8px">Progression rules</div>
+        <div class="progression-box">${t.progression}</div>
+      </div>` : ''}
+
+      ${t.notes ? `
+      <div>
+        <div class="detail-section-title" style="margin-bottom:8px">Coach notes</div>
+        <div class="progression-box">${t.notes}</div>
+      </div>` : ''}
+
+      <div style="padding-top:4px;border-top:1px solid var(--border);font-size:12px;color:var(--text-muted)">
+        View public preview: <a href="/programs/${t.slug}" target="_blank" style="color:var(--olive);font-weight:500;">/programs/${t.slug}</a>
+      </div>
+    `;
+  }
+
+  function setPreviewWeek(idx) {
+    _previewWeek = idx;
+    const t = _detailTemplate;
+    const week = t.weeks[idx];
+
+    // Update tab active states
+    document.querySelectorAll('.week-tab').forEach((btn, i) => btn.classList.toggle('active', i === idx));
+    // Update label
+    const labelEl = document.querySelector('#week-days').previousElementSibling;
+    if (labelEl) labelEl.textContent = `${week.label || ''} — ${week.phase || ''}`;
+
+    const daysHtml = (week.days || []).map(day => {
+      const exRows = (day.exercises || []).map((ex, idx2) => `
+        <div class="day-exercise">
+          <span class="ex-num">${idx2 + 1}</span>
+          <span class="ex-name">${ex.name}</span>
+          <span class="ex-scheme">${ex.sets}×${ex.reps}</span>
+          <span class="ex-rpe">${ex.load || ''}</span>
+        </div>
+        ${ex.notes ? `<div class="ex-notes">${ex.notes}</div>` : ''}
+      `).join('');
+      return `<div class="day-block"><div class="day-header"><span class="day-name">${day.day}</span><span class="day-focus">${day.focus}</span></div>${exRows}</div>`;
+    }).join('');
+    document.getElementById('week-days').innerHTML = daysHtml;
+  }
+
+  // ── Import ─────────────────────────────────────────────────────────────────
+  function quickImport(slug, name) {
+    openDetail(slug);
+    setTimeout(() => {
+      const input = document.getElementById('import-client');
+      if (input) input.focus();
+    }, 300);
+  }
+
+  async function doImport(slug) {
+    const clientEl = document.getElementById('import-client');
+    const startEl  = document.getElementById('import-start');
+    const btn      = document.getElementById('import-btn');
+    const successEl = document.getElementById('import-success');
+
+    const client = (clientEl ? clientEl.value : '').trim();
+    const start  = startEl ? startEl.value : _todayIso();
+
+    if (!client) {
+      clientEl.focus();
+      clientEl.style.borderColor = '#c0392b';
+      setTimeout(() => clientEl.style.borderColor = '', 1500);
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Importing…';
+
+    try {
+      const res = await fetch(`/api/templates/${slug}/import`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clientName: client, startDate: start }),
+      });
+      const data = await res.json();
+
+      if (data.ok) {
+        successEl.textContent = `✓ ${data.message}`;
+        successEl.style.display = 'block';
+        btn.textContent = 'Import Program';
+        btn.disabled = false;
+        // Clear form
+        if (clientEl) clientEl.value = '';
+      } else {
+        btn.textContent = 'Import Program';
+        btn.disabled = false;
+        alert(data.error || 'Import failed');
+      }
+    } catch (err) {
+      btn.textContent = 'Import Program';
+      btn.disabled = false;
+      alert('Import failed — network error');
+    }
+  }
+
+  // ── Helpers ────────────────────────────────────────────────────────────────
+  function _goalLabel(goal) {
+    return { strength: 'Strength', hypertrophy: 'Hypertrophy', powerbuilding: 'Powerbuilding', general: 'General Fitness' }[goal] || goal;
+  }
+  function _diffLabel(d) {
+    return { beginner: 'Beginner', intermediate: 'Intermediate', advanced: 'Advanced' }[d] || d;
+  }
+  function _diffDots(d) {
+    const n = { beginner: 1, intermediate: 2, advanced: 3 }[d] || 2;
+    const dots = [1,2,3].map(i => `<span class="diff-dot ${i <= n ? 'lit' : ''}"></span>`).join('');
+    return `<span class="diff-badge"><span class="diff-dots">${dots}</span></span>`;
+  }
+  function _todayIso() {
+    return new Date().toISOString().split('T')[0];
+  }
+
+  // ── Coach name from cookie ─────────────────────────────────────────────────
+  (function loadCoachMeta() {
+    try {
+      const token = document.cookie.split(';').map(c => c.trim()).find(c => c.startsWith('coach_token='));
+      if (token) fetch('/dashboard/me').then(r => r.ok ? r.json() : null).then(d => {
+        if (!d) return;
+        const name = d.name || d.email || 'Coach';
+        const init = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+        document.getElementById('coach-name-display').textContent = name;
+        document.getElementById('coach-avatar-init').textContent = init;
+      }).catch(() => {});
+    } catch (_) {}
+  })();
+</script>
+</body>
+</html>
