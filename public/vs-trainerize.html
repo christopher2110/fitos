@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitOS vs Trainerize — The Honest Comparison</title>
+  <meta name="description" content="FitOS vs Trainerize: pricing, data ownership, AI tools, self-hosting, and 5-year cost. Trainerize charges $4,740+ over 5 years. FitOS is $497 once — you own it.">
+  <link rel="canonical" href="https://fitos-zc11.polsia.app/vs/trainerize" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="FitOS vs Trainerize: Stop Renting. Start Owning." />
+  <meta property="og:description" content="Trainerize charges $4,740+ over 5 years with zero ownership. FitOS is $497 once — you own the code. Full side-by-side comparison." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://fitos-zc11.polsia.app/vs/trainerize" />
+  <meta property="og:image" content="https://fitos-zc11.polsia.app/og/vs-trainerize.svg" />
+  <meta property="og:site_name" content="FitOS" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="FitOS vs Trainerize: Stop Renting. Start Owning." />
+  <meta name="twitter:description" content="Trainerize charges $4,740+ over 5 years with zero ownership. FitOS is $497 once — you own the code." />
+  <meta name="twitter:image" content="https://fitos-zc11.polsia.app/og/vs-trainerize.svg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Schema.org Product markup for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "FitOS",
+    "description": "Open-source coaching management system for personal trainers. Google Sheets as your database, PWA for coaches and clients, AI Program Builder included.",
+    "url": "https://fitos-zc11.polsia.app",
+    "offers": {
+      "@type": "Offer",
+      "price": "497",
+      "priceCurrency": "USD",
+      "priceValidUntil": "2027-01-01",
+      "availability": "https://schema.org/InStock",
+      "url": "https://buy.stripe.com/eVq5kD5iPaEj2kk2mYfAc02"
+    }
+  }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:       #F5F1E8;
+      --cream-light: #FDFAF5;
+      --cream-mid:   #EDE6D8;
+      --olive:       #5C6E3F;
+      --olive-dark:  #3D4A1A;
+      --olive-muted: #8A9650;
+      --olive-pale:  #E8EDD6;
+      --text:        #2C2A24;
+      --text-muted:  #7A7570;
+      --border:      #DDD8CA;
+      --red:         #C0392B;
+      --red-pale:    #FDECEA;
+      --green:       #2E7D32;
+      --green-pale:  #EDF7EE;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── STICKY HEADER ──────────────────────────────────── */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(245,241,232,0.92);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(221,216,202,0.6);
+      padding: 0 48px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .site-header-logo {
+      font-family: 'Fraunces', serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: #3D4A1A;
+      letter-spacing: -0.02em;
+      text-decoration: none;
+    }
+    .site-header-nav {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .site-header-link {
+      font-size: 13px;
+      font-weight: 500;
+      color: #7A7570;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .site-header-link:hover { color: #2C2A24; }
+    .site-header-link.active { color: var(--olive); }
+    .site-header-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #5C6E3F;
+      color: #FDFAF5;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 9px 18px;
+      border-radius: 22px;
+      text-decoration: none;
+      transition: background 0.18s, transform 0.12s;
+    }
+    .site-header-cta:hover { background: #3D4A1A; transform: translateY(-1px); }
+
+    /* ── HERO ────────────────────────────────────────────── */
+    .vs-hero {
+      background: var(--olive-dark);
+      padding: 80px 24px 88px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .vs-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 15% 85%, rgba(138,150,80,0.15) 0%, transparent 50%),
+        radial-gradient(circle at 85% 15%, rgba(92,110,63,0.1) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .vs-hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      color: #8A9650;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      background: rgba(138,150,80,0.15);
+      border: 1px solid rgba(138,150,80,0.3);
+      padding: 6px 14px;
+      border-radius: 20px;
+      margin-bottom: 28px;
+      position: relative;
+      z-index: 1;
+    }
+    .vs-hero-h1 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 700;
+      line-height: 1.06;
+      letter-spacing: -0.03em;
+      color: #F5F1E8;
+      margin-bottom: 18px;
+      position: relative;
+      z-index: 1;
+    }
+    .vs-hero-h1 em { font-style: italic; color: #8A9650; }
+    .vs-hero-sub {
+      font-size: 17px;
+      line-height: 1.65;
+      color: rgba(245,241,232,0.65);
+      max-width: 580px;
+      margin: 0 auto 36px;
+      position: relative;
+      z-index: 1;
+    }
+    .vs-hero-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
+    }
+    .btn-hero-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--olive);
+      color: #FDFAF5;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 14px 28px;
+      border-radius: 50px;
+      text-decoration: none;
+      transition: background 0.18s, transform 0.15s;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+    }
+    .btn-hero-primary:hover { background: #4a5c32; transform: translateY(-2px); }
+    .btn-hero-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: rgba(245,241,232,0.7);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      padding: 14px 28px;
+      border-radius: 50px;
+      text-decoration: none;
+      border: 1px solid rgba(245,241,232,0.2);
+      transition: border-color 0.18s, color 0.18s;
+    }
+    .btn-hero-ghost:hover { border-color: rgba(245,241,232,0.5); color: #F5F1E8; }
+
+    /* ── COMPARISON TABLE ────────────────────────────────── */
+    .comparison-section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 72px 24px 60px;
+    }
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--olive);
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .section-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      text-align: center;
+      color: var(--text);
+      margin-bottom: 48px;
+      line-height: 1.12;
+    }
+    .section-title em { font-style: italic; color: var(--olive); }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--cream-light);
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .comparison-table thead th {
+      padding: 16px 20px;
+      text-align: left;
+      background: var(--cream-mid);
+      border-bottom: 2px solid var(--border);
+    }
+    .comparison-table thead th:first-child {
+      width: 36%;
+    }
+    .th-brand {
+      font-family: 'Fraunces', serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .th-brand.fitos { color: var(--olive-dark); }
+    .th-brand.them { color: var(--text-muted); }
+    .th-brand-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: var(--olive-pale);
+      color: var(--olive);
+      padding: 3px 8px;
+      border-radius: 10px;
+    }
+    .th-dim {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .comparison-table tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.12s;
+    }
+    .comparison-table tbody tr:last-child { border-bottom: none; }
+    .comparison-table tbody tr:hover { background: rgba(245,241,232,0.5); }
+
+    .comparison-table td {
+      padding: 16px 20px;
+      vertical-align: top;
+      font-size: 14px;
+    }
+    .comparison-table td:first-child {
+      font-weight: 600;
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    .win {
+      color: var(--green);
+      font-weight: 600;
+    }
+    .win-note {
+      display: block;
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-top: 2px;
+      line-height: 1.4;
+    }
+    .neutral {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+    .neutral-note {
+      display: block;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .loss {
+      color: var(--red);
+      font-weight: 500;
+    }
+    .loss-note {
+      display: block;
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .check { color: var(--green); font-size: 16px; }
+    .cross { color: var(--red); font-size: 16px; }
+    .dot-muted { color: var(--text-muted); font-size: 16px; }
+
+    .row-highlight td {
+      background: var(--olive-pale);
+    }
+
+    /* ── COST CALCULATOR ─────────────────────────────────── */
+    .calc-section {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px 72px;
+    }
+    .calc-card {
+      background: var(--cream-light);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px 36px 32px;
+    }
+    .calc-card-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--olive);
+      margin-bottom: 6px;
+    }
+    .calc-card-title {
+      font-family: 'Fraunces', serif;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      color: var(--text);
+      margin-bottom: 28px;
+    }
+    .calc-controls {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+    .calc-label {
+      font-size: 14px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .calc-slider-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      min-width: 180px;
+    }
+    input[type="range"] {
+      flex: 1;
+      height: 4px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: var(--border);
+      border-radius: 2px;
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--olive);
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(92,110,63,0.4);
+    }
+    .calc-year-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--olive-dark);
+      min-width: 60px;
+    }
+    .calc-results {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 20px;
+      align-items: center;
+    }
+    .calc-col {
+      text-align: center;
+    }
+    .calc-col-name {
+      font-family: 'Fraunces', serif;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      margin-bottom: 4px;
+    }
+    .calc-col-name.them { color: var(--text-muted); }
+    .calc-col-name.us { color: var(--olive-dark); }
+    .calc-amount {
+      font-family: 'Fraunces', serif;
+      font-size: 52px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .calc-amount.them { color: var(--red); }
+    .calc-amount.us { color: var(--olive); }
+    .calc-breakdown {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .calc-vs {
+      font-family: 'Fraunces', serif;
+      font-size: 22px;
+      color: var(--border);
+      text-align: center;
+      align-self: center;
+    }
+    .calc-savings {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+    .calc-savings-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .calc-savings-amount {
+      font-family: 'Fraunces', serif;
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--olive);
+    }
+    .calc-savings-note {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ── WIN REASONS ─────────────────────────────────────── */
+    .wins-section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px 72px;
+    }
+    .wins-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .win-card {
+      background: var(--cream-light);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+    }
+    .win-card.ours {
+      border-color: rgba(92,110,63,0.3);
+      background: var(--olive-pale);
+    }
+    .win-card-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--olive);
+      margin-bottom: 8px;
+    }
+    .win-card.theirs .win-card-label { color: var(--text-muted); }
+    .win-card-title {
+      font-family: 'Fraunces', serif;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .win-card-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .win-card-list li {
+      font-size: 13px;
+      color: var(--text-muted);
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      line-height: 1.4;
+    }
+    .win-card-list li::before {
+      flex-shrink: 0;
+      font-size: 12px;
+      margin-top: 1px;
+    }
+    .win-card.ours .win-card-list li::before { content: '✓'; color: var(--olive); font-weight: 700; }
+    .win-card.theirs .win-card-list li::before { content: '✓'; color: var(--text-muted); }
+
+    /* ── BOTTOM CTA ──────────────────────────────────────── */
+    .bottom-cta {
+      background: var(--olive-dark);
+      padding: 72px 24px 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .bottom-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle at 30% 70%, rgba(138,150,80,0.14) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .bottom-cta-h2 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      color: #F5F1E8;
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
+    }
+    .bottom-cta-h2 em { font-style: italic; color: #8A9650; }
+    .bottom-cta-p {
+      font-size: 16px;
+      color: rgba(245,241,232,0.6);
+      max-width: 480px;
+      margin: 0 auto 32px;
+      line-height: 1.6;
+      position: relative;
+      z-index: 1;
+    }
+    .bottom-cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+    }
+    .btn-primary-lg {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--olive);
+      color: #FDFAF5;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 14px 28px;
+      border-radius: 50px;
+      text-decoration: none;
+      transition: background 0.18s, transform 0.15s;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+    .btn-primary-lg:hover { background: #4a5c32; transform: translateY(-2px); }
+    .btn-ghost-lg {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: rgba(245,241,232,0.7);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      padding: 14px 28px;
+      border-radius: 50px;
+      text-decoration: none;
+      border: 1px solid rgba(245,241,232,0.2);
+      transition: border-color 0.18s, color 0.18s;
+    }
+    .btn-ghost-lg:hover { border-color: rgba(245,241,232,0.5); color: #F5F1E8; }
+
+    /* ── MOBILE ──────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .site-header { padding: 0 20px; }
+      .site-header-nav .site-header-link { display: none; }
+      .comparison-table td, .comparison-table th { padding: 12px 14px; }
+      .wins-grid { grid-template-columns: 1fr; }
+      .calc-results { grid-template-columns: 1fr; }
+      .calc-vs { display: none; }
+      .calc-amount { font-size: 40px; }
+      .vs-hero { padding: 60px 20px 68px; }
+    }
+    @media (max-width: 480px) {
+      .comparison-table { font-size: 12px; }
+      .comparison-table td, .comparison-table th { padding: 10px 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- COMPARISON HUB BANNER -->
+<div style="background:#162436;border-bottom:1px solid rgba(255,255,255,0.08);padding:10px 24px;text-align:center;">
+  <span style="font-size:13px;color:rgba(255,255,255,0.55);">Comparing multiple platforms? &nbsp;</span>
+  <a href="/vs" style="font-size:13px;font-weight:600;color:#FF5A36;text-decoration:none;border-bottom:1px solid rgba(255,90,54,0.3);">See the full comparison hub — all 3 platforms side-by-side →</a>
+</div>
+
+<!-- STICKY HEADER -->
+<header class="site-header">
+  <a href="/" class="site-header-logo">FitOS</a>
+  <nav class="site-header-nav">
+    <a href="/pricing" class="site-header-link">Pricing</a>
+    <a href="/vs/trainerize" class="site-header-link active">vs Trainerize</a>
+    <a href="/demo" class="site-header-link">Live Demo</a>
+    <a href="/dashboard" class="site-header-link">Sign In</a>
+    <a href="/trial/signup" class="site-header-cta">
+      Start Free Trial <span style="opacity:0.7;font-size:12px">→</span>
+    </a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="vs-hero">
+  <div class="vs-hero-kicker">Honest comparison</div>
+  <h1 class="vs-hero-h1">FitOS vs Trainerize.<br><em>Let's be direct.</em></h1>
+  <p class="vs-hero-sub">
+    Trainerize is polished, mature, and has a native app. We'll say that clearly.
+    But for coaches who care about data ownership, price, and AI flexibility — FitOS pays for itself in 10 months vs Trainerize ($49/mo) and owns your data forever.
+  </p>
+  <div class="vs-hero-buttons">
+    <a href="/trial/signup" class="btn-hero-primary">Try FitOS free for 14 days →</a>
+    <a href="/demo" class="btn-hero-ghost">See it live — no signup needed →</a>
+  </div>
+</section>
+
+<!-- COMPARISON TABLE -->
+<section class="comparison-section">
+  <div class="section-label">Feature by feature</div>
+  <h2 class="section-title">Where each one <em>actually wins</em></h2>
+
+  <table class="comparison-table">
+    <thead>
+      <tr>
+        <th><div class="th-dim">Dimension</div></th>
+        <th>
+          <div class="th-brand fitos">
+            FitOS
+            <span class="th-brand-tag">Open Source</span>
+          </div>
+        </th>
+        <th>
+          <div class="th-brand them">Trainerize</div>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="row-highlight">
+        <td>Pricing</td>
+        <td>
+          <span class="win">$497 one-time</span>
+          <span class="win-note">+ $7/mo hosted (months 4+, 3 free). Or self-host free forever.</span>
+        </td>
+        <td>
+          <span class="loss">$39–$79/mo</span>
+          <span class="loss-note">$2,340–$4,740 over 5 years. You own nothing.</span>
+        </td>
+      </tr>
+      <tr>
+        <td>Data ownership</td>
+        <td>
+          <span class="win">Complete</span>
+          <span class="win-note">Your Google Sheet. Your Google Drive. We never touch it.</span>
+        </td>
+        <td>
+          <span class="neutral">Platform-held</span>
+          <span class="neutral-note">Data lives in Trainerize's database. Export is CSV on request.</span>
+        </td>
+      </tr>
+      <tr>
+        <td>Open source</td>
+        <td>
+          <span class="win">✓ MIT licensed</span>
+          <span class="win-note">Fork it, extend it, self-host it. No permission needed.</span>
+        </td>
+        <td>
+          <span class="neutral">✗ Proprietary</span>
+          <span class="neutral-note">Closed source. No audit trail, no extensibility.</span>
+        </td>
+      </tr>
+      <tr class="row-highlight">
+        <td>AI agents</td>
+        <td>
+          <span class="win">Built-in BYOK</span>
+          <span class="win-note">Program Builder, skill runner, Claude-powered. Your API key — no reselling.</span>
+        </td>
+        <td>
+          <span class="neutral">Limited (add-on)</span>
+          <span class="neutral-note">Basic AI suggestions in higher tiers. No custom agents.</span>
+        </td>
+      </tr>
+      <tr>
+        <td>Platform lock-in</td>
+        <td>
+          <span class="win">None</span>
+          <span class="win-note">Cancel, self-host, export — zero friction.</span>
+        </td>
+        <td>
+          <span class="loss">High</span>
+          <span class="loss-note">Client history, messaging, and programs only accessible through Trainerize.</span>
+        </td>
+      </tr>
+      <tr>
+        <td>Self-hosting</td>
+        <td>
+          <span class="win">✓ Yes</span>
+          <span class="win-note">Deploy to Render, Fly.io, Railway, or any VPS in minutes.</span>
+        </td>
+        <td>
+          <span class="neutral">✗ No</span>
+          <span class="neutral-note">SaaS only. No on-premise option.</span>
+        </td>
+      </tr>
+      <tr class="row-highlight">
+        <td>Custom branding</td>
+        <td>
+          <span class="win">Full</span>
+          <span class="win-note">Edit colors, fonts, logo anywhere in the codebase.</span>
+        </td>
+        <td>
+          <span class="neutral">Limited</span>
+          <span class="neutral-note">Logo + colors in higher tiers. Layout is fixed.</span>
+        </td>
+      </tr>
+      <tr>
+        <td>Client PWA</td>
+        <td>
+          <span class="win">✓ Installable</span>
+          <span class="win-note">Workouts, check-ins, history, messages — offline-first.</span>
+        </td>
+        <td>
+          <span class="win">✓ Native app</span>
+          <span class="win-note">iOS + Android apps with push notifications. More polished.</span>
+        </td>
+      </tr>
+      <tr>
+        <td>Programming tools</td>
+        <td>
+          <span class="win">AI Builder + Programs tab</span>
+          <span class="win-note">Generate full programs via Claude. Assign directly to clients.</span>
+        </td>
+        <td>
+          <span class="win">Program templates</span>
+          <span class="win-note">Solid workout builder. No AI generation yet.</span>
+        </td>
+      </tr>
+      <tr class="row-highlight">
+        <td>Messaging</td>
+        <td>
+          <span class="neutral">Basic</span>
+          <span class="neutral-note">Text threads in the PWA. No push notifications yet.</span>
+        </td>
+        <td>
+          <span class="win">Full-featured</span>
+          <span class="win-note">Push notifications, video messaging, coach-client threads.</span>
+        </td>
+      </tr>
+      <tr>
+        <td>Body measurements</td>
+        <td>
+          <span class="win">✓ Full tracking</span>
+          <span class="win-note">Circumferences, weight, wellness metrics. 12-week trend charts.</span>
+        </td>
+        <td>
+          <span class="win">✓ Full tracking</span>
+          <span class="win-note">Similar coverage with progress photos.</span>
+        </td>
+      </tr>
+      <tr class="row-highlight">
+        <td>Integrations</td>
+        <td>
+          <span class="neutral">Google Workspace</span>
+          <span class="neutral-note">Sheets + Drive today. Extensible via skills — add what you need.</span>
+        </td>
+        <td>
+          <span class="win">100+ integrations</span>
+          <span class="win-note">Zapier, Stripe, nutrition apps, wearables. Mature ecosystem.</span>
+        </td>
+      </tr>
+      <tr>
+        <td>5-year cost</td>
+        <td>
+          <span class="win" style="font-size:18px">$833</span>
+          <span class="win-note">$497 license + $7/mo hosted × 48 months (3 free). Self-host = just $497.</span>
+        </td>
+        <td>
+          <span class="loss" style="font-size:18px">$2,340+</span>
+          <span class="loss-note">At $39/mo (entry plan) × 60 months. Nothing owned.</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- COST CALCULATOR -->
+<section class="calc-section">
+  <div class="calc-card">
+    <div class="calc-card-label">5-Year Cost Calculator</div>
+    <div class="calc-card-title">See how much you save</div>
+
+    <div class="calc-controls">
+      <span class="calc-label">Years:</span>
+      <div class="calc-slider-wrap">
+        <input type="range" id="years-slider" min="1" max="10" value="5" oninput="updateCalc()">
+        <span class="calc-year-val" id="years-display">5 years</span>
+      </div>
+      <span class="calc-label">Trainerize plan:</span>
+      <select id="tz-plan" onchange="updateCalc()" style="font-family:'DM Sans',sans-serif;font-size:13px;padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:var(--cream);color:var(--text);outline:none;">
+        <option value="39">Basic ($39/mo)</option>
+        <option value="59" selected>Plus ($59/mo)</option>
+        <option value="79">Pro ($79/mo)</option>
+      </select>
+    </div>
+
+    <div class="calc-results">
+      <div class="calc-col">
+        <div class="calc-col-name them">Trainerize</div>
+        <div class="calc-amount them" id="them-amount">$3,540</div>
+        <div class="calc-breakdown" id="them-breakdown">$59/mo × 60 months</div>
+      </div>
+      <div class="calc-vs">vs</div>
+      <div class="calc-col">
+        <div class="calc-col-name us">FitOS</div>
+        <div class="calc-amount us" id="us-amount">$833</div>
+        <div class="calc-breakdown" id="us-breakdown">$497 license + $7/mo × 48mo</div>
+      </div>
+    </div>
+
+    <div class="calc-savings">
+      <div class="calc-savings-label">You keep</div>
+      <div class="calc-savings-amount" id="savings-amount">$2,707</div>
+      <div class="calc-savings-note" id="savings-note">Over 5 years at the Plus plan</div>
+    </div>
+  </div>
+</section>
+
+<!-- WHERE EACH WINS -->
+<section class="wins-section">
+  <div class="section-label" style="text-align:left">Honest breakdown</div>
+  <h2 class="section-title" style="text-align:left">Where FitOS wins. Where Trainerize wins.</h2>
+
+  <div class="wins-grid">
+    <div class="win-card ours">
+      <div class="win-card-label">FitOS wins here</div>
+      <div class="win-card-title">Ownership, price, flexibility</div>
+      <ul class="win-card-list">
+        <li>Data permanence — Google Sheet survives any SaaS shutdown</li>
+        <li>5-year cost 60–80% lower at any plan level</li>
+        <li>MIT license — extend, fork, or white-label freely</li>
+        <li>BYOK AI agents you actually control</li>
+        <li>Self-host for free when you don't need managed infra</li>
+        <li>No per-client fees at any scale</li>
+      </ul>
+    </div>
+    <div class="win-card theirs">
+      <div class="win-card-label">Trainerize wins here</div>
+      <div class="win-card-title">Polish, ecosystem, mobile</div>
+      <ul class="win-card-list">
+        <li>Native iOS + Android apps with push notifications</li>
+        <li>100+ third-party integrations (nutrition, wearables, Zapier)</li>
+        <li>Video messaging between coach and client</li>
+        <li>Large marketplace of template programs</li>
+        <li>More established customer support organization</li>
+        <li>Habit tracking and accountability features</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- BOTTOM CTA -->
+<section class="bottom-cta">
+  <h2 class="bottom-cta-h2">Try it free.<br><em>No card required.</em></h2>
+  <p class="bottom-cta-p">
+    14 days, full access, real clients. If you don't love it, your trial account expires cleanly — your Google Sheet stays yours either way.
+  </p>
+  <div class="bottom-cta-row">
+    <a href="/trial/signup" class="btn-primary-lg">Start Free Trial →</a>
+    <a href="https://github.com/Polsia-Inc/fitos" class="btn-ghost-lg" target="_blank" rel="noopener">
+      See the code on GitHub
+    </a>
+  </div>
+</section>
+
+<script>
+function updateCalc() {
+  var years = parseInt(document.getElementById('years-slider').value);
+  var tzMonthly = parseInt(document.getElementById('tz-plan').value);
+  var planNames = { 39: 'Basic', 59: 'Plus', 79: 'Pro' };
+
+  var themTotal = tzMonthly * years * 12;
+  // FitOS: $497 license + $7/mo hosted (first 3 months free after purchase, so ~(years*12 - 3) months paid)
+  var hostedMonths = Math.max(0, years * 12 - 3);
+  var usTotal = 497 + (7 * hostedMonths);
+  var savings = themTotal - usTotal;
+
+  document.getElementById('years-display').textContent = years + ' year' + (years !== 1 ? 's' : '');
+  document.getElementById('them-amount').textContent = '$' + themTotal.toLocaleString();
+  document.getElementById('them-breakdown').textContent = '$' + tzMonthly + '/mo × ' + (years * 12) + ' months';
+  document.getElementById('us-amount').textContent = '$' + usTotal.toLocaleString();
+  document.getElementById('us-breakdown').textContent = '$497 license + $7/mo × ' + hostedMonths + 'mo';
+  document.getElementById('savings-amount').textContent = savings > 0 ? '$' + savings.toLocaleString() : 'Break even';
+  document.getElementById('savings-note').textContent = 'Over ' + years + ' year' + (years !== 1 ? 's' : '') + ' at the ' + (planNames[tzMonthly] || '') + ' plan';
+}
+
+// Initialize on load
+updateCalc();
+</script>
+
+
+<!-- MIGRATE CTA -->
+<div style='max-width:860px;margin:0 auto;padding:0 24px 24px;'>
+  <div style='background:#3D4A1A;border-radius:16px;padding:28px 32px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;'>
+    <div>
+      <div style='font-family:"Fraunces",serif;font-size:1.2rem;font-weight:700;color:#F5F1E8;margin-bottom:6px;'>Migrate from Trainerize in 60 seconds &rarr;</div>
+      <div style='font-size:14px;color:rgba(245,241,232,0.7);'>Export your Clients &amp; Training Log CSVs, drop them in FitOS. Done.</div>
+    </div>
+    <a href='/dashboard/import' style='display:inline-flex;align-items:center;gap:8px;background:#5C6E3F;color:#FDFAF5;font-size:14px;font-weight:600;padding:12px 22px;border-radius:24px;text-decoration:none;white-space:nowrap;transition:background 0.18s;' onmouseover='this.style.background="#4A5A32"' onmouseout='this.style.background="#5C6E3F"'>Open Import Tool</a>
+  </div>
+</div>
+
+<!-- CROSS-LINK TO TRUECOACH + EVERFIT -->
+<div style='max-width:860px;margin:0 auto;padding:0 24px 16px;'>
+  <div style='background:#FDFAF5;border:1px solid #DDD8CA;border-radius:16px;padding:24px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;'>
+    <div style='font-size:14px;color:#7A7570;'><strong style='color:#2C2A24;font-weight:600;'>Also comparing options?</strong> See how FitOS stacks up against TrueCoach &mdash; Xplor-acquired, $1,800 over 5 years, no data export.</div>
+    <a href='/vs/truecoach' style='font-size:14px;font-weight:600;color:#5C6E3F;text-decoration:none;border-bottom:1px solid rgba(92,110,63,0.3);padding-bottom:1px;white-space:nowrap;'>FitOS vs TrueCoach &rarr;</a>
+  </div>
+</div>
+<div style='max-width:860px;margin:0 auto;padding:0 24px 16px;'>
+  <div style='background:#FDFAF5;border:1px solid #DDD8CA;border-radius:16px;padding:24px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;'>
+    <div style='font-size:14px;color:#7A7570;'><strong style='color:#2C2A24;font-weight:600;'>Looking at Everfit too?</strong> See how FitOS compares &mdash; VC-backed, up to $14,520 over 5 years, no code access.</div>
+    <a href='/vs/everfit' style='font-size:14px;font-weight:600;color:#5C6E3F;text-decoration:none;border-bottom:1px solid rgba(92,110,63,0.3);padding-bottom:1px;white-space:nowrap;'>FitOS vs Everfit &rarr;</a>
+  </div>
+</div>
+<div style='max-width:860px;margin:0 auto;padding:0 24px 48px;'>
+  <div style='text-align:center;padding:16px;'>
+    <a href='/vs' style='font-size:13px;color:#7A7570;text-decoration:none;border-bottom:1px solid #DDD8CA;padding-bottom:2px;'>← View all platform comparisons</a>
+  </div>
+</div>
+</body>
+</html>
