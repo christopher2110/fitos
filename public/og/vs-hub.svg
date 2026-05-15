@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F5F1E8"/>
+      <stop offset="100%" stop-color="#EDE6D8"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="0" y="0" width="8" height="630" fill="#5C6E3F"/>
+
+  <!-- Badge -->
+  <rect x="80" y="72" width="240" height="36" rx="18" fill="#5C6E3F"/>
+  <text x="200" y="96" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#fff" text-anchor="middle" letter-spacing="1">COMPARISON HUB</text>
+
+  <!-- Main headline -->
+  <text x="80" y="210" font-family="Georgia, serif" font-size="58" font-weight="700" fill="#2C2A24" letter-spacing="-2">FitOS vs Every Coaching</text>
+  <text x="80" y="280" font-family="Georgia, serif" font-size="58" font-weight="700" fill="#2C2A24" letter-spacing="-2">Platform</text>
+  <text x="80" y="350" font-family="Georgia, serif" font-size="36" font-weight="600" fill="#5C6E3F" font-style="italic">The honest comparison.</text>
+
+  <!-- Competitor pills -->
+  <rect x="80" y="400" width="200" height="52" rx="26" fill="rgba(92,110,63,0.12)" stroke="#C8D8A0" stroke-width="1.5"/>
+  <text x="180" y="433" font-family="Arial, sans-serif" font-size="18" fill="#3D4A1A" font-weight="600" text-anchor="middle">Trainerize</text>
+
+  <rect x="300" y="400" width="200" height="52" rx="26" fill="rgba(92,110,63,0.12)" stroke="#C8D8A0" stroke-width="1.5"/>
+  <text x="400" y="433" font-family="Arial, sans-serif" font-size="18" fill="#3D4A1A" font-weight="600" text-anchor="middle">TrueCoach</text>
+
+  <rect x="520" y="400" width="180" height="52" rx="26" fill="rgba(92,110,63,0.12)" stroke="#C8D8A0" stroke-width="1.5"/>
+  <text x="610" y="433" font-family="Arial, sans-serif" font-size="18" fill="#3D4A1A" font-weight="600" text-anchor="middle">Everfit</text>
+
+  <!-- Key stat -->
+  <text x="80" y="510" font-family="Arial, sans-serif" font-size="22" fill="#7A7570">12-dimension comparison · 5-year cost calculator · $497 vs $1,800–$14,940</text>
+
+  <!-- Domain -->
+  <text x="80" y="580" font-family="Arial, sans-serif" font-size="18" fill="#7A7570">fitos-zc11.polsia.app/vs</text>
+</svg>
