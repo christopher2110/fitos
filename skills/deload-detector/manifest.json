@@ -1,0 +1,18 @@
+{
+  "id": "deload-detector",
+  "name": "Deload Detector",
+  "description": "Analyzes 4 weeks of RPE trends on main lifts. Flags clients showing ≥3 consecutive weeks of rising avg RPE, or any session averaging RPE ≥9. Posts an agent_flag to the Activity feed so it surfaces on your dashboard.",
+  "version": "1.0.0",
+  "model": "claude-haiku-4-5",
+  "schedule": "0 9 * * 0",
+  "schedule_label": "Weekly, Sunday 9am",
+  "inputs": [
+    { "tab": "Workouts",    "range": "Workouts!A1:K500" },
+    { "tab": "Completions", "range": "Completions!A1:H500" },
+    { "tab": "Profile",     "range": "Profile!A2:D50" }
+  ],
+  "outputs": [
+    { "tab": "Activity", "action": "append", "type": "agent_flag", "severity": "high" }
+  ],
+  "requires_tools": []
+}
