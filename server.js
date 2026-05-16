@@ -29,7 +29,6 @@ const analyticsRouter         = require('./routes/analytics');
 const emailWebhookRouter      = require('./routes/email-webhook');
 const templatesRouter         = require('./routes/templates');
 const { publicRouter: programsPublicRouter, apiRouter: templatesApiRouter } = require('./routes/templates');
-const githubPushRouter = require('./routes/github-push');
 
 const { trialMiddleware, seedCoachIfNeeded } = require('./lib/trial');
 const { startDripCron }    = require('./services/email-drip');
@@ -194,8 +193,6 @@ app.get('/partners/schools/agreement', (req, res) => {
 // HTML page: /admin/diagnostics?key=...  JSON: /admin/diagnostics/api?key=...
 app.use('/admin/diagnostics', adminDiagnosticsRouter);
 
-// TEMPORARY: one-shot GitHub push endpoint — remove after use (v5)
-app.use('/api/github-push', githubPushRouter);
 
 // Public stats API — deploy counter for landing page social proof
 app.use('/api/stats', statsRouter);
@@ -211,7 +208,7 @@ app.use('/api/email/webhook', emailWebhookRouter);
 app.use('/dashboard/templates', templatesRouter);
 app.use('/api/templates',       templatesApiRouter);
 
-// Public program preview pages — SEO, no auth required
+// Public program preview pages — SEO, no auth required––
 app.use('/programs', programsPublicRouter);
 
 // Landing page with analytics beacon injected
